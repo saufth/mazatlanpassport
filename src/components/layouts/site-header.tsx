@@ -1,6 +1,5 @@
 'use client'
 import { useState } from 'react'
-import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion'
 import { CallToAction } from '@/components/call-to-action'
 import { Icons } from '@/components/icons'
@@ -10,9 +9,7 @@ import NextLink from '@/components/ui/next-link'
 import { siteConfig } from '@/config/site'
 
 export default function SiteHeader () {
-  const pathname = usePathname()
   const { scrollYProgress } = useScroll()
-  const [isOnTop, setIsOnTop] = useState(true)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [visible, setVisible] = useState(true)
 
@@ -25,9 +22,7 @@ export default function SiteHeader () {
 
       if (scrollYProgress.get() < 0.01) {
         setVisible(true)
-        setIsOnTop(true)
       } else {
-        setIsOnTop(false)
         direction < 0
           ? setVisible(true)
           : setVisible(false)
@@ -39,7 +34,7 @@ export default function SiteHeader () {
     <>
       <motion.header
         initial={{
-          y: 0,
+          y: 0
         }}
         animate={{
           y: visible || isMenuOpen ? 0 : -100
@@ -54,7 +49,7 @@ export default function SiteHeader () {
             <div className='w-full h-header flex justify-between items-center'>
               <div className='h-10 sm:h-12 xl:h-[54px]'>
                 <NextLink href='/' onClick={closeMenu}>
-                  <Icons.Logotype className='w-auto h-full'/>
+                  <Icons.Logotype className='w-auto h-full' />
                   <span className='sr-only'>{siteConfig.name} home</span>
                 </NextLink>
               </div>

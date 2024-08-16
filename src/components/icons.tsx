@@ -18,8 +18,8 @@ export const Icons = {
         <title>{`${siteConfig.name} logotype`}</title>
         <rect
           className='fill-[#d2cd18]'
-          width="512"
-          height="512"
+          width={512}
+          height={512}
         />
       </svg>
     )
