@@ -15,6 +15,8 @@ export default function IndexPage () {
       <Hero
         title={siteConfig.slogan}
         description={siteConfig.description}
+        to='signin'
+        src='/video/home-hero.mp4'
       />
       <section id='preguntas-frecuentes'>
         <div className='container pt-spacing-8'>

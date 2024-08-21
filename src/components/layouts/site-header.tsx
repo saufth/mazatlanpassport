@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion'
 import { CallToAction } from '@/components/call-to-action'
 import { Icons } from '@/components/icons'
-import { ModeToggle } from '@/components/layouts/mode-toggle'
+// import { ModeToggle } from '@/components/layouts/mode-toggle'
 import Menu from '@/components/layouts/menu'
 import NextLink from '@/components/ui/next-link'
 import { siteConfig } from '@/config/site'
@@ -54,7 +54,7 @@ export default function SiteHeader () {
                 </NextLink>
               </div>
               <div className='flex items-center gap-x-spacing-4'>
-                <ModeToggle />
+                {/* <ModeToggle /> */}
                 <button className='w-9 h-2.5 relative scale-90 sm:scale-100' onClick={toggleMenu}>
                   <motion.span
                     initial={{
