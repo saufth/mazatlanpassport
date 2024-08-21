@@ -26,11 +26,11 @@ export const Hero = ({ title, description, to, src, children, className }: HeroP
         <div>
           <div className='max-w-md sm:max-w-2xl lg:max-w-3xl'>
             <h1 className='f-display-2 text-white text-balance'>
-              Descuentos exclusivos con <span className='text-primary'>{siteConfig.name}</span>
+              {title}
             </h1>
             {description && (
               <p className='f-subhead-3 text-balance text-white mt-spacing-4'>
-                {description}
+                {description}.
               </p>
             )}
           </div>
