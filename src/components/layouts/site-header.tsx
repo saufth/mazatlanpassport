@@ -49,7 +49,7 @@ export default function SiteHeader () {
             <div className='w-full h-header flex justify-between items-center'>
               <div className='h-10 sm:h-12 xl:h-[54px]'>
                 <NextLink href='/' onClick={closeMenu}>
-                  <Icons.Logotype className='w-auto h-full' />
+                  <Icons.Logomark className='w-auto h-full' />
                   <span className='sr-only'>{siteConfig.name} home</span>
                 </NextLink>
               </div>

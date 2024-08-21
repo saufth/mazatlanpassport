@@ -12,9 +12,9 @@ CREATE TABLE IF NOT EXISTS `mzpass`.`genres` (
   `updated_at` TIMESTAMP NULL,
   `deleted_at` TIMESTAMP NULL,
   `status` TINYINT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC),
-  PRIMARY KEY (`id`))
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mzpass`.`users` (
@@ -30,11 +30,10 @@ CREATE TABLE IF NOT EXISTS `mzpass`.`users` (
   `updated_at` TIMESTAMP NULL,
   `deleted_at` TIMESTAMP NULL,
   `status` TINYINT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC),
-  UNIQUE INDEX `password_UNIQUE` (`password` ASC),
   INDEX `fk_users-genres_idx` (`gender_id` ASC),
-  PRIMARY KEY (`id`),
   CONSTRAINT `fk_users-genres`
     FOREIGN KEY (`gender_id`)
     REFERENCES `mzpass`.`genres` (`id`))
@@ -48,9 +47,9 @@ CREATE TABLE IF NOT EXISTS `mzpass`.`suscriptions_types` (
   `updated_at` TIMESTAMP NULL,
   `deleted_at` TIMESTAMP NULL,
   `status` TINYINT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC),
-  PRIMARY KEY (`id`))
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mzpass`.`suscriptions` (
@@ -63,10 +62,10 @@ CREATE TABLE IF NOT EXISTS `mzpass`.`suscriptions` (
   `updated_at` TIMESTAMP NULL,
   `deleted_at` TIMESTAMP NULL,
   `status` TINYINT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   INDEX `fk_suscriptions-users_idx` (`user_id` ASC),
   INDEX `fk_suscriptions-suscriptions_types_idx` (`suscription_type_id` ASC),
-  PRIMARY KEY (`id`),
   CONSTRAINT `fk_suscriptions-users`
     FOREIGN KEY (`user_id`)
     REFERENCES `mzpass`.`users` (`id`),
@@ -85,11 +84,31 @@ CREATE TABLE IF NOT EXISTS `mzpass`.`promos` (
   `updated_at` TIMESTAMP NULL,
   `deleted_at` TIMESTAMP NULL,
   `status` TINYINT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  UNIQUE INDEX `name_UNIQUE` (`name` ASC),
-  UNIQUE INDEX `description_UNIQUE` (`description` ASC),
-  UNIQUE INDEX `image_UNIQUE` (`image` ASC),
-  PRIMARY KEY (`id`))
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC))
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `mzpass`.`suscriptions_promos` (
+  `suscription_id` BINARY(16) NOT NULL,
+  `promo_id` BINARY(16) NOT NULL,
+  `user_id` BINARY(16) NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `deleted_at` TIMESTAMP NULL,
+  `status` TINYINT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`suscription_id`, `promo_id`),
+  INDEX `fk_suscriptions_promos-suscriptions_idx` (`suscription_id` ASC),
+  INDEX `fk_suscriptions_promos-users_idx` (`user_id` ASC),
+  INDEX `fk_suscriptions_promos-promos_idx` (`promo_id` ASC),
+  CONSTRAINT `fk_suscriptions_promos-suscriptions`
+    FOREIGN KEY (`suscription_id`)
+    REFERENCES `mzpass`.`suscriptions` (`id`),
+  CONSTRAINT `fk_suscriptions_promos-users`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `mzpass`.`suscriptions` (`user_id`),
+  CONSTRAINT `fk_suscriptions_promos-promos`
+    FOREIGN KEY (`promo_id`)
+    REFERENCES `mzpass`.`promos` (`id`))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mzpass`.`admins` (
@@ -103,11 +122,10 @@ CREATE TABLE IF NOT EXISTS `mzpass`.`admins` (
   `updated_at` TIMESTAMP NULL,
   `deleted_at` TIMESTAMP NULL,
   `status` TINYINT NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC),
-  UNIQUE INDEX `password_UNIQUE` (`password` ASC),
   INDEX `fk_admins-genres_idx` (`gender_id` ASC),
-  PRIMARY KEY (`id`),
   CONSTRAINT `fk_admins-genres`
     FOREIGN KEY (`gender_id`)
     REFERENCES `mzpass`.`genres` (`id`))
