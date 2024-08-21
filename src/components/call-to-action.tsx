@@ -15,6 +15,7 @@ export interface CallToActionProps
     ButtonVariantProps {
   children?: string
   to?: keyof typeof siteRoutes
+  icon?: boolean
 }
 
 export const CallToAction = (
@@ -24,7 +25,8 @@ export const CallToAction = (
     onClick,
     to = 'signin',
     size = 'lg',
-    variant
+    variant,
+    icon
   }: CallToActionProps
 ) => {
   return (
@@ -33,7 +35,7 @@ export const CallToAction = (
       size={size}
       variant={variant}
       className={cn(
-        'tracking-wide flex items-center gap-x-spacing-2',
+        'flex items-center gap-x-spacing-2',
         className
       )}
     >
@@ -42,7 +44,7 @@ export const CallToAction = (
         onClick={onClick}
       >
         {children || siteRoutes[to]?.title}
-        <ArrowRightIcon className='[&_*]:fill-accent-foreground w-auto h-3.5 sm:h-4 -rotate-45' />
+        {icon && <ArrowRightIcon className='[&_*]:fill-accent-foreground w-auto h-4 sm:h-[18px] -rotate-45' />}
       </NextLink>
     </Button>
   )

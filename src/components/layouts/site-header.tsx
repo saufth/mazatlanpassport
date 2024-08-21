@@ -47,14 +47,17 @@ export default function SiteHeader () {
         <nav aria-label={`${siteConfig.name} directory`}>
           <div className='container relative z-10'>
             <div className='w-full h-header flex justify-between items-center'>
-              <div className='h-8 sm:h-9 xl:h-10'>
+              <div className='h-9 sm:h-10'>
                 <NextLink href='/' onClick={closeMenu}>
                   <Icons.Logomark className='w-auto h-full' />
                   <span className='sr-only'>{siteConfig.name} home</span>
                 </NextLink>
               </div>
               <div className='flex items-center gap-x-spacing-4'>
-                {/* <ModeToggle /> */}
+                <div className='flex items-center gap-x-spacing-3'>
+                  <CallToAction onClick={closeMenu} size='default' to='login' variant='ghost' className='hidden sm:inline-flex' />
+                  <CallToAction onClick={closeMenu} size='default' className='hidden sm:inline-flex' />
+                </div>
                 <button className='w-9 h-2.5 relative scale-90 sm:scale-100' onClick={toggleMenu}>
                   <motion.span
                     initial={{
@@ -90,7 +93,6 @@ export default function SiteHeader () {
                   />
                   <span className='sr-only'>Toggle menu</span>
                 </button>
-                <CallToAction onClick={closeMenu} className='hidden sm:inline-flex' />
               </div>
             </div>
           </div>

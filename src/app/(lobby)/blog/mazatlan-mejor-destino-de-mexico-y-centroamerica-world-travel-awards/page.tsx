@@ -16,7 +16,7 @@ export default function Blog1Page () {
     <>
       <section className='-mt-header-h'>
         <div className='container pt-spacing-9'>
-          <h1 className='f-display-3 font-bold text-balance'>
+          <h1 className='f-display-3 font-medium text-balance'>
             {article.title}
           </h1>
         </div>

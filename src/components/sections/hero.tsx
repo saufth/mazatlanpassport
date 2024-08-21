@@ -34,7 +34,10 @@ export const Hero = ({ title, description, to, src, children, className }: HeroP
             )}
           </div>
           {to && (
-            <CallToAction to={to} size='full' className='mt-spacing-4' />
+            <div className='flex items-center gap-x-spacing-4'>
+              <CallToAction to={to} size='full' icon className='mt-spacing-5' />
+              <CallToAction to='login' variant='ghost' size='full' className='mt-spacing-5' />
+            </div>
           )}
         </div>
         {children}

@@ -46,9 +46,7 @@ const config: Config = {
         'spacing-11': 'var(--spacing-spacing-11)'
       },
       fontFamily: {
-        sans: ['var(--font-sans)', ...fontFamily.sans],
-        primary: ['var(--font-primary)', ...fontFamily.sans],
-        header: ['var(--font-header)', ...fontFamily.sans]
+        sans: ['var(--font-sans)', ...fontFamily.sans]
       },
       colors: {
         primary: {

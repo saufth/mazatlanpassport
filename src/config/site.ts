@@ -20,10 +20,10 @@ export const siteNav: MainNavItem[] = [
     title: 'Promociones',
     href: '/#promos'
   },
-  {
-    title: 'Quiénes somos',
-    href: '/#nosotros'
-  },
+  // {
+  //   title: 'Quiénes somos',
+  //   href: '/#nosotros'
+  // },
   {
     title: 'Suscribirse',
     href: '/#signin'
@@ -86,7 +86,7 @@ export const socialNav: NavItem[] = [
 
 export const siteConfig: SiteConfig = {
   name: 'Mazatlán Passport',
-  slogan: 'Descuentos Exclusivos con Mazatlán Passport',
+  slogan: 'Descuentos exclusivos con Mazatlán Passport',
   description: 'Sé socio y accede a descuentos exclusivos en los mejores lugares de Mazatlán',
   url: `https://${domain}`,
   author,
