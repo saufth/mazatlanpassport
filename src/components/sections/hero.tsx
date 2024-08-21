@@ -3,7 +3,6 @@ import { CallToAction, type CallToActionProps } from '@/components/call-to-actio
 import { BackgroundVideo, type BackgroundVideoProps } from '@/components/background-video'
 import { cn } from '@/lib/utils'
 import type { Title, Description } from '@/types'
-import { siteConfig } from '@/config/site'
 
 export interface HeroProps
   extends Title,
