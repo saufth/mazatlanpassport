@@ -222,7 +222,7 @@
   /* Site header */
 
   .h-header {
-    @apply h-16 sm:h-[72px] xl:h-20;
+    @apply h-16 sm:h-[72px] xl:h-16;
   }
 
   .-mt-header-h {
