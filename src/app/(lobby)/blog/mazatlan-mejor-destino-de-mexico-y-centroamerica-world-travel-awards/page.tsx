@@ -11,12 +11,12 @@ export const metadata: Metadata = {
   description: typeof article.description === 'string' ? article.description : article.description[0]!
 }
 
-export default function Las10MejoresCosasQueHacerEnMazatlanPage () {
+export default function Blog1Page () {
   return (
     <>
       <section className='-mt-header-h'>
         <div className='container pt-spacing-9'>
-          <h1 className='f-display-3 font-primary font-bold text-balance'>
+          <h1 className='f-display-3 font-bold text-balance'>
             {article.title}
           </h1>
         </div>
@@ -50,7 +50,7 @@ export default function Las10MejoresCosasQueHacerEnMazatlanPage () {
             </p>
             {article.items.map((articleItem, key) => (
               <div className='' key={key}>
-                <h3 className='f-heading-2 mt-spacing-5 text-balance font-header f-header'>
+                <h3 className='f-heading-2 mt-spacing-5 text-balance f-header'>
                   {articleItem.title}
                 </h3>
                 {typeof articleItem.description === 'string'
