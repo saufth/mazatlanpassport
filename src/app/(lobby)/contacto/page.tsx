@@ -7,7 +7,7 @@ import { siteConfig } from '@/config/site'
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: 'Contáctanos',
-  description: '¿Listo para expandir tu negocio?'
+  description: 'Pongámonos en contacto'
 }
 
 export default function ContactPage () {
@@ -17,7 +17,7 @@ export default function ContactPage () {
         <div className='container pt-spacing-9'>
           <SectionHeader
             title='Contáctanos hoy mismo'
-            description='¿Listo para expandir tu negocio?'
+            description='Pongámonos en contacto'
           />
           <div className='cols-container mt-spacing-6'>
             <div className='w-full lg:w-5-cols relative mt-12 lg:mt-0 order-2 lg:order-1'>
@@ -25,7 +25,7 @@ export default function ContactPage () {
             </div>
             <div className='w-full lg:w-7-cols order-1 lg:order-2'>
               <Image
-                src='/images/contact-page.webp'
+                src='/images/contact-hero.webp'
                 alt='Mujer hablando por teléfono mientras sostiene una tables y esta parada en medo de la sala de su casa'
                 width={2840}
                 height={2840}

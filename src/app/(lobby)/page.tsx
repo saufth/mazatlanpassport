@@ -89,14 +89,14 @@ export default function IndexPage () {
     <>
       <Hero
         title={siteConfig.slogan}
-        description={siteConfig.description}
+        description={`${siteConfig.description}.`}
         to='signin'
         src='/video/home-hero.mp4'
       />
-      <section>
+      <section id='promociones'>
         <div className='container pt-spacing-7'>
           <SectionHeader
-            title='Hazte socio'
+            title='Promociones exclusivas'
             description='Beneficios exclusivos para viajeros inteligentes'
           />
           <div className='cols-container mt-spacing-6 gap-y-gutter relative z-10'>

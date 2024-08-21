@@ -6,8 +6,8 @@ import { cn } from '@/lib/utils'
 import { siteNav } from '@/config/site'
 
 const siteRoutes = {
-  signin: siteNav.find((navItem) => navItem.href === '/#signin')!,
-  login: siteNav.find((navItem) => navItem.href === '/#login')!
+  signin: siteNav.find((navItem) => navItem.href === '/suscribirse')!,
+  login: siteNav.find((navItem) => navItem.href === '/iniciar-sesion')!
 }
 
 export interface CallToActionProps

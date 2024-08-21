@@ -18,7 +18,7 @@ export const blogNav: MainNavItem[] = [
 export const siteNav: MainNavItem[] = [
   {
     title: 'Promociones',
-    href: '/#promos'
+    href: '/#promociones'
   },
   // {
   //   title: 'Quiénes somos',
@@ -26,11 +26,11 @@ export const siteNav: MainNavItem[] = [
   // },
   {
     title: 'Suscribirse',
-    href: '/#signin'
+    href: '/suscribirse'
   },
   {
     title: 'Iniciar sesión',
-    href: '/#login'
+    href: '/iniciar-sesion'
   },
   {
     title: 'Preguntas frecuentes',

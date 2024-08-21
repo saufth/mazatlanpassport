@@ -3,6 +3,7 @@ import { CallToAction, type CallToActionProps } from '@/components/call-to-actio
 import { BackgroundVideo, type BackgroundVideoProps } from '@/components/background-video'
 import { cn } from '@/lib/utils'
 import type { Title, Description } from '@/types'
+import { siteConfig } from '@/config/site'
 
 export interface HeroProps
   extends Title,
@@ -17,7 +18,7 @@ export const Hero = ({ title, description, to, src, children, className }: HeroP
   return (
     <section
       className={cn(
-        'screen-container relative overflow-hidden -mt-header-h bg-yellow-500',
+        'screen-container relative overflow-hidden -mt-header-h',
         className
       )}
     >
@@ -25,7 +26,7 @@ export const Hero = ({ title, description, to, src, children, className }: HeroP
         <div>
           <div className='max-w-md sm:max-w-2xl lg:max-w-3xl'>
             <h1 className='f-display-2 text-white text-balance'>
-              {title}
+              Descuentos exclusivos con <span className='text-primary'>{siteConfig.name}</span>
             </h1>
             {description && (
               <p className='f-subhead-3 text-balance text-white mt-spacing-4'>
