@@ -1,6 +1,6 @@
 import SocialNav from '@/components/layouts/social-nav'
 import { Link } from '@/components/ui/link'
-import { cn, formatPhoneNumber } from '@/lib/utils'
+import { cn, formatPhoneNumber, whatsappUrl } from '@/lib/utils'
 import {
   siteConfig,
   contactEmail,
@@ -8,6 +8,7 @@ import {
   contact,
   blogNav
 } from '@/config/site'
+import { Icons } from '../icons'
 
 export interface MainNavProps {
   action?: () => void
@@ -21,7 +22,7 @@ export default function MainNav ({ action, muted }: MainNavProps) {
         {contact.map((contactItem, contactItemKey) => (
           <div className='flex flex-col gap-y-spacing-3' key={`contact-item-${contactItemKey}`}>
             <Link
-              href={`tel:${contactItem.phone.fullNumber}`}
+              href={whatsappUrl(contactItem.phone.fullNumber)}
               onClick={action}
               aria-label={`Número de atención a clientes ${contactItem.country}`}
               title='Llamar ahora'
@@ -30,6 +31,7 @@ export default function MainNav ({ action, muted }: MainNavProps) {
               rel='noreferrer'
               className={cn('w-fit flex gap-x-2 items-center', muted && 'text-card-foreground')}
             >
+              <Icons.Whatsapp className='w-auto h-6 sm:h-8' />
               <span className='font-normal'>{`${contactItem.phone.code} ${formatPhoneNumber(contactItem.phone.number)}`}</span>
             </Link>
             <Link

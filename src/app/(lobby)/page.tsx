@@ -138,7 +138,7 @@ export default function IndexPage () {
         </div>
       </section>
       <section id='preguntas-frecuentes'>
-        <div className='container pt-spacing-8'>
+        <div className='container pt-spacing-7'>
           <SectionHeader
             title={faq.title}
             description={faq.description}

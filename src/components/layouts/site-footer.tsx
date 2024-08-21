@@ -5,7 +5,7 @@ import { siteConfig } from '@/config/site'
 
 export default function SiteFooter () {
   return (
-    <footer className='bg-card border-t mt-spacing-8'>
+    <footer className='bg-card border-t mt-spacing-7'>
       <div className='container'>
         <div className='py-spacing-7'>
           <MainNav muted />

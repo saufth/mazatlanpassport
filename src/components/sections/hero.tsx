@@ -29,14 +29,14 @@ export const Hero = ({ title, description, to, src, children, className }: HeroP
             </h1>
             {description && (
               <p className='f-subhead-3 text-balance text-white mt-spacing-4'>
-                {description}.
+                {description}
               </p>
             )}
           </div>
           {to && (
-            <div className='flex items-center gap-x-spacing-4'>
-              <CallToAction to={to} size='full' icon className='mt-spacing-5' />
-              <CallToAction to='login' variant='ghost' size='full' className='mt-spacing-5' />
+            <div className='flex flex-col sm:flex-row items-center gap-spacing-3 mt-spacing-5'>
+              <CallToAction to={to} size='full' icon />
+              <CallToAction to='login' variant='ghost' size='full' />
             </div>
           )}
         </div>
