@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer'
 import { z } from 'zod'
-import { contactSchema } from '@/lib/validations/email'
+import { contactSchema } from '@/lib/validations/contact'
 import { siteConfig, contactEmail, domain } from '@/config/site'
 
 // export const runtime = 'edge'
@@ -25,7 +25,8 @@ export async function POST (req: Request) {
       to: contactEmail,
       subject: 'Nuevo mensaje desde formulario web',
       html: `
-        <p><b>Nombre:</b> ${input.name}</p>
+        <p><b>Nombre(s):</b> ${input.firstName}</p>
+        <p><b>Apellido(s):</b> ${input.lastName}</p>
         <p><b>Correo electrónico:</b> ${input.email}</p>
         <p><b>Teléfono:</b> ${input.phone}</p>
         <p><b>Asunto:</b> ${input.subject}</p>
@@ -35,7 +36,7 @@ export async function POST (req: Request) {
     await transporter.sendMail({
       from: `${siteConfig.name} ${contactEmail}`,
       to: input.email,
-      subject: `${input.name}, hemos recibido tu mensaje en ${siteConfig.name}`,
+      subject: `${input.firstName}, hemos recibido tu mensaje en ${siteConfig.name}`,
       html: `
           <h1><b>¡Gracias por contactarnos!</b></h1>
           <p>Un miembro de nuestro equipo se comunicará contigo en breve.</p>

@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import SigninForm from '@/components/forms/signin-form'
+import SignupForm from '@/components/forms/signup-form'
 
 export default function SigninPage () {
   return (
@@ -15,7 +15,7 @@ export default function SigninPage () {
         </div>
         <div className='cols-container mt-spacing-6'>
           <div className='w-full lg:w-5-cols relative mt-12 lg:mt-0 order-2 lg:order-1'>
-            <SigninForm />
+            <SignupForm amount={999} />
           </div>
           <div className='w-full lg:w-7-cols order-1 lg:order-2'>
             <Image

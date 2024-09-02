@@ -16,15 +16,16 @@ import { toast } from 'sonner'
 import { PaperPlaneIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { type Inputs, contactSchema } from '@/lib/validations/email'
+import { type ContactInputs, contactSchema } from '@/lib/validations/contact'
 
 export default function ContactForm () {
   const [isPending, startTransition] = useTransition()
 
-  const form = useForm<Inputs>({
+  const form = useForm<ContactInputs>({
     resolver: zodResolver(contactSchema),
     defaultValues: {
-      name: '',
+      firstName: '',
+      lastName: '',
       email: '',
       phone: '',
       subject: ''
@@ -33,9 +34,9 @@ export default function ContactForm () {
 
   const formRef = useRef<HTMLFormElement>(null)
 
-  const onSubmit = async (data: Inputs) => {
+  const onSubmit = async (data: ContactInputs) => {
     startTransition(async () => {
-      const response = await fetch('/api/email/contact', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -72,13 +73,31 @@ export default function ContactForm () {
       >
         <FormField
           control={form.control}
-          name='name'
+          name='firstName'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nombre completo</FormLabel>
+              <FormLabel>¿Cómo te llamas?</FormLabel>
               <FormControl>
                 <Input
-                  placeholder='Tu nombre completo'
+                  type='text'
+                  placeholder='Nombre(s)'
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='lastName'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>¿Cómo te apellidas?</FormLabel>
+              <FormControl>
+                <Input
+                  type='text'
+                  placeholder='Apellido(s)'
                   {...field}
                 />
               </FormControl>

@@ -15,26 +15,24 @@ import { toast } from 'sonner'
 import { ArrowTopRightIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { type Inputs, contactSchema } from '@/lib/validations/email'
+import { type LoginInputs, loginSchema } from '@/lib/validations/login'
 
 export default function SigninForm () {
   const [isPending, startTransition] = useTransition()
 
-  const form = useForm<Inputs>({
-    resolver: zodResolver(contactSchema),
+  const form = useForm<LoginInputs>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
-      name: '',
       email: '',
-      phone: '',
-      subject: ''
+      password: ''
     }
   })
 
   const formRef = useRef<HTMLFormElement>(null)
 
-  const onSubmit = async (data: Inputs) => {
+  const onSubmit = async (data: LoginInputs) => {
     startTransition(async () => {
-      const response = await fetch('/api/email/contact', {
+      const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -87,12 +85,13 @@ export default function SigninForm () {
         />
         <FormField
           control={form.control}
-          name='phone'
+          name='password'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Contraseña</FormLabel>
               <FormControl>
                 <Input
+                  type='password'
                   className='rounded-none'
                   placeholder='Ingresa tu contraseña'
                   {...field}

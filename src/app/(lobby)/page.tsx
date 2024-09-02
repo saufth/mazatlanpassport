@@ -105,7 +105,7 @@ export default function IndexPage () {
 
               return (
                 <div className='w-6-cols xs:w-3-cols md:w-4-cols lg:w-6-cols' key={key}>
-                  <NextLink href={`/${promoItem.id}`}>
+                  <NextLink href={`/promos/${promoItem.id}`}>
                     <Card as='article' className='group'>
                       <CardContent>
                         <Image

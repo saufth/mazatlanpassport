@@ -92,3 +92,21 @@ export interface DocumentElementWithFullscreen extends HTMLElement {
   mozRequestFullScreen?: () => void;
   webkitRequestFullscreen?: () => void;
 }
+
+export interface Limits {
+  min: number
+  max: number
+}
+
+export interface Message {
+  message: string
+}
+
+export interface ValidationMessages {
+  default: Message
+  limits: Message
+}
+
+export interface Amount {
+  amount: number
+}

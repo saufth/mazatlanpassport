@@ -12,9 +12,9 @@
     --popover: 100% 0 0; /* #FFFFFF */
     --popover-foreground: 0% 0 0; /* #000000 */
     --primary: 91.65% 0.189 102.64; /* #FCE718 */
-    --primary-foreground: 100% 0 0; /* #FFFFFF */
+    --primary-foreground: 0% 0 0; /* #000000 */
     --secondary: 30.45% 0.052 290.91; /* #2F2A47 */
-    --secondary-foreground: 0% 0 0; /* #000000 */
+    --secondary-foreground: 100% 0 0; /* #FFFFFF */
     --muted: 96.76% 0.001 286.38; /* #F4F4F5 */
     --muted-foreground: 55.2% 0.014 285.93; /* #71717A  */
     --accent: 64.27% 0.19 38.29; /* #E85723 */
@@ -22,9 +22,10 @@
     --destructive: 63.68% 0.208 25.33; /* #EF4444 */
     --destructive-foreground: 98.48% 0 0; /* #FAFAFA */
     --border: 91.97% 0.004 286.32; /* #E4E4E7 */
-    --input: 91.97% 0.004 286.32; /* #E4E4E7 */
-    --ring: 21.03% 0.006 285.88; /* #18181B */
-    --radius: 0.5rem;
+    --input: 100% 0 0; /* #FFFFFF */
+    --ring: 56.55% 0.188 255.61; /* #0573E1 */
+    /* Radius */
+    --radius: 0.313rem; /* 5px */
     /* Shell */
     --inner-gutter: 16px;
     --outer-gutter: 16px;
@@ -52,9 +53,9 @@
     --popover: 100% 0 0; /* #FFFFFF */
     --popover-foreground: 0% 0 0; /* #000000 */
     --primary: 91.65% 0.189 102.64; /* #FCE718 */
-    --primary-foreground: 100% 0 0; /* #FFFFFF */
+    --primary-foreground: 0% 0 0; /* #000000 */
     --secondary: 30.45% 0.052 290.91; /* #2F2A47 */
-    --secondary-foreground: 0% 0 0; /* #000000 */
+    --secondary-foreground: 100% 0 0; /* #FFFFFF */
     --muted: 96.76% 0.001 286.38; /* #F4F4F5 */
     --muted-foreground: 55.2% 0.014 285.93; /* #71717A  */
     --accent: 64.27% 0.19 38.29; /* #E85723 */
@@ -62,8 +63,8 @@
     --destructive: 63.68% 0.208 25.33; /* #EF4444 */
     --destructive-foreground: 98.48% 0 0; /* #FAFAFA */
     --border: 91.97% 0.004 286.32; /* #E4E4E7 */
-    --input: 91.97% 0.004 286.32; /* #E4E4E7 */
-    --ring: 21.03% 0.006 285.88; /* #18181B */
+    --input: 100% 0 0; /* #FFFFFF */
+    --ring: 56.55% 0.188 255.61; /* #0573E1 */
   }
 }
 
@@ -227,6 +228,18 @@
 
   .-mt-header-h {
     @apply -mt-[57px] sm:-mt-[65px];
+  }
+
+  .ring-shadow {
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.03), 0px 3px 6px rgba(0, 0, 0, 0.02);
+  }
+
+  .ring-focus {
+    box-shadow:
+      0px 1px 1px rgba(0, 0, 0, 0.03),
+      0px 3px 6px rgba(0, 0, 0, 0.02),
+      0 0 0 3px oklch(var(--ring) / 25%),
+      0 1px 1px 0 rgba(0, 0, 0, 0.08);
   }
 }
 

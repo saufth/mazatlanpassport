@@ -1,5 +1,6 @@
 import { type ComponentProps } from 'react'
 import { siteConfig } from '@/config/site'
+import { AlertTriangle } from 'lucide-react'
 
 type IconProps = ComponentProps<'svg'>
 
@@ -42,47 +43,47 @@ export const Icons = {
           >
             <stop
               offset='0'
-              stop-color='#feeb1a'
+              stopColor='#feeb1a'
               id='stop1'
             />
             <stop
               offset='.26'
-              stop-color='#fde81a'
+              stopColor='#fde81a'
               id='stop2'
             />
             <stop
               offset='.42'
-              stop-color='#fce01a'
+              stopColor='#fce01a'
               id='stop3'
             />
             <stop
               offset='.55'
-              stop-color='#fad11b'
+              stopColor='#fad11b'
               id='stop4'
             />
             <stop
               offset='.66'
-              stop-color='#f7bd1d'
+              stopColor='#f7bd1d'
               id='stop5'
             />
             <stop
               offset='.77'
-              stop-color='#f3a31e'
+              stopColor='#f3a31e'
               id='stop6'
             />
             <stop
               offset='.87'
-              stop-color='#ee8321'
+              stopColor='#ee8321'
               id='stop7'
             />
             <stop
               offset='.96'
-              stop-color='#e85d23'
+              stopColor='#e85d23'
               id='stop8'
             />
             <stop
               offset='1'
-              stop-color='#e54825'
+              stopColor='#e54825'
               id='stop9'
             />
           </linearGradient>
@@ -292,11 +293,11 @@ export const Icons = {
         >
           <stop
             offset='0'
-            stop-color='#20b038'
+            stopColor='#20b038'
           />
           <stop
             offset='1'
-            stop-color='#60d66a'
+            stopColor='#60d66a'
           />
         </linearGradient>
         <g transform='matrix(0.41795372,0,0,0.41795372,1.1428895,2.87024e-6)'>
@@ -556,5 +557,6 @@ export const Icons = {
         </g>
       </svg>
     )
-  }
+  },
+  Warning: AlertTriangle
 }

@@ -1,2 +1,2 @@
-INSERT INTO `mzpass`.`admins` (`email`, `password`, `first_name`, `last_name`, `gender_id`) VALUES
-('root', 'e7a3270c2e834b40db6962008160c3f81b2ace8f', 'Root', 'Root', 3);
+INSERT INTO `mzpass`.`admins` (`id`, `email`, `password`, `first_name`, `last_name`, `genre_iso`) VALUES
+(UNHEX(REPLACE('c92b27b7-a64c-42f4-9673-dd6e64cd4ab3', '-', '')), 'root', 'e7a3270c2e834b40db6962008160c3f81b2ace8f', 'Root', 'Root', 0);

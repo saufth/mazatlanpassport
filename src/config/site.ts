@@ -25,7 +25,7 @@ export const siteNav: MainNavItem[] = [
   //   href: '/#nosotros'
   // },
   {
-    title: 'Suscribirse',
+    title: 'Comprar membrecia',
     href: '/suscribirse'
   },
   {

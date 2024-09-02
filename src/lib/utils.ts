@@ -1,16 +1,18 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { siteConfig } from '@/config/site'
-import {
-  type DocumentElementWithFullscreen,
-  type DocumentWithFullscreen
+import type {
+  Limits,
+  DocumentElementWithFullscreen,
+  DocumentWithFullscreen,
+  ValidationMessages
 } from '@/types'
 
-export function cn (...inputs: ClassValue[]) {
+export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function slugify (str: string) {
+export function slugify(str: string) {
   return str
     .toLowerCase()
     .replace(/ /g, '-')
@@ -18,7 +20,7 @@ export function slugify (str: string) {
     .replace(/--+/g, '-')
 }
 
-export function absoluteUrl (path: string = '/') {
+export function absoluteUrl(path: string = '/') {
   return `${siteConfig.url}${path}`
 }
 
@@ -26,17 +28,7 @@ export const capitalize = (text: string): string => (
   `${text.charAt(0).toUpperCase()}${text.slice(1).toLowerCase()}`
 )
 
-export function formatPhoneNumber (phoneNumber: string) {
-  const cleaned = ('' + phoneNumber).replace(/\D/g, '')
-  const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/)
-  return match && '(' + match[1] + ') ' + match[2] + '-' + match[3]
-}
-
-export function whatsappUrl (phoneNumber: string) {
-  return `https://wa.me/${phoneNumber}`
-}
-
-export function calculateYears (dateA: Date, dateB: Date) {
+export function calculateYears(dateA: Date, dateB: Date) {
   let years = new Date(dateB).getFullYear() - new Date(dateA).getFullYear()
   let month = new Date(dateB).getMonth() - new Date(dateA).getMonth()
   const dateDiff = new Date(dateB).getDay() - new Date(dateA).getDay()
@@ -45,7 +37,52 @@ export function calculateYears (dateA: Date, dateB: Date) {
   return years
 }
 
-export function requestFullScreen (element: DocumentElementWithFullscreen) {
+export function formatPhoneNumber(phoneNumber: string) {
+  const cleaned = ('' + phoneNumber).replace(/\D/g, '')
+  const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/)
+  return match && '(' + match[1] + ') ' + match[2] + '-' + match[3]
+}
+
+export function formatPrice(
+  price: number | string,
+  currency: 'usd' | 'eur' | 'mxn' = 'mxn',
+  notation: 'compact' | 'engineering' | 'scientific' | 'standard' = 'standard',
+  minimumFractionDigits = 0
+) {
+  return new Intl.NumberFormat('es-MX', {
+    style: 'currency',
+    currency,
+    notation,
+    minimumFractionDigits
+  }).format(Number(price))
+}
+
+export function convertToSubcurrency(amount: number, factor: number = 100) {
+  return Math.round(amount * factor)
+}
+
+export function createValidationErrorMessages(limits: Record<string, Limits>) {
+  const validationErrorMessages: Record<string, ValidationMessages> = {}
+  const limitsKeys = Object.keys(limits)
+
+  for (let i = 0; i < limitsKeys.length; i++) {
+    validationErrorMessages[limitsKeys[i]] = {
+      default: { message: `${limitsKeys[i]} es invalida.` },
+      limits: {
+        message: limits[limitsKeys[i]].min === limits[limitsKeys[i]].max
+          ? `Debe tener ${limits[limitsKeys[i]].min} caracteres.`
+          : `Debe tener de ${limits[limitsKeys[i]].min} a ${limits[limitsKeys[i]].max} caracteres.`
+      }
+    }
+  }
+
+  return validationErrorMessages
+}
+export function whatsappUrl(phoneNumber: string) {
+  return `https://wa.me/${phoneNumber}`
+}
+
+export function requestFullScreen(element: DocumentElementWithFullscreen) {
   if (element.requestFullscreen) {
     element.requestFullscreen()
   } else if (element.msRequestFullscreen) {
@@ -57,15 +94,15 @@ export function requestFullScreen (element: DocumentElementWithFullscreen) {
   }
 }
 
-export function isFullScreen (): boolean {
+export function isFullScreen(): boolean {
   const doc = document as DocumentWithFullscreen
   return !!(doc.fullscreenElement ||
-      doc.mozFullScreenElement ||
-      doc.webkitFullscreenElement ||
-      doc.msFullscreenElement)
+    doc.mozFullScreenElement ||
+    doc.webkitFullscreenElement ||
+    doc.msFullscreenElement)
 }
 
-export function exitFullScreen (doc: DocumentWithFullscreen) {
+export function exitFullScreen(doc: DocumentWithFullscreen) {
   if (doc.exitFullscreen) {
     doc.exitFullscreen()
   } else if (doc.msExitFullscreen) {
@@ -77,7 +114,7 @@ export function exitFullScreen (doc: DocumentWithFullscreen) {
   }
 }
 
-export function toogleFullScreen (): void {
+export function toogleFullScreen(): void {
   if (isFullScreen()) {
     requestFullScreen(document.documentElement)
   } else {

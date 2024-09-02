@@ -6,10 +6,10 @@ import type { Title, Description } from '@/types'
 
 export interface HeroProps
   extends Title,
-    Partial<Description>,
-    PropsWithChildren,
-    Partial<Pick<CallToActionProps, 'to'>>,
-    Partial<BackgroundVideoProps> {
+  Partial<Description>,
+  PropsWithChildren,
+  Partial<Pick<CallToActionProps, 'to'>>,
+  Partial<BackgroundVideoProps> {
   className?: string
 }
 
