@@ -41,7 +41,7 @@ export default function SiteHeader () {
         transition={{
           duration: 0.5
         }}
-        className='w-full sticky top-0 left-0 z-40 bg-background border-b'
+        className='w-full sticky top-0 left-0 z-40 bg-background'
       >
         <nav aria-label={`${siteConfig.name} directory`}>
           <div className='container relative z-10'>

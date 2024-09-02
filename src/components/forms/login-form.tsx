@@ -92,7 +92,6 @@ export default function SigninForm () {
               <FormControl>
                 <Input
                   type='password'
-                  className='rounded-none'
                   placeholder='Ingresa tu contraseña'
                   {...field}
                 />

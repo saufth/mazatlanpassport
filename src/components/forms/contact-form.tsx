@@ -129,7 +129,6 @@ export default function ContactForm () {
               <FormLabel>Número de teléfono</FormLabel>
               <FormControl>
                 <Input
-                  className='rounded-none'
                   placeholder='Ingresa un número de teléfono'
                   {...field}
                 />

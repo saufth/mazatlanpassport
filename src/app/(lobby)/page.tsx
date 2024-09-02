@@ -16,73 +16,9 @@ import {
 import { Hero } from '@/components/sections/hero'
 import { SectionHeader } from '@/components/sections/section-header'
 import { ArrowRightIcon } from '@radix-ui/react-icons'
-import { v4 as uuidv4 } from 'uuid'
 import { siteConfig } from '@/config/site'
 import { faq } from '@/config/organization'
-
-const promoTypes = [
-  {
-    id: 1,
-    title: '2x1',
-    description: 'En el plato principal'
-  },
-  {
-    id: 2,
-    title: '50%',
-    description: 'En el plato principal'
-  }
-]
-
-const promos = [
-  {
-    id: uuidv4(),
-    name: 'Establecimiento 1',
-    description: 'Descripción del establecimiento 1',
-    image: {
-      src: '/images/promo1.webp',
-      alt: 'Platillo principal de Establecimiento 1',
-      width: 1920,
-      height: 1080
-    },
-    type: 1
-  },
-  {
-    id: uuidv4(),
-    name: 'Establecimiento 2',
-    description: 'Descripción del establecimiento 2',
-    image: {
-      src: '/images/promo2.webp',
-      alt: 'Platillo principal de Establecimiento 2',
-      width: 1920,
-      height: 1080
-    },
-    type: 2
-  },
-  {
-    id: uuidv4(),
-    name: 'Establecimiento 3',
-    description: 'Descripción del establecimiento 3',
-    image: {
-      src: '/images/promo3.webp',
-      alt: 'Platillo principal de Establecimiento 3',
-      width: 1920,
-      height: 1080
-    },
-    type: 1
-  },
-  {
-    id: uuidv4(),
-    name: 'Establecimiento 4',
-    description: 'Descripción del establecimiento 4',
-    image: {
-      src: '/images/promo4.webp',
-      alt: 'Platillo principal de Establecimiento 4',
-      width: 1920,
-      height: 1080
-    },
-    type: 2
-  }
-]
+import { promos, promoTypes } from '@/config/promos'
 
 export default function IndexPage () {
   return (
@@ -106,7 +42,7 @@ export default function IndexPage () {
               return (
                 <div className='w-6-cols xs:w-3-cols md:w-4-cols lg:w-6-cols' key={key}>
                   <NextLink href={`/promos/${promoItem.id}`}>
-                    <Card as='article' className='group'>
+                    <Card as='article' className='group rounded-3xl overflow-hidden'>
                       <CardContent>
                         <Image
                           src={promoItem.image.src}
