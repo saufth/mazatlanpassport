@@ -45,7 +45,7 @@ const suscriptionTypes = [
   }
 ]
 
-export default function SignupForm({ amount }: Amount) {
+export default function SignupForm ({ amount }: Amount) {
   // const stripe = useStripe()
   // const stripeElements = useElements()
 
