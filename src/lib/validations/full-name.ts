@@ -3,43 +3,14 @@ import {
   string as zodString,
   type infer as zodInfer
 } from 'zod'
-import { createValidationErrorMessages } from '@/lib/utils'
-import type { FullNameSchemaFields, ValidationConfig } from '@/types/validations'
-
-const validationConfig: ValidationConfig<FullNameSchemaFields> = {
-  firstName: {
-    name: 'Nombre',
-    required: true,
-    limits: { min: 3, max: 35 }
-  },
-  lastName: {
-    name: 'Apellido',
-    required: true,
-    limits: { min: 3, max: 35 }
-  }
-}
-
-const validationErrorMessages = createValidationErrorMessages(validationConfig)
 
 export const fullNameSchema = zodObject({
-  firstName: zodString(validationErrorMessages.name.required!)
-    .min(
-      validationConfig.firstName.limits!.min,
-      validationErrorMessages.name.limits
-    )
-    .max(
-      validationConfig.firstName.limits!.max,
-      validationErrorMessages.name.limits
-    ),
-  lastName: zodString(validationErrorMessages.lastName.required!)
-    .min(
-      validationConfig.lastName.limits!.min,
-      validationErrorMessages.lastName.limits
-    )
-    .max(
-      validationConfig.lastName.limits!.max,
-      validationErrorMessages.lastName.limits
-    )
+  firstName: zodString({ required_error: 'El Nombre es requqrido' })
+    .min(3, { message: 'El Nombre debe tener de 3 a 35 caracteres' })
+    .max(35, { message: 'El Nombre debe tener de 3 a 35 caracteres' }),
+  lastName: zodString({ required_error: 'El Apellido es requerido' })
+    .min(3, { message: 'El Apellido debe tener de 3 a 35 caracteres' })
+    .max(35, { message: 'El Apellido debe tener de 3 a 35 caracteres' })
 })
 
 export type FullNameInputs = zodInfer<typeof fullNameSchema>
