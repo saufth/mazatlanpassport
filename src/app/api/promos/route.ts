@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { pool } from '@/lib/mysql'
+import { pool } from '@/lib/database'
 import { type RowDataPacket } from 'mysql2'
 
 export async function GET () {

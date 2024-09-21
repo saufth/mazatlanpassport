@@ -13,7 +13,7 @@ export const promoTypes = [
 
 export const promos = [
   {
-    id: 'fa6ac26c2a004f8f963db18409be7113',
+    id: 'fa6ac26c-2a00-4f8f-963d-b18409be7113',
     name: 'Establecimiento 1',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
     image: {
@@ -25,7 +25,7 @@ export const promos = [
     type: 1
   },
   {
-    id: '5d92eafa0a1a4787a549aa274199694e',
+    id: '5d92eafa-0a1a-4787-a549-aa274199694e',
     name: 'Establecimiento 2',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
     image: {
@@ -37,7 +37,7 @@ export const promos = [
     type: 2
   },
   {
-    id: '1b519eef21024b0588a935495369c2b0',
+    id: '1b519eef-2102-4b05-88a9-35495369c2b0',
     name: 'Establecimiento 3',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
     image: {
@@ -49,7 +49,7 @@ export const promos = [
     type: 1
   },
   {
-    id: '1b519eef21024b0588a935495369c2b0',
+    id: '1b519eef-2102-4b05-88a9-35495369c2b0',
     name: 'Establecimiento 4',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
     image: {

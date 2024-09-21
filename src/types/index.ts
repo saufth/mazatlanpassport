@@ -102,11 +102,6 @@ export interface Message {
   message: string
 }
 
-export interface ValidationMessages {
-  default: Message
-  limits: Message
-}
-
 export interface Amount {
   amount: number
 }

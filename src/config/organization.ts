@@ -1,4 +1,4 @@
-export const faq = {
+export const FAQ = {
   title: 'Preguntas frecuentes',
   description: 'No te quedes con dudas.',
   items: [
@@ -18,4 +18,4 @@ export const faq = {
       description: 'Para considerar exitosa la internacionalización, el proyecto debe alcanzar una rentabilidad neta superior al 15%.'
     }
   ]
-}
+} as const

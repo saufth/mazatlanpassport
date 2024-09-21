@@ -41,12 +41,12 @@ export default function SiteHeader () {
         transition={{
           duration: 0.5
         }}
-        className='w-full sticky top-0 left-0 z-40 bg-background'
+        className='w-full sticky top-0 left-0 z-40 border-b border-border bg-background/90 backdrop-filter backdrop-blur backdrop-saturate-200'
       >
         <nav aria-label={`${siteConfig.name} directory`}>
           <div className='container relative z-10'>
             <div className='w-full h-header flex justify-between items-center'>
-              <div className='h-9 sm:h-10'>
+              <div className='h-8 sm:h-10'>
                 <NextLink href='/' onClick={closeMenu}>
                   <Icons.Logomark className='w-auto h-full' />
                   <span className='sr-only'>{siteConfig.name} home</span>

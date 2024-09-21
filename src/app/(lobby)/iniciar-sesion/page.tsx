@@ -1,7 +1,7 @@
 import Image from 'next/image'
-import LoginForm from '@/components/forms/login-form'
+import LoginForm from '@/components/forms/signin-form'
 
-export default function LoginPage () {
+export default function SigninPage () {
   return (
     <section>
       <div className='container pt-spacing-7'>

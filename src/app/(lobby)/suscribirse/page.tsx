@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import SignupForm from '@/components/forms/signup-form'
 
-export default function SigninPage () {
+export default function SubscribePage () {
   return (
     <section>
       <div className='container pt-spacing-7'>

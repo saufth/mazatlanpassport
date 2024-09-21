@@ -2,11 +2,10 @@ import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { siteConfig } from '@/config/site'
 import type {
-  Limits,
   DocumentElementWithFullscreen,
-  DocumentWithFullscreen,
-  ValidationMessages
+  DocumentWithFullscreen
 } from '@/types'
+import { ValidationConfig, ValidationErrorMessagesConfig, ValidationSchemaFields } from '@/types/validations'
 
 export function cn (...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -24,6 +23,10 @@ export function absoluteUrl (path: string = '/') {
   return `${siteConfig.url}${path}`
 }
 
+export function toTitleCase (title: string) {
+  return title.replace(/\w\S*/g, (word) => `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`)
+}
+
 export const capitalize = (text: string): string => (
   `${text.charAt(0).toUpperCase()}${text.slice(1).toLowerCase()}`
 )
@@ -37,10 +40,25 @@ export function calculateYears (dateA: Date, dateB: Date) {
   return years
 }
 
-export function formatPhoneNumber (phoneNumber: string) {
-  const cleaned = ('' + phoneNumber).replace(/\D/g, '')
-  const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/)
-  return match && '(' + match[1] + ') ' + match[2] + '-' + match[3]
+export function formatPhoneNumber (phoneNumber: string | number) {
+  const cleanedNumber = String(phoneNumber).replace(/\D/g, '')
+
+  if (cleanedNumber.length < 10 || cleanedNumber.length > 14) {
+    return cleanedNumber
+  } else if (cleanedNumber.length === 10) {
+    const numberSections = cleanedNumber.match(/^(\d{3})(\d{3})(\d{4})$/)
+    return numberSections ? `(${numberSections[1]}) ${numberSections[2]}-${numberSections[3]}` : cleanedNumber
+  }
+
+  const dialCode = cleanedNumber.slice(0, cleanedNumber.length - 10)
+  const number = cleanedNumber.slice(-10)
+  const numberSections = number.match(/^(\d{3})(\d{3})(\d{4})$/)
+
+  return numberSections ? `+${dialCode} (${numberSections[1]}) ${numberSections[2]}-${numberSections[3]}` : cleanedNumber
+}
+
+export function createWhatsappUrl (phoneNumber: string, message?: string) {
+  return `https://wa.me/${phoneNumber}${message ? `?text=${message.replaceAll(' ', '+')}` : ''}`
 }
 
 export function formatPrice (
@@ -61,25 +79,32 @@ export function convertToSubcurrency (amount: number, factor: number = 100) {
   return Math.round(amount * factor)
 }
 
-export function createValidationErrorMessages (limits: Record<string, Limits>) {
-  const validationErrorMessages: Record<string, ValidationMessages> = {}
-  const limitsKeys = Object.keys(limits)
+export function createValidationErrorMessages<T extends ValidationSchemaFields> (
+  validationConfig: ValidationConfig<T>
+) {
+  const validationErrorMessages: ValidationErrorMessagesConfig = {}
+  const validationConfigKeys = Object.keys(validationConfig) as T[]
 
-  for (let i = 0; i < limitsKeys.length; i++) {
-    validationErrorMessages[limitsKeys[i]] = {
-      default: { message: `${limitsKeys[i]} es invalida.` },
-      limits: {
-        message: limits[limitsKeys[i]].min === limits[limitsKeys[i]].max
-          ? `Debe tener ${limits[limitsKeys[i]].min} caracteres.`
-          : `Debe tener de ${limits[limitsKeys[i]].min} a ${limits[limitsKeys[i]].max} caracteres.`
-      }
+  for (let index = 0; index < validationConfigKeys.length; index++) {
+    const validationConfigItem = validationConfig[validationConfigKeys[index]]
+    const fildNameMessage = `El campo de ${validationConfigItem}`
+
+    validationErrorMessages[validationConfigKeys[index]] = {
+      invalid: validationConfigItem.invalid
+        ? { message: `${fildNameMessage} es invalido.` }
+        : undefined,
+      limits: validationConfigItem.limits && {
+        message: validationConfigItem.limits.min === validationConfigItem.limits.max
+          ? `${fildNameMessage} debe tener ${validationConfigItem.limits.min} caracteres.`
+          : `${fildNameMessage} debe tener de ${validationConfigItem.limits.min} a ${validationConfigItem.limits.max} caracteres.`
+      },
+      required: validationConfigItem.required
+        ? { required_error: `${fildNameMessage} es obligatorio` }
+        : undefined
     }
   }
 
   return validationErrorMessages
-}
-export function whatsappUrl (phoneNumber: string) {
-  return `https://wa.me/${phoneNumber}`
 }
 
 export function requestFullScreen (element: DocumentElementWithFullscreen) {

@@ -5,6 +5,8 @@ import type {
   MainNavItem,
   NavItem
 } from '@/types'
+import { COUNTRIES } from './app'
+import { createWhatsappUrl, formatPhoneNumber } from '@/lib/utils'
 
 export const author: NextAuthor = {
   name: 'saufth',
@@ -17,21 +19,21 @@ export const blogNav: MainNavItem[] = [
 
 export const siteNav: MainNavItem[] = [
   {
-    title: 'Promociones',
-    href: '/#promociones'
-  },
-  // {
-  //   title: 'Quiénes somos',
-  //   href: '/#nosotros'
-  // },
-  {
-    title: 'Comprar membrecia',
+    title: 'Comprar membresia',
     href: '/suscribirse'
   },
   {
     title: 'Iniciar sesión',
     href: '/iniciar-sesion'
   },
+  {
+    title: 'Promociones exclusivas',
+    href: '/#promociones-exclusivas'
+  },
+  // {
+  //   title: 'Quiénes somos',
+  //   href: '/#nosotros'
+  // },
   {
     title: 'Preguntas frecuentes',
     href: '/#preguntas-frecuentes'
@@ -42,24 +44,25 @@ export const siteNav: MainNavItem[] = [
   }
 ]
 
-export const domain = 'mazatlanpassport.com'
+export const domain = 'https://mazatlanpassport.mx'
 
-export const contactEmail = `contacto@${domain}`
-
-export const contact = [
-  {
-    country: 'México',
-    phone: {
-      number: '6695555555',
-      code: '+52',
-      fullNumber: '+526695555555'
-    },
-    address: {
-      name: 'Mazatlán, Sinaloa.',
-      url: 'https://maps.app.goo.gl/CBoETvyJYMmrmifX9'
-    }
+const country = COUNTRIES.find((countryItem) => countryItem.alpha2 === 'MX')!
+const phone = `${country.dialCode}6692393939`
+const address = 'Mazatlán, Sinaloa.'
+export const contactConfig = {
+  email: 'mazatlanpassport@gmail.com',
+  phone: {
+    number: phone,
+    displayNumber: formatPhoneNumber(phone),
+    whatsappUrl: createWhatsappUrl(phone)
+  },
+  address: {
+    country: country.name.es,
+    title: address,
+    fullTitle: `${address} ${country.name.es}.`,
+    url: 'https://maps.app.goo.gl/CBoETvyJYMmrmifX9'
   }
-]
+}
 
 export const socialNav: NavItem[] = [
   {

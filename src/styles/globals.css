@@ -25,10 +25,10 @@
     --input: 100% 0 0; /* #FFFFFF */
     --ring: 56.55% 0.188 255.61; /* #0573E1 */
     /* Radius */
-    --radius: 0.313rem; /* 5px */
+    --radius: 0.5rem; /* 8px */
     /* Shell */
-    --inner-gutter: 16px;
-    --outer-gutter: 16px;
+    --inner-gutter: 8px;
+    --outer-gutter: 8px;
     --grid-columns: 6;
     /* Spacing */
     --spacing-spacing-1: .25rem;
@@ -71,8 +71,8 @@
   @media (min-width: 768px) {
     :root {
         /* Shell */
-      --inner-gutter: 24px;
-      --outer-gutter: 24px;
+      --inner-gutter: 16px;
+      --outer-gutter: 16px;
       --grid-columns: 8;
       /* Spacing */
       --spacing-spacing-5: 2.25rem;
@@ -199,7 +199,11 @@
   }
 
   .f-body-1 {
-    @apply text-[1rem] xl:text-[1.125rem] leading-[130%] xl:leading-[140%] xl:tracking-wide;
+    @apply text-[1rem] xl:text-[1.125rem] xl:tracking-wide;
+  }
+
+  .f-body-2 {
+    @apply text-[0.75rem] xl:text-[1rem] xl:tracking-wide;
   }
 
   /* Container */

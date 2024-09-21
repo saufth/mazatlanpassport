@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 import { siteNav } from '@/config/site'
 
 const siteRoutes = {
-  signin: siteNav.find((navItem) => navItem.href === '/suscribirse')!,
+  subscribe: siteNav.find((navItem) => navItem.href === '/suscribirse')!,
   login: siteNav.find((navItem) => navItem.href === '/iniciar-sesion')!
 }
 
@@ -23,7 +23,7 @@ export const CallToAction = (
     children,
     className,
     onClick,
-    to = 'signin',
+    to = 'subscribe',
     size = 'lg',
     variant,
     icon

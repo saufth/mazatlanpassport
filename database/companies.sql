@@ -1,0 +1,2 @@
+INSERT INTO `mazatlanpassport`.`companies` (`id`, `name`, `slogan`, `description`, `email`, `website`, `profile_image`, `cover_image`, `reservation`, `admin_key`) VALUES
+((UUID_TO_BIN('c92b27b7-a64c-42f4-9673-dd6e64cd4ab3')), 'El Sinaloense', 'Deleitate con mariscos', 'Mariscos, bar, banda y el mejor ambiente del puerto', 'admin@sinaloense.mx', 'sinaloense.com', 'c92b27b7a64c42f49673dd6e64cd4ab3-profile.webp', 'c92b27b7a64c42f49673dd6e64cd4ab3-cover.webp', 1, 1);

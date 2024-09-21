@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState, useTransition } from 'react'
+import { useRef, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -13,59 +13,59 @@ import {
 import { toast } from 'sonner'
 import { Icons } from '@/components/icons'
 import { ArrowTopRightIcon } from '@radix-ui/react-icons'
-import {
-  PaymentElement as StripePaymentElement,
-  Elements as StripeElments
-  // useElements,
-  // useStripe
-} from '@stripe/react-stripe-js'
-import { loadStripe } from '@stripe/stripe-js'
+// import {
+//   PaymentElement as StripePaymentElement,
+//   Elements as StripeElments
+//   // useElements,
+//   // useStripe
+// } from '@stripe/react-stripe-js'
+// import { loadStripe } from '@stripe/stripe-js'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { convertToSubcurrency, formatPrice } from '@/lib/utils'
-import { type SignupInputs, signupSchema } from '@/lib/validations/signup'
+// import { convertToSubcurrency } from '@/lib/utils'
+import { type SignupInputs, signupSchema } from '@/lib/validations/auth/signup'
 import type { Amount } from '@/types'
 
 if (process.env.NEXT_PUBLIC_STRIPE_PK === undefined) {
   throw new Error('NEXT_PUBLIC_STRIPE_PK is not defined')
 }
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK)
+// const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK)
 
-const suscriptionTypes = [
-  {
-    title: 'Semanal',
-    price: 399,
-    days: 7
-  },
-  {
-    title: 'Mensual',
-    price: 1199,
-    days: 30
-  }
-]
+// const suscriptionTypes = [
+//   {
+//     title: 'Semanal',
+//     price: 399,
+//     days: 7
+//   },
+//   {
+//     title: 'Mensual',
+//     price: 1199,
+//     days: 30
+//   }
+// ]
 
 export default function SignupForm ({ amount }: Amount) {
   // const stripe = useStripe()
   // const stripeElements = useElements()
 
   // const [errorMessage, setErrorMessage] = useState<string>()
-  const [clientSecret, setClientSecret] = useState<string>('')
+  // const [clientSecret, setClientSecret] = useState<string>('')
   // const [loading, setLoading] = useState<boolean>(false)
 
   const [isPending, startTransition] = useTransition()
 
-  useEffect(() => {
-    fetch('/api/create-payment-intent', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ amount: convertToSubcurrency(amount) })
-    })
-      .then((res) => res.json())
-      .then((data) => setClientSecret(data.clientSecret))
-  }, [amount])
+  // useEffect(() => {
+  //   fetch('/api/create-payment-intent', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({ amount: convertToSubcurrency(amount) })
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => setClientSecret(data.clientSecret))
+  // }, [amount])
 
   const form = useForm<SignupInputs>({
     resolver: zodResolver(signupSchema),
@@ -73,7 +73,10 @@ export default function SignupForm ({ amount }: Amount) {
       firstName: '',
       lastName: '',
       email: '',
-      password: ''
+      password: '',
+      confirmPassword: '',
+      phone: '',
+      genreISO: 0
     }
   })
 
@@ -172,7 +175,7 @@ export default function SignupForm ({ amount }: Amount) {
               <FormControl>
                 <Input
                   type='password'
-                  placeholder='Ingresa tu contraseña'
+                  placeholder='••••••••••••'
                   {...field}
                 />
               </FormControl>
@@ -180,7 +183,24 @@ export default function SignupForm ({ amount }: Amount) {
             </FormItem>
           )}
         />
-        <div>
+        <FormField
+          control={form.control}
+          name='confirmPassword'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirmar contraseña</FormLabel>
+              <FormControl>
+                <Input
+                  type='confirmPassword'
+                  placeholder='••••••••••••'
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {/* <div>
           <div className='cols-container pb-spacing-4'>
             {suscriptionTypes.map((suscriptionTypeItem, key) => {
               return (
@@ -208,7 +228,7 @@ export default function SignupForm ({ amount }: Amount) {
           >
             {clientSecret && <StripePaymentElement />}
           </StripeElments>
-        </div>
+        </div> */}
         <div className='pt-spacing-4'>
           <Button
             className='[&>*]:text-accent-foreground lg:w-full'
@@ -218,7 +238,7 @@ export default function SignupForm ({ amount }: Amount) {
             {isPending
               ? (
                 <span className='flex items-center gap-x-2'>
-                  Enviando <Icons.Spinner className='h-3 w-3' aria-hidden='true' />
+                  Procesando.. <Icons.Spinner className='h-3 w-3' aria-hidden='true' />
                 </span>)
               : (
                 <span className='pt-px lg:pt-0 flex items-center gap-x-spacing-2 lg:font-medium text-xs lg:text-sm tracking-wider'>

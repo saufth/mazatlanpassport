@@ -1,17 +1,26 @@
-import { promos, promoTypes } from '@/config/promos'
 import { type Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
-
-export const metadata: Metadata = {
-  metadataBase: new URL('http://localhost:3000'),
-  title: 'Promoción',
-  description: 'Lorem ipsum'
-}
+import { promos, promoTypes } from '@/config/promos'
+import { domain } from '@/config/site'
 
 interface PromoPageProps {
   params: {
     id: string
+  }
+}
+export async function generateMetadata ({ params }: PromoPageProps): Promise<Metadata> {
+  const promoId = decodeURIComponent(params.id)
+  const promo = promos.find(promoItem => promoItem.id === promoId)!
+
+  if (!promo) {
+    return {}
+  }
+
+  return {
+    metadataBase: new URL(domain),
+    title: promo.name,
+    description: promo.description
   }
 }
 

@@ -1,14 +1,13 @@
 import SocialNav from '@/components/layouts/social-nav'
 import { Link } from '@/components/ui/link'
-import { cn, formatPhoneNumber, whatsappUrl } from '@/lib/utils'
+import { Icons } from '@/components/icons'
+import { cn } from '@/lib/utils'
 import {
   siteConfig,
-  contactEmail,
   socialNav,
-  contact,
+  contactConfig,
   blogNav
 } from '@/config/site'
-import { Icons } from '../icons'
 
 export interface MainNavProps {
   action?: () => void
@@ -18,13 +17,13 @@ export interface MainNavProps {
 export default function MainNav ({ action, muted }: MainNavProps) {
   return (
     <div className='cols-container gap-y-spacing-7'>
-      <div className='w-6-cols md:w-5-cols lg:w-6-cols space-y-spacing-5 order-2 md:order-1'>
-        {contact.map((contactItem, contactItemKey) => (
+      <div className='w-6-cols md:w-5-cols lg:w-5-cols space-y-spacing-5 order-2 md:order-1'>
+        {[contactConfig].map((contactItem, contactItemKey) => (
           <div className='flex flex-col gap-y-spacing-3' key={`contact-item-${contactItemKey}`}>
             <Link
-              href={whatsappUrl(contactItem.phone.fullNumber)}
+              href={contactItem.phone.whatsappUrl}
               onClick={action}
-              aria-label={`Número de atención a clientes ${contactItem.country}`}
+              aria-label={`Número de atención a clientes ${contactItem.address.country}`}
               title='Llamar ahora'
               target='_blank'
               size='lg'
@@ -32,7 +31,7 @@ export default function MainNav ({ action, muted }: MainNavProps) {
               className={cn('w-fit flex gap-x-2 items-center', muted && 'text-card-foreground')}
             >
               <Icons.Whatsapp className='w-auto h-6 sm:h-8' />
-              <span className='font-normal'>{`${contactItem.phone.code} ${formatPhoneNumber(contactItem.phone.number)}`}</span>
+              <span className='font-normal'>{contactItem.phone.displayNumber}</span>
             </Link>
             <Link
               href={contactItem.address.url}
@@ -44,13 +43,13 @@ export default function MainNav ({ action, muted }: MainNavProps) {
               rel='noreferrer'
               className={cn('w-fit text-balance font-normal', muted && 'text-card-foreground')}
             >
-              {contactItem.address.name}
+              {contactItem.address.fullTitle}
             </Link>
           </div>
         ))}
         <div className='flex flex-col gap-y-spacing-3'>
           <Link
-            href={`mailto:${contactEmail}`}
+            href={`mailto:${contactConfig.email}`}
             onClick={action}
             aria-label='Envía un mensaje con tu servicio de correo, se abre en una nueva pestaña o en tu cliente de correo predeterminado'
             title='Enviar correo ahora'
@@ -59,13 +58,13 @@ export default function MainNav ({ action, muted }: MainNavProps) {
             size='lg'
             className={cn('w-fit font-normal', muted && 'text-card-foreground')}
           >
-            {contactEmail}
+            {contactConfig.email}
           </Link>
           <SocialNav items={socialNav} action={action} muted />
         </div>
       </div>
       <nav
-        className='w-6-cols md:w-3-cols lg:w-6-cols order-1 md:order-2'
+        className='w-6-cols md:w-3-cols lg:w-7-cols order-1 md:order-2'
         aria-label={`${siteConfig.name} directorio`}
       >
         <div className='cols-container gap-y-spacing-6'>
