@@ -46,7 +46,7 @@ export default function SiteHeader () {
         <nav aria-label={`${siteConfig.name} directory`}>
           <div className='container relative z-10'>
             <div className='w-full h-header flex justify-between items-center'>
-              <div className='h-8 sm:h-10'>
+              <div className='h-8 sm:h-14'>
                 <NextLink href='/' onClick={closeMenu}>
                   <Icons.Logomark className='w-auto h-full' />
                   <span className='sr-only'>{siteConfig.name} home</span>
