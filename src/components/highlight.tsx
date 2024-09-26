@@ -1,26 +1,52 @@
-interface HighlightProps {
+import { cn } from '@/lib/utils'
+
+export interface HighlightProps {
   children: string
-  index: number
+  className?: string
+  index?: number
+  indexEnd?: number
 }
 
-export const Highlight = ({ children, index }: HighlightProps) => {
+export function Highlight ({
+  children,
+  className,
+  index = -1,
+  indexEnd = index
+}: HighlightProps) {
   const textData = children.split(' ')
-  const isInRange = index >= 0 && index < textData.length
+
+  const indexEndFixed = indexEnd >= textData.length ? textData.length - 1 : indexEnd
+  const isIndexOk = index >= 0 && index < textData.length
+  const isIndexEndOk = indexEndFixed >= 0 && indexEndFixed >= index
+
+  let spaceHandler = ''
 
   return (
     <>
-      {isInRange
+      {isIndexOk && isIndexEndOk
         ? textData.map((word, key) => {
-          const space = key > 0 ? ' ' : ''
-          return key !== index
-            ? `${space}${word}`
+          if (key === 1) { spaceHandler = ' ' }
+
+          return key < index || key > indexEndFixed
+            ? `${spaceHandler}${word}`
             : (
               <span key={key}>
-                {space}
-                <span className='inline-block relative z-10'>
-                  {word}
-                  <span className='w-full h-3/5 absolute inset-0 m-auto bg-accent top-1 md:top-2 -right-1 md:-right-2 -z-10' />
-                </span>
+                {key === index && textData.map((highlightItem, highlightItemKey) => {
+                  return highlightItemKey >= index && highlightItemKey <= indexEndFixed && (
+                    <span key={highlightItemKey}>
+                      {spaceHandler}
+                      <span className='inline-block relative z-10 text-white px-1'>
+                        {highlightItem}
+                        <span
+                          className={cn(
+                            'w-full h-[95%] bg-accent absolute inset-y-0 left-px -z-10 -rotate-1',
+                            className
+                          )}
+                        />
+                      </span>
+                    </span>
+                  )
+                })}
               </span>
               )
         })

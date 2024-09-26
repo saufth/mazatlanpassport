@@ -5,7 +5,7 @@ import ThemeProvider from '@/components/layouts/theme-provider'
 import { Toaster } from '@/components/ui/toaster'
 import GoogleSearchScript from '@/components/layouts/google-seacrch-script'
 import { cn } from '@/lib/utils'
-import { fontSans } from '@/lib/fonts'
+import { fontHeader, fontSans } from '@/lib/fonts'
 import { siteConfig } from '@/config/site'
 import '@/styles/globals.css'
 
@@ -18,7 +18,38 @@ export const metadata: Metadata = {
   description: siteConfig.description,
   keywords: [
     siteConfig.name,
-    siteConfig.slogan
+    siteConfig.slogan,
+    'Mazatlan Passport',
+    'Mazatlán',
+    'Mazatlan',
+    'Sinaloa',
+    'Mazatlan Sinaloa',
+    'Mazatlán Sinaloa',
+    'Passport',
+    'Descuentos en Mazatlan Sinaloa',
+    'Descuentos en Mazatlán Sinaloa',
+    'Promociones en Mazatlan Sinaloa',
+    'Promociones en Mazatlán Sinaloa',
+    'Viajes a Mazatlan Sinaloa',
+    'Viajes a Mazatlán Sinaloa',
+    'Vacaciones en Mazatlan Sinaloa',
+    'Vacaciones en Mazatlán Sinaloa',
+    '¿Que hacer en Mazatlan Sinaloa?',
+    '¿Que hacer en Mazatlán Sinaloa',
+    'Restaurantes en Mazatlan Sinaloa',
+    'Restaurantes en Mazatlán Sinaloa',
+    'Lugares en Mazatlan Sinaloa',
+    'Lugares en Mazatlán Sinaloa',
+    '¿Porque ir a Mazatlan Sinaloa?',
+    '¿Porque ir a Mazatlán Sinaloa',
+    'Mejores lugares de Mazatlan Sinaloa',
+    'Mejores lugares de Mazatlán Sinaloa',
+    'Atracciones en Mazatlan Sinaloa',
+    'Atracciones en Mazatlán Sinaloa',
+    'Noticias Mazatlan Sinaloa',
+    'Noticias Mazatlán Sinaloa',
+    'Recuerdos Mazatlan Sinaload',
+    'Recuerdos Mazatlán Sinaload'
   ],
   authors: siteConfig.author,
   creator: siteConfig.author.name,
@@ -54,6 +85,7 @@ export default function RootLayout ({ children }: PropsWithChildren) {
       lang='es'
       suppressHydrationWarning
       className={cn(
+        fontHeader.variable,
         fontSans.variable,
         'font-sans antialiased !scroll-smooth'
       )}

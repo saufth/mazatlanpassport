@@ -1,21 +1,19 @@
 import { type ComponentProps } from 'react'
-import { ArrowRightIcon } from '@radix-ui/react-icons'
 import { Button, type ButtonVariantProps } from '@/components/ui/button'
 import NextLink from '@/components/ui/next-link'
-import { cn } from '@/lib/utils'
 import { siteNav } from '@/config/site'
 
-const siteRoutes = {
+const callToActionRoutes = {
   subscribe: siteNav.find((navItem) => navItem.href === '/suscribirse')!,
   login: siteNav.find((navItem) => navItem.href === '/iniciar-sesion')!
 }
 
+export type CallToActionRoutes = keyof typeof callToActionRoutes
+
 export interface CallToActionProps
-  extends Pick<ComponentProps<typeof NextLink>, 'className' | 'onClick'>,
+  extends Pick<ComponentProps<typeof NextLink>, 'children' | 'className' | 'onClick'>,
     ButtonVariantProps {
-  children?: string
-  to?: keyof typeof siteRoutes
-  icon?: boolean
+  to?: CallToActionRoutes
 }
 
 export const CallToAction = (
@@ -25,8 +23,7 @@ export const CallToAction = (
     onClick,
     to = 'subscribe',
     size = 'lg',
-    variant,
-    icon
+    variant
   }: CallToActionProps
 ) => {
   return (
@@ -34,17 +31,14 @@ export const CallToAction = (
       asChild
       size={size}
       variant={variant}
-      className={cn(
-        'flex items-center gap-x-spacing-2',
-        className
-      )}
+      className={className}
     >
       <NextLink
-        href={siteRoutes[to].href}
+        href={callToActionRoutes[to].href}
         onClick={onClick}
+        className='uppercase'
       >
-        {children || siteRoutes[to]?.title}
-        {icon && <ArrowRightIcon className='[&_*]:fill-accent-foreground w-auto h-4 sm:h-[18px] -rotate-45' />}
+        {children || callToActionRoutes[to]?.title}
       </NextLink>
     </Button>
   )

@@ -1,78 +1,74 @@
 'use client'
+import NextLink from '@/components/ui/next-link'
 import { useState } from 'react'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion'
 import { CallToAction } from '@/components/call-to-action'
 import { Icons } from '@/components/icons'
 import Menu from '@/components/layouts/menu'
-import NextLink from '@/components/ui/next-link'
 import { siteConfig } from '@/config/site'
 
 export default function SiteHeader () {
   const { scrollYProgress } = useScroll()
+  const [isOnTop, setIsOnTop] = useState(true)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [visible, setVisible] = useState(true)
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
   const closeMenu = () => setIsMenuOpen(false)
 
   useMotionValueEvent(scrollYProgress, 'change', (current) => {
-    if (typeof current === 'number') {
-      const direction = current - scrollYProgress.getPrevious()!
-
-      if (scrollYProgress.get() < 0.01) {
-        setVisible(true)
-      } else {
-        direction < 0
-          ? setVisible(true)
-          : setVisible(false)
-      }
+    if (typeof current === 'number' && scrollYProgress.get() > 0) {
+      setIsOnTop(false)
+    } else {
+      setIsOnTop(true)
     }
   })
 
+  const homeNav = siteConfig.mainNav.find((navItem) => navItem.href === '/')!
+
   return (
     <>
-      <motion.header
-        initial={{
-          y: 0
-        }}
-        animate={{
-          y: visible || isMenuOpen ? 0 : -100
-        }}
-        transition={{
-          duration: 0.5
-        }}
-        className='w-full sticky top-0 left-0 z-40 border-b border-border bg-background/90 backdrop-filter backdrop-blur backdrop-saturate-200'
-      >
+      <header className='w-full h-header sticky top-0 left-0 z-40 overflow-hidden'>
         <nav aria-label={`${siteConfig.name} directory`}>
-          <div className='container relative z-10'>
-            <div className='w-full h-header flex justify-between items-center'>
-              <div className='h-8 sm:h-14'>
-                <NextLink href='/' onClick={closeMenu}>
-                  <Icons.Logomark className='w-auto h-full' />
-                  <span className='sr-only'>{siteConfig.name} home</span>
+          <div className='py-[var(--site-header-gutter-y-top)] relative z-10 border-b border-transparent'>
+            <div className='container flex justify-between items-center'>
+              <motion.div
+                initial={{
+                  height: 'var(--site-header-logo-height-top)'
+                }}
+                animate={{
+                  height: isOnTop ? 'var(--site-header-logo-height-top)' : 'var(--site-header-logo-height)'
+                }}
+                transition={{
+                  duration: 0.3
+                }}
+                className='w-auto h-[var(--site-header-logo-height-top)]'
+              >
+                <NextLink href={homeNav.href}>
+                  <Icons.LogotypeAlt className='w-auto h-full' />
+                  <span className='sr-only'>{homeNav.title}</span>
                 </NextLink>
-              </div>
+              </motion.div>
               <div className='flex items-center gap-x-spacing-4'>
                 <div className='flex items-center gap-x-spacing-3'>
                   <CallToAction onClick={closeMenu} size='default' to='login' variant='ghost' className='hidden sm:inline-flex' />
                   <CallToAction onClick={closeMenu} size='default' className='hidden sm:inline-flex' />
                 </div>
-                <button className='w-9 h-2.5 relative scale-90 sm:scale-100' onClick={toggleMenu}>
+                <button className='w-11 h-4 relative scale-90 sm:scale-100' onClick={toggleMenu}>
                   <motion.span
                     initial={{
                       top: 0,
                       left: 0
                     }}
                     animate={{
-                      top: isMenuOpen ? 3.8 : 0,
-                      left: isMenuOpen ? 3.6 : 0,
-                      rotate: isMenuOpen ? 45 : 0
+                      top: isMenuOpen ? 6.45 : 0,
+                      left: isMenuOpen ? 4.4 : 0,
+                      rotate: isMenuOpen ? 135 : 0
                     }}
                     transition={{
                       duration: 1,
                       type: 'spring'
                     }}
-                    className='w-4/5 h-0.5 absolute bg-foreground'
+                    className='w-4/5 h-1 absolute bg-secondary'
                   />
                   <motion.span
                     initial={{
@@ -80,15 +76,15 @@ export default function SiteHeader () {
                       right: 0
                     }}
                     animate={{
-                      bottom: isMenuOpen ? 3.8 : 0,
-                      right: isMenuOpen ? 3.6 : 0,
-                      rotate: isMenuOpen ? -45 : 0
+                      bottom: isMenuOpen ? 6.45 : 0,
+                      right: isMenuOpen ? 4.4 : 0,
+                      rotate: isMenuOpen ? -135 : 0
                     }}
                     transition={{
                       duration: 1,
                       type: 'spring'
                     }}
-                    className='w-4/5 h-0.5 absolute bg-foreground'
+                    className='w-4/5 h-1 absolute bg-secondary'
                   />
                   <span className='sr-only'>Toggle menu</span>
                 </button>
@@ -96,7 +92,7 @@ export default function SiteHeader () {
             </div>
           </div>
         </nav>
-      </motion.header>
+      </header>
       <AnimatePresence>
         {isMenuOpen && <Menu action={closeMenu} />}
       </AnimatePresence>

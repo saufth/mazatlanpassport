@@ -1,5 +1,11 @@
 import localFont from 'next/font/local'
 
+export const fontHeader = localFont({
+  src: '../../public/fonts/header.woff2',
+  display: 'swap',
+  variable: '--font-header'
+})
+
 export const fontSans = localFont({
   src: [
     {
