@@ -16,8 +16,9 @@ import {
 import { PageHeader } from '@/components/page-header'
 import { SectionHeader } from '@/components/sections/section-header'
 import { siteConfig } from '@/config/site'
-import { FAQ } from '@/config/organization'
+import { FAQ, howItWorks } from '@/config/organization'
 import { promos, promoTypes } from '@/config/promos'
+import { CallToAction } from '@/components/call-to-action'
 
 export function Lobby () {
   return (
@@ -28,6 +29,37 @@ export function Lobby () {
         to='subscribe'
         toAlt='login'
       />
+      <section className='bg-ring pt-32 -mt-32'>
+        <div className='container py-spacing-9'>
+          <h2 className='max-w-5xl mx-auto f-display-3 font-header text-secondary-foreground text-center text-balance -rotate-6 sm:-rotate-3'>
+            ¡Obten tu membresía hoy mismo y disfruta de <b className='text-primary font-normal'>beneficios exclusivos</b>!
+          </h2>
+          <div className='cols-container mt-spacing-7 justify-center gap-y-spacing-7'>
+            {howItWorks.map((howItWorksItem, howItWorksItemKey) => (
+              <div className='w-6-cols xs:w-4-cols' key={`how-it-works-${howItWorksItemKey}`}>
+                <Image
+                  src={howItWorksItem.image.src}
+                  alt={howItWorksItem.image.alt}
+                  width={howItWorksItem.image.width}
+                  height={howItWorksItem.image.height}
+                  className='px-gutter'
+                />
+                <div className='mt-spacing-2'>
+                  <h3 className='f-heading-3 text-white font-medium text-balance text-center'>
+                    {howItWorksItem.title}
+                  </h3>
+                  <p className='f-subhead-3 text-white mt-spacing-3 text-balance text-center'>
+                    {howItWorksItem.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className='flex justify-center mt-spacing-7'>
+            <CallToAction />
+          </div>
+        </div>
+      </section>
       <section id='promociones-exclusivas'>
         <div className='container pt-spacing-6'>
           <SectionHeader

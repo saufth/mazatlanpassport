@@ -44,7 +44,7 @@
     --spacing-spacing-11: 11.25rem;
     /* Site header */
     --site-header-gutter-y-top: 1rem; /* 16px */
-    --site-header-gutter-y: 0.75rem; /* 12px */
+    --site-header-gutter-y: 1rem; /* 16px */
     --site-header-logo-height-top: 3rem; /* 44px */
     --site-header-logo-height: 2.5rem; /* 36px */
   }
@@ -77,8 +77,8 @@
       /* Site header */
       --site-header-gutter-y-top: 1.5rem; /* 16px */
       --site-header-gutter-y: 0.875rem; /* 14px */
-      --site-header-logo-height-top: 3.5rem; /* 56px */
-      --site-header-logo-height: 2.75rem; /* 44px */
+      --site-header-logo-height-top: 3.75rem; /* 56px */
+      --site-header-logo-height: 3rem; /* 44px */
     }
   }
 

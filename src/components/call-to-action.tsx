@@ -4,7 +4,7 @@ import NextLink from '@/components/ui/next-link'
 import { siteNav } from '@/config/site'
 
 const callToActionRoutes = {
-  subscribe: siteNav.find((navItem) => navItem.href === '/suscribirse')!,
+  subscribe: siteNav.find((navItem) => navItem.href === '/registrarse')!,
   login: siteNav.find((navItem) => navItem.href === '/iniciar-sesion')!
 }
 

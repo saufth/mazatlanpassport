@@ -19,8 +19,8 @@ export const blogNav: MainNavItem[] = [
 
 export const siteNav: MainNavItem[] = [
   {
-    title: 'Comprar membresia',
-    href: '/suscribirse'
+    title: '¡Obten tu membresía!',
+    href: '/registrarse'
   },
   {
     title: 'Iniciar sesión',
