@@ -89,7 +89,7 @@ export const socialNav: NavItem[] = [
 
 export const siteConfig: SiteConfig = {
   name: 'Mazatlán Passport',
-  slogan: '¡Descuentos exclusivos en Mazátlan!',
+  slogan: '¡Descuentos exclusivos en Mazatlán!',
   description: 'Sé socio y accede a descuentos exclusivos en los mejores lugares de Mazatlán',
   url: `https://${domain}`,
   author,

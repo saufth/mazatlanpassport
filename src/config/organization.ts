@@ -1,6 +1,6 @@
 export const howItWorks = [
   {
-    title: 'Hazte socio y obten tu membresía',
+    title: 'Registrate en linea y obten tu membresía',
     description: 'Crea una cuenta y elige el plan que mejor se ajuste a tus necesidades.',
     image: {
       src: '/assets/howitworks-step-1.svg',
@@ -11,7 +11,7 @@ export const howItWorks = [
   },
   {
     title: 'Descubre promociones y lugares increibles',
-    description: 'Explora y descubre promociones exclusivas en los establecimientos participantes.',
+    description: 'Explora y descubre promos exclusivas en los establecimientos participantes.',
     image: {
       src: '/assets/howitworks-step-2.svg',
       alt: 'Segundo paso de cómo funciona Mazatlán Passport',
@@ -20,8 +20,8 @@ export const howItWorks = [
     }
   },
   {
-    title: 'Disfruta de los beneficios exclusivos',
-    description: 'Visita y muestra tu tarjeta digital en algun establecimiento participante y difruta.',
+    title: '¡Disfruta de los beneficios exclusivos!',
+    description: 'Visita algun establecimiento participante, muestra tu tarjeta digital y difruta.',
     image: {
       src: '/assets/howitworks-step-3.svg',
       alt: 'Tercer paso de cómo funciona Mazatlán Passport',

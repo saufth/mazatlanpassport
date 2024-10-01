@@ -1,12 +1,22 @@
+import { cn } from '@/lib/utils'
 import { Header } from '@/types'
 
-export const SectionHeader = ({ title, description } : Header) => {
+interface SectionHeaderProps extends Header {
+  className?: string
+}
+
+export const SectionHeader = ({ title, description, className } : SectionHeaderProps) => {
   return (
-    <div className='flex flex-col gap-y-spacing-3'>
-      <h2 className='text-[0.625rem] sm:text-[0.875rem] xl:text-[0.875rem] uppercase text-ring font-medium text-balance leading-none tracking-wider'>
+    <div
+      className={cn(
+        'flex flex-col gap-y-spacing-3',
+        className
+      )}
+    >
+      <h2 className='f-body-1 uppercase text-ring font-medium text-balance leading-none tracking-wider'>
         {title}
       </h2>
-      <p className='f-heading-2 text-balance'>
+      <p className='f-display-3 font-medium text-balance'>
         {description}
       </p>
     </div>

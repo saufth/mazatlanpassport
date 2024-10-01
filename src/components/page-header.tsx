@@ -49,18 +49,20 @@ export function PageHeader ({
       <div className='absolute inset-0 bg-gradient-to-b from-accent/0 via-accent/0 to-accent/60 [clip-path:polygon(25%_0%,100%_0,100%_95%,0_100%,0_100%,0_0)]' />
       <div className='absolute inset-0 bg-gradient-to-tl from-accent/0 via-accent/0 to-accent/40 [clip-path:polygon(25%_0%,100%_0,100%_95%,0_100%,0_100%,0_0)]' />
       <Image
-        src='/assets/ballon-sunglasses-watermelon-umbrella-palmleaf-beach.svg'
+        src='/assets/ballon-sunglasses-watermelon-umbrella-palmleaf-beach.webp'
         alt=''
         className='w-3/5 xs:w-1/2 md:w-2/5 lg:w-1/3 xl:w-1/3 3xl:w-[28%] my-auto absolute -bottom-[1%] xs:-bottom-[4%] -left-[6%] md:-left-[4%]'
         width={465.25101}
         height={512}
+        priority
       />
       <Image
-        src='/assets/donut-sandals-starfish-palmleaft-beach.svg'
+        src='/assets/donut-sandals-starfish-palmleaft-beach.webp'
         alt=''
         className='w-3/5 xs:w-1/2 md:w-2/5 lg:w-1/3 xl:w-1/3 3xl:w-[28%] my-auto absolute bottom-[3%] -right-[12%] xs:-right-[10%] md:-right-[8%] lg:-right-[6%]'
         width={506.451}
         height={512}
+        priority
       />
     </section>
   )
