@@ -3,23 +3,12 @@ import {
   object as zodObject,
   type infer as zodInfer
 } from 'zod'
-import { createValidationErrorMessages } from '@/lib/utils'
 import { GENRE } from '@/config/app'
-import type { GenreISOSchemaFields, ValidationConfig } from '@/types/validations'
-
-const validationConfig: ValidationConfig<GenreISOSchemaFields> = {
-  genreISO: {
-    name: 'Genero',
-    required: true
-  }
-}
-
-const validationErrorMessages = createValidationErrorMessages(validationConfig)
 
 export const genreISOSchema = zodObject({
-  genreISO: ZodNumber(validationErrorMessages.genreISO.required!)
+  genreISO: ZodNumber({ required_error: 'El Genero es requqrido' })
     .refine((genreISO) => !GENRE.find(genreItem => genreISO === genreItem.iso),
-      validationErrorMessages.genreISO.invalid
+      { message: 'El Genero es ivalido' }
     )
 })
 

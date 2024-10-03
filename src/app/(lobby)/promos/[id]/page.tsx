@@ -26,10 +26,10 @@ export async function generateMetadata ({ params }: PromoPageProps): Promise<Met
 }
 
 export default function PromoPage ({ params }: PromoPageProps) {
-  const promoId = params.id
+  const companyId = params.id
 
-  const promo = promos.find(promoItem => promoItem.id === promoId)!
-  const company = companies.find(companyItem => companyItem.id === promo.companyId)!
+  const promo = promos.find(promoItem => promoItem.companyId === companyId)!
+  const company = companies.find(companyItem => companyItem.id === companyId)!
 
   if (!promo) {
     notFound()

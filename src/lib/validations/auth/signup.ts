@@ -3,33 +3,15 @@ import {
   string as zodString,
   type infer as zodInfer
 } from 'zod'
-import { createValidationErrorMessages } from '@/lib/utils'
 import { fullNameSchema } from '@/lib/validations/full-name'
 import { signinSchema } from '@/lib/validations/auth/signin'
 import { phoneSchema } from '@/lib/validations/phone'
 import { genreISOSchema } from '@/lib/validations/genre-iso'
-import type { SignupSchemaFields, ValidationConfig } from '@/types/validations'
-
-const validationConfig: ValidationConfig<SignupSchemaFields> = {
-  confirmPassword: {
-    name: 'Confirmar contraseña',
-    required: true,
-    limits: { min: 6, max: 32 }
-  }
-}
-
-const validationErrorMessages = createValidationErrorMessages(validationConfig)
 
 export const signupSchema = zodObject({
-  confirmPassword: zodString(validationErrorMessages.confirmPassword.required!)
-    .min(
-      validationConfig.confirmPassword.limits!.min,
-      validationErrorMessages.confirmPassword.limits
-    )
-    .max(
-      validationConfig.confirmPassword.limits!.max,
-      validationErrorMessages.confirmPassword.limits
-    )
+  confirmPassword: zodString({ required_error: 'Confirma tu contraseña' })
+    .min(6, { message: 'La Contraseña debe tener de 6 a 32 caracteres' })
+    .max(32, { message: 'La Contraseña debe tener de 6 a 32 caracteres' })
 })
   .merge(fullNameSchema)
   .merge(signinSchema)
