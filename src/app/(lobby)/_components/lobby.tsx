@@ -6,11 +6,12 @@ import {
   AccordionTrigger
 } from '@/components/ui/accordion'
 import { CallToAction } from '@/components/call-to-action'
+import { CompanyCard } from '@/components/company-card'
 import { PageHeader } from '@/components/page-header'
 import { siteConfig } from '@/config/site'
 import { FAQ, howItWorks } from '@/config/organization'
 import { companies } from '@/config/companies'
-import { CompaniesCarousel } from '@/components/companies-carousel'
+// import { CompaniesCarousel } from '@/components/companies-carousel'
 
 export function Lobby () {
   return (
@@ -60,9 +61,18 @@ export function Lobby () {
           <h2 className='f-display-3 font-semibold text-secondary text-balance'>
             ¡Promociones exclusivas <span className='text-accent'>para viajeros inteligentes!</span>
           </h2>
-          <div className='mt-spacing-4'>
-            <CompaniesCarousel companies={companies} />
+          <div className='cols-container mt-spacing-6 gap-y-gutter relative z-10'>
+            {companies.map((promoItem, key) => {
+              return (
+                <div className='w-6-cols xs:w-3-cols md:w-4-cols lg:w-4-cols' key={key}>
+                  <CompanyCard {...promoItem} />
+                </div>
+              )
+            })}
           </div>
+          {/* <div className='mt-spacing-4'>
+            <CompaniesCarousel companies={companies} />
+          </div> */}
         </div>
         <div className='absolute inset-0 bg-gradient-to-bl from-accent/35 via-transparent to-transparent' />
         <div className='absolute inset-0 bg-gradient-to-t from-accent/35 via-transparent to-transparent' />
