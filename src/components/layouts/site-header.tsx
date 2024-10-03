@@ -1,10 +1,10 @@
 'use client'
-import NextLink from '@/components/ui/next-link'
+import Link from 'next/link'
+import Menu from '@/components/layouts/menu'
 import { useState } from 'react'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion'
 import { CallToAction } from '@/components/call-to-action'
 import { Icons } from '@/components/icons'
-import Menu from '@/components/layouts/menu'
 import { siteConfig } from '@/config/site'
 
 export default function SiteHeader () {
@@ -55,10 +55,10 @@ export default function SiteHeader () {
               }}
               className='w-auto h-[var(--site-header-logo-height-top)]'
             >
-              <NextLink href={homeNav.href}>
+              <Link href={homeNav.href}>
                 <Icons.LogotypeAlt className='w-auto h-full' />
                 <span className='sr-only'>{homeNav.title}</span>
-              </NextLink>
+              </Link>
             </motion.div>
             <div className='flex items-center gap-x-spacing-4'>
               <div className='flex items-center gap-x-spacing-3'>

@@ -1,5 +1,5 @@
+import Link from 'next/link'
 import SocialNav from '@/components/layouts/social-nav'
-import { Link } from '@/components/ui/link'
 import { Icons } from '@/components/icons'
 import { cn } from '@/lib/utils'
 import {
@@ -26,9 +26,11 @@ export default function MainNav ({ action, muted }: MainNavProps) {
               aria-label={`Número de atención a clientes ${contactItem.address.country}`}
               title='Llamar ahora'
               target='_blank'
-              size='lg'
               rel='noreferrer'
-              className={cn('w-fit flex gap-x-2 items-center', muted && 'text-card-foreground')}
+              className={cn(
+                'w-fit f-subhead-2 font-medium flex gap-x-2 items-center hover:underline',
+                muted && 'text-card-foreground'
+              )}
             >
               <Icons.Whatsapp className='w-auto h-6 sm:h-8' />
               <span className='font-normal'>{contactItem.phone.displayNumber}</span>
@@ -39,9 +41,11 @@ export default function MainNav ({ action, muted }: MainNavProps) {
               aria-label='Abre la ubicación del corporativo en Google Maps, se abre en una nueva pestaña o en tu aplicación de mapas predeterminada'
               title='Ver ubicación en Google Maps'
               target='_blank'
-              size='lg'
               rel='noreferrer'
-              className={cn('w-fit text-balance font-normal', muted && 'text-card-foreground')}
+              className={cn(
+                'w-fit f-subhead-2 font-normal text-balance hover:underline',
+                muted && 'text-card-foreground'
+              )}
             >
               {contactItem.address.fullTitle}
             </Link>
@@ -55,8 +59,10 @@ export default function MainNav ({ action, muted }: MainNavProps) {
             title='Enviar correo ahora'
             target='_blank'
             rel='noreferrer'
-            size='lg'
-            className={cn('w-fit font-normal', muted && 'text-card-foreground')}
+            className={cn(
+              'w-fit f-subhead-2 font-normal hover:underline',
+              muted && 'text-card-foreground'
+            )}
           >
             {contactConfig.email}
           </Link>
@@ -81,7 +87,10 @@ export default function MainNav ({ action, muted }: MainNavProps) {
                       onClick={action}
                       aria-label={mainNavItem.title}
                       title={`Ir a página ${mainNavItem.title}`}
-                      className={cn('text-base sm:text-lg text-balance', muted && 'text-card-foreground')}
+                      className={cn(
+                        'text-base sm:text-lg text-balance hover:underline',
+                        muted && 'text-card-foreground'
+                      )}
                     >
                       {mainNavItem.title}
                     </Link>
@@ -103,7 +112,10 @@ export default function MainNav ({ action, muted }: MainNavProps) {
                       onClick={action}
                       aria-label={blogNavItem.title}
                       title={`Ir a articulo ${blogNavItem.title}`}
-                      className={cn('text-base sm:text-lg text-balance', muted && 'text-card-foreground')}
+                      className={cn(
+                        'text-base sm:text-lg text-balance hover:underline',
+                        muted && 'text-card-foreground'
+                      )}
                     >
                       {blogNavItem.title}
                     </Link>

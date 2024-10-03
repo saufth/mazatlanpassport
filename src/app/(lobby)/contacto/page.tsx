@@ -30,7 +30,6 @@ export default function ContactPage () {
                 width={2840}
                 height={2840}
                 sizes='(max-width: 744px) 100vw, (max-width: 1280px) 100vw, (max-width: 1440px) 100vw, 100vw'
-                loading='lazy'
                 className='w-full'
               />
             </div>

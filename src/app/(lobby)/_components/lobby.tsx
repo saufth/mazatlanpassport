@@ -1,23 +1,16 @@
 import Image from 'next/image'
-import NextLink from '@/components/ui/next-link'
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger
 } from '@/components/ui/accordion'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
+import { CallToAction } from '@/components/call-to-action'
 import { PageHeader } from '@/components/page-header'
 import { siteConfig } from '@/config/site'
 import { FAQ, howItWorks } from '@/config/organization'
-import { promos, promoTypes } from '@/config/promos'
-import { CallToAction } from '@/components/call-to-action'
+import { companies } from '@/config/companies'
+import { CompaniesCarousel } from '@/components/companies-carousel'
 
 export function Lobby () {
   return (
@@ -30,7 +23,7 @@ export function Lobby () {
       />
       <section className='bg-gradient-to-b from-ring via-secondary to-ring pt-32 -mt-36'>
         <div className='container py-spacing-9'>
-          <h2 className='max-w-5xl mx-auto f-display-3 font-header text-secondary-foreground text-center text-balance -rotate-6 sm:-rotate-3'>
+          <h2 className='max-w-5xl mx-auto f-display-3 font-header text-white text-center text-balance -rotate-6 sm:-rotate-3'>
             ¡Obten tu membresía hoy mismo y disfruta de <b className='text-primary font-normal'>beneficios exclusivos</b>!
           </h2>
           <div className='cols-container mt-spacing-7 justify-center gap-y-spacing-6'>
@@ -59,59 +52,20 @@ export function Lobby () {
           </div>
         </div>
       </section>
-      <section id='promociones-exclusivas' className='bg-primary'>
-        <div className='container py-spacing-9'>
-          <h2 className='f-display-3 font-semibold text-secondary text-center text-balance'>
+      <section
+        id='promociones-exclusivas'
+        className='bg-primary relative'
+      >
+        <div className='container py-spacing-9 relative z-10'>
+          <h2 className='f-display-3 font-semibold text-secondary text-balance'>
             ¡Promociones exclusivas <span className='text-accent'>para viajeros inteligentes!</span>
           </h2>
-          <div className='cols-container mt-spacing-7 gap-y-gutter relative z-10'>
-            {promos.map((promoItem, key) => {
-              const promoTypeData = promoTypes.find((promoTypeItem) => promoTypeItem.id === promoItem.type)!
-
-              return (
-                <div className='w-6-cols xs:w-3-cols md:w-4-cols lg:w-4-cols' key={key}>
-                  <NextLink href={`/promos/${promoItem.id}`}>
-                    <Card
-                      as='article'
-                      className='relative border-0 shadow-none bg-transparent rounded-2xl overflow-hidden hover:scale-105 transition-transform'
-                    >
-                      <CardContent className='relative z-10 flex flex-col justify-center aspect-video overflow-hidden'>
-                        <Image
-                          src={promoItem.image.src}
-                          alt={promoItem.image.alt}
-                          width={promoItem.image.width}
-                          height={promoItem.image.height}
-                          loading='lazy'
-                          quality={100}
-                          className='object-cover'
-                        />
-                      </CardContent>
-                      <CardHeader className='p-0 py-spacing-4 space-y-0 relative z-10 overflow-hidden bg-secondary/90 backdrop-filter backdrop-blur backdrop-saturate-200'>
-                        <CardTitle className='text-white font-medium'>
-                          {promoItem.name}
-                        </CardTitle>
-                        <CardDescription className='f-body-2 text-white'>
-                          {`${promoTypeData.title} ${promoTypeData.description}`}
-                        </CardDescription>
-                      </CardHeader>
-                      <div className='absolute inset-x-0 bottom-0 aspect-video'>
-                        <Image
-                          src={promoItem.image.src}
-                          alt={promoItem.image.alt}
-                          width={promoItem.image.width}
-                          height={promoItem.image.height}
-                          loading='lazy'
-                          quality={10}
-                          className='relative'
-                        />
-                      </div>
-                    </Card>
-                  </NextLink>
-                </div>
-              )
-            })}
+          <div className='mt-spacing-4'>
+            <CompaniesCarousel companies={companies} />
           </div>
         </div>
+        <div className='absolute inset-0 bg-gradient-to-bl from-accent/35 via-transparent to-transparent' />
+        <div className='absolute inset-0 bg-gradient-to-t from-accent/35 via-transparent to-transparent' />
       </section>
       <section id='preguntas-frecuentes' className='bg-secondary'>
         <div className='container py-spacing-9'>

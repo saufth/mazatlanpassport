@@ -27,39 +27,39 @@ export const Icons = {
           >
             <stop
               offset='0'
-              stop-color='#feeb1a'
+              stopColor='#feeb1a'
             />
             <stop
               offset='.26'
-              stop-color='#fde81a'
+              stopColor='#fde81a'
             />
             <stop
               offset='.42'
-              stop-color='#fce01a'
+              stopColor='#fce01a'
             />
             <stop
               offset='.55'
-              stop-color='#fad11b'
+              stopColor='#fad11b'
             />
             <stop
               offset='.66'
-              stop-color='#f7bd1d'
+              stopColor='#f7bd1d'
             />
             <stop
               offset='.77'
-              stop-color='#f3a31e'
+              stopColor='#f3a31e'
             />
             <stop
               offset='.87'
-              stop-color='#ee8321'
+              stopColor='#ee8321'
             />
             <stop
               offset='.96'
-              stop-color='#e85d23'
+              stopColor='#e85d23'
             />
             <stop
               offset='1'
-              stop-color='#e54825'
+              stopColor='#e54825'
             />
           </linearGradient>
           <linearGradient
@@ -312,39 +312,39 @@ export const Icons = {
           >
             <stop
               offset='0'
-              stop-color='#feeb1a'
+              stopColor='#feeb1a'
             />
             <stop
               offset='.26'
-              stop-color='#fde81a'
+              stopColor='#fde81a'
             />
             <stop
               offset='.42'
-              stop-color='#fce01a'
+              stopColor='#fce01a'
             />
             <stop
               offset='.55'
-              stop-color='#fad11b'
+              stopColor='#fad11b'
             />
             <stop
               offset='.66'
-              stop-color='#f7bd1d'
+              stopColor='#f7bd1d'
             />
             <stop
               offset='.77'
-              stop-color='#f3a31e'
+              stopColor='#f3a31e'
             />
             <stop
               offset='.87'
-              stop-color='#ee8321'
+              stopColor='#ee8321'
             />
             <stop
               offset='.96'
-              stop-color='#e85d23'
+              stopColor='#e85d23'
             />
             <stop
               offset='1'
-              stop-color='#e54825'
+              stopColor='#e54825'
             />
           </linearGradient>
           <linearGradient

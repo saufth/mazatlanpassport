@@ -27,7 +27,6 @@ export default function Blog2Page () {
             width={article.image.width}
             height={article.image.height}
             sizes='(max-width: 744px) 100vw, (max-width: 1280px) 100vw, (max-width: 1440px) 100vw, 100vw'
-            loading='lazy'
           />
         </div>
       </section>
@@ -40,7 +39,6 @@ export default function Blog2Page () {
               width={article.image.width}
               height={article.image.height}
               sizes='(max-width: 744px) 100vw, (max-width: 1280px) 100vw, (max-width: 1440px) 100vw, 100vw'
-              loading='lazy'
               className='md:w-md lg:w-xl xl:w-2xl h-auto'
             />
           </div>

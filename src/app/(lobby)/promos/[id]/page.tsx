@@ -1,8 +1,9 @@
 import { type Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
-import { promos, promoTypes } from '@/config/promos'
+import { promos } from '@/config/promos'
 import { domain } from '@/config/site'
+import { companies } from '@/config/companies'
 
 interface PromoPageProps {
   params: {
@@ -28,7 +29,7 @@ export default function PromoPage ({ params }: PromoPageProps) {
   const promoId = params.id
 
   const promo = promos.find(promoItem => promoItem.id === promoId)!
-  const promoType = promoTypes.find(promoTypeItem => promoTypeItem.id === promo.type)!
+  const company = companies.find(companyItem => companyItem.id === promo.companyId)!
 
   if (!promo) {
     notFound()
@@ -41,7 +42,7 @@ export default function PromoPage ({ params }: PromoPageProps) {
           <div className='h-52 md:h-64 xl:h-72 overflow-hidden rounded-2xl mt-spacing-1'>
             <div className='w-[130%] sm:w-full -ml-[15%] sm:ml-0'>
               <Image
-                src={promo.image.src}
+                src={promo.image}
                 alt={promo.name}
                 width={1920}
                 height={1080}
@@ -62,9 +63,10 @@ export default function PromoPage ({ params }: PromoPageProps) {
         <div>{promo.id}</div>
         <div>{promo.name}</div>
         <div>{promo.description}</div>
-        <div>{promo.image.src}</div>
-        <div>{promoType.title}</div>
-        <div>{promoType.description}</div>
+        <div>{promo.image}</div>
+        <div>{company.id}</div>
+        <div>{company.name}</div>
+        <div>{company.description}</div>
       </section>
     </>
   )

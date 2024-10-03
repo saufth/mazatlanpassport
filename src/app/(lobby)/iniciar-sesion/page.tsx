@@ -24,7 +24,6 @@ export default function SigninPage () {
               width={1920}
               height={1080}
               sizes='(max-width: 744px) 100vw, (max-width: 1280px) 100vw, (max-width: 1440px) 100vw, 100vw'
-              loading='lazy'
               className='w-full'
             />
           </div>

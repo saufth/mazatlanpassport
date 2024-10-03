@@ -1,4 +1,4 @@
-import NextLink from '@/components/ui/next-link'
+import Link from 'next/link'
 import { ArrowRightIcon } from '@radix-ui/react-icons'
 import { Icons } from '@/components/icons'
 import { capitalize, cn } from '@/lib/utils'
@@ -48,7 +48,7 @@ const SocialNav = ({ items, action, muted }: SocialNavProps) => {
 
         return (
           <li key={key}>
-            <NextLink
+            <Link
               href={socialItem.href}
               onClick={action}
               aria-label={`${socialTitle} - ${siteConfig.name}`}
@@ -59,7 +59,7 @@ const SocialNav = ({ items, action, muted }: SocialNavProps) => {
                 ? <socialIcon.Icon muted />
                 : <ArrowRightIcon className={cn('w-7 h-7', muted && 'text-card-foreground')} />}
               <span className='sr-only'>{socialTitle}</span>
-            </NextLink>
+            </Link>
           </li>
         )
       })}

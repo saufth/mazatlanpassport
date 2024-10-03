@@ -1,6 +1,6 @@
+import Link from 'next/link'
 import { type ComponentProps } from 'react'
 import { Button, type ButtonVariantProps } from '@/components/ui/button'
-import NextLink from '@/components/ui/next-link'
 import { siteNav } from '@/config/site'
 
 const callToActionRoutes = {
@@ -11,7 +11,7 @@ const callToActionRoutes = {
 export type CallToActionRoutes = keyof typeof callToActionRoutes
 
 export interface CallToActionProps
-  extends Pick<ComponentProps<typeof NextLink>, 'children' | 'className' | 'onClick'>,
+  extends Pick<ComponentProps<typeof Link>, 'children' | 'className' | 'onClick'>,
     ButtonVariantProps {
   to?: CallToActionRoutes
 }
@@ -33,13 +33,13 @@ export const CallToAction = (
       variant={variant}
       className={className}
     >
-      <NextLink
+      <Link
         href={callToActionRoutes[to].href}
         onClick={onClick}
         className='uppercase'
       >
         {children || callToActionRoutes[to]?.title}
-      </NextLink>
+      </Link>
     </Button>
   )
 }

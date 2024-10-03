@@ -1,4 +1,4 @@
-import NextLink from '@/components/ui/next-link'
+import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import type { Author } from '@/types'
 
@@ -10,7 +10,7 @@ export const LinkAuthor = ({ name, description, url, className }: LinkAuthorProp
   const href = typeof url === 'string' ? url : url.href
 
   return (
-    <NextLink
+    <Link
       href={href}
       target='_blank'
       title={description}
@@ -20,6 +20,6 @@ export const LinkAuthor = ({ name, description, url, className }: LinkAuthorProp
       <b>
         {name}
       </b>
-    </NextLink>
+    </Link>
   )
 }

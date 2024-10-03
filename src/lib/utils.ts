@@ -5,7 +5,6 @@ import type {
   DocumentElementWithFullscreen,
   DocumentWithFullscreen
 } from '@/types'
-import { ValidationConfig, ValidationErrorMessagesConfig, ValidationSchemaFields } from '@/types/validations'
 
 export function cn (...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -77,34 +76,6 @@ export function formatPrice (
 
 export function convertToSubcurrency (amount: number, factor: number = 100) {
   return Math.round(amount * factor)
-}
-
-export function createValidationErrorMessages<T extends ValidationSchemaFields> (
-  validationConfig: ValidationConfig<T>
-) {
-  const validationErrorMessages: ValidationErrorMessagesConfig = {}
-  const validationConfigKeys = Object.keys(validationConfig) as T[]
-
-  for (let index = 0; index < validationConfigKeys.length; index++) {
-    const validationConfigItem = validationConfig[validationConfigKeys[index]]
-    const fildNameMessage = `El campo de ${validationConfigItem}`
-
-    validationErrorMessages[validationConfigKeys[index]] = {
-      invalid: validationConfigItem.invalid
-        ? { message: `${fildNameMessage} es invalido.` }
-        : undefined,
-      limits: validationConfigItem.limits && {
-        message: validationConfigItem.limits.min === validationConfigItem.limits.max
-          ? `${fildNameMessage} debe tener ${validationConfigItem.limits.min} caracteres.`
-          : `${fildNameMessage} debe tener de ${validationConfigItem.limits.min} a ${validationConfigItem.limits.max} caracteres.`
-      },
-      required: validationConfigItem.required
-        ? { required_error: `${fildNameMessage} es obligatorio` }
-        : undefined
-    }
-  }
-
-  return validationErrorMessages
 }
 
 export function requestFullScreen (element: DocumentElementWithFullscreen) {

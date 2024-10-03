@@ -12,19 +12,19 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-accent text-accent-foreground border-secondary',
+        default: 'bg-accent text-accent-foreground',
         destructive: 'bg-destructive/95 text-destructive-foreground',
         outline: 'border border-primary text-primary text-primary',
         secondary: 'bg-secondary/90 text-secondary-foreground',
-        ghost: 'text-secondary bg-white border-secondary',
-        link: 'hover:underline'
+        ghost: 'text-secondary bg-white',
+        link: 'hover:underline hover:scale-100'
       },
       size: {
-        default: 'h-9 lg:h-10 px-4 lg:px-5 text-sm lg:text-base tracking-wide font-medium border-2',
-        xs: 'text-xs lg:text-sm border',
-        sm: 'px-1 text-sm lg:text-base border',
-        lg: 'w-fit h-11 sm:h-12 xl:h-14 px-6 sm:px-8 text-lg sm:text-lg xl:text-xl font-medium border-4',
-        full: 'w-full sm:w-fit h-11 sm:h-12 xl:h-14 px-6 sm:px-8 text-lg sm:text-lg xl:text-xl font-medium border-4',
+        default: 'h-9 lg:h-10 px-4 lg:px-5 text-sm lg:text-base tracking-wide font-medium',
+        xs: 'text-xs lg:text-sm',
+        sm: 'px-1 text-sm lg:text-base',
+        lg: 'w-fit h-11 sm:h-12 xl:h-14 px-6 sm:px-8 text-lg sm:text-lg xl:text-xl font-medium',
+        full: 'w-full sm:w-fit h-11 sm:h-12 xl:h-14 px-6 sm:px-8 text-lg sm:text-lg xl:text-xl font-medium',
         icon: 'h-7 lg:h-[33px] w-7 lg:w-[33px]'
       }
     },

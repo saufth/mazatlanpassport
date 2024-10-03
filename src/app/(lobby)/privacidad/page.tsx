@@ -1,5 +1,5 @@
+import Link from 'next/link'
 import { type Metadata } from 'next'
-import { Link } from '@/components/ui/link'
 import { siteConfig, contactConfig } from '@/config/site'
 
 export const metadata: Metadata = {
@@ -150,8 +150,8 @@ export default function PrivacyPage () {
                 Las preguntas sobre esta Política de privacidad y las solicitudes de acceso deben dirigirse a:
               </p>
               <p>
-                <b>{siteConfig.name}</b>, <Link href={contactConfig.address.url}>{contactConfig.address.fullTitle}</Link> O
-                al correo: <Link href={`mailto:${contactConfig.email}`}>{contactConfig.email}</Link>
+                <b>{siteConfig.name}</b>, <Link href={contactConfig.address.url} className='hover:underline'>{contactConfig.address.fullTitle}</Link> O
+                al correo: <Link href={`mailto:${contactConfig.email}`} className='hover:underline'>{contactConfig.email}</Link>
               </p>
               <p>
                 <b>{siteConfig.name}</b> se compromete a trabajar con las personas para obtener una
