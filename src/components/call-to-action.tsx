@@ -36,7 +36,6 @@ export const CallToAction = (
       <Link
         href={callToActionRoutes[to].href}
         onClick={onClick}
-        className='uppercase'
       >
         {children || callToActionRoutes[to]?.title}
       </Link>

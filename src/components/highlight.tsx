@@ -35,11 +35,11 @@ export function Highlight ({
                   return highlightItemKey >= index && highlightItemKey <= indexEndFixed && (
                     <span key={highlightItemKey}>
                       {spaceHandler}
-                      <span className='inline-block relative z-10 text-white px-1'>
+                      <span className='inline-block relative z-10 text-white px-2'>
                         {highlightItem}
                         <span
                           className={cn(
-                            'w-full h-[95%] bg-accent absolute inset-y-0 left-px -z-10 -rotate-1',
+                            'w-full h-[95%] bg-accent rounded-lg absolute inset-y-0 left-px -z-10 -rotate-1',
                             className
                           )}
                         />

@@ -4,19 +4,15 @@
  */
 export const GENRE = [
   {
-    iso: 0,
-    title: 'Desconocido'
-  },
-  {
-    iso: 1,
+    iso: '1',
     title: 'Hombre'
   },
   {
-    iso: 2,
+    iso: '2',
     title: 'Mujer'
   },
   {
-    iso: 9,
+    iso: '9',
     title: 'No applicable'
   }
 ] as const

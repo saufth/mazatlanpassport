@@ -60,12 +60,17 @@ export function createWhatsappUrl (phoneNumber: string, message?: string) {
   return `https://wa.me/${phoneNumber}${message ? `?text=${message.replaceAll(' ', '+')}` : ''}`
 }
 
-export function formatPrice (
-  price: number | string,
-  currency: 'usd' | 'eur' | 'mxn' = 'mxn',
-  notation: 'compact' | 'engineering' | 'scientific' | 'standard' = 'standard',
+export function formatPrice ({
+  price,
+  currency = 'mxn',
+  notation = 'standard',
   minimumFractionDigits = 0
-) {
+} : {
+  price: number | string,
+  currency?: 'usd' | 'eur' | 'mxn',
+  notation?: 'compact' | 'engineering' | 'scientific' | 'standard',
+  minimumFractionDigits?: number
+}) {
   return new Intl.NumberFormat('es-MX', {
     style: 'currency',
     currency,

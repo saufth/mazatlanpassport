@@ -33,6 +33,7 @@ const config: Config = {
       },
       spacing: {
         gutter: 'var(--inner-gutter)',
+        'outer-gutter': 'var(--outer-gutter)',
         'spacing-1': 'var(--spacing-spacing-1)',
         'spacing-2': 'var(--spacing-spacing-2)',
         'spacing-3': 'var(--spacing-spacing-3)',

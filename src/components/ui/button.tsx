@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
   cn(
-    'inline-flex rounded-full items-center justify-center items-center ring-0 ring-transparent',
+    'inline-flex rounded-lg items-center justify-center items-center ring-0 ring-transparent',
     'hover:scale-105 transition-all duration-300 disabled:pointer-events-none disabled:opacity-50',
     'focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent'
   ),
@@ -15,16 +15,16 @@ const buttonVariants = cva(
         default: 'bg-accent text-accent-foreground',
         destructive: 'bg-destructive/95 text-destructive-foreground',
         outline: 'border border-primary text-primary text-primary',
-        secondary: 'bg-secondary/90 text-secondary-foreground',
+        secondary: 'bg-secondary text-white',
         ghost: 'text-secondary bg-white',
         link: 'hover:underline hover:scale-100'
       },
       size: {
-        default: 'h-9 lg:h-10 px-4 lg:px-5 text-sm lg:text-base tracking-wide font-medium',
+        default: 'py-spacing-1 px-spacing-3 f-body-1 leading-none font-bold',
         xs: 'text-xs lg:text-sm',
         sm: 'px-1 text-sm lg:text-base',
-        lg: 'w-fit h-11 sm:h-12 xl:h-14 px-6 sm:px-8 text-lg sm:text-lg xl:text-xl font-medium',
-        full: 'w-full sm:w-fit h-11 sm:h-12 xl:h-14 px-6 sm:px-8 text-lg sm:text-lg xl:text-xl font-medium',
+        lg: 'w-fit px-spacing-4 py-spacing-3 f-subhead-3 font-bold',
+        full: 'w-full sm:w-fit px-spacing-4 py-spacing-3 f-subhead-3 font-bold',
         icon: 'h-7 lg:h-[33px] w-7 lg:w-[33px]'
       }
     },

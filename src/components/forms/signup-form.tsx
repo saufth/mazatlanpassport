@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useTransition } from 'react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -13,6 +13,14 @@ import {
 import { toast } from 'sonner'
 import { Icons } from '@/components/icons'
 import { ArrowTopRightIcon } from '@radix-ui/react-icons'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
 // import {
 //   PaymentElement as StripePaymentElement,
 //   Elements as StripeElments
@@ -24,11 +32,14 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 // import { convertToSubcurrency } from '@/lib/utils'
 import { type SignupInputs, signupSchema } from '@/lib/validations/auth/signup'
-import type { Amount } from '@/types'
+import { GENRE } from '@/config/app'
+import { signup } from '@/lib/actions/auth'
+import { getErrorMessage } from '@/lib/handle-error'
+// import type { Amount } from '@/types'
 
-if (process.env.NEXT_PUBLIC_STRIPE_PK === undefined) {
-  throw new Error('NEXT_PUBLIC_STRIPE_PK is not defined')
-}
+// if (process.env.NEXT_PUBLIC_STRIPE_PK === undefined) {
+//   throw new Error('NEXT_PUBLIC_STRIPE_PK is not defined')
+// }
 
 // const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK)
 
@@ -45,7 +56,7 @@ if (process.env.NEXT_PUBLIC_STRIPE_PK === undefined) {
 //   }
 // ]
 
-export default function SignupForm ({ amount }: Amount) {
+export default function SignupForm () {
   // const stripe = useStripe()
   // const stripeElements = useElements()
 
@@ -53,7 +64,7 @@ export default function SignupForm ({ amount }: Amount) {
   // const [clientSecret, setClientSecret] = useState<string>('')
   // const [loading, setLoading] = useState<boolean>(false)
 
-  const [isPending, startTransition] = useTransition()
+  const [loading, setLoading] = useState(false)
 
   // useEffect(() => {
   //   fetch('/api/create-payment-intent', {
@@ -75,48 +86,35 @@ export default function SignupForm ({ amount }: Amount) {
       email: '',
       password: '',
       confirmPassword: '',
-      phone: '',
-      genreISO: 0
+      genreISO: ''
     }
   })
 
-  const formRef = useRef<HTMLFormElement>(null)
+  const onSubmit = (inputs: SignupInputs) => {
+    setLoading(true)
 
-  const onSubmit = async (data: SignupInputs) => {
-    startTransition(async () => {
-      const response = await fetch('/api/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
+    toast.promise(
+      signup(inputs),
+      {
+        loading: 'Registrando...',
+        success: () => {
+          form.reset()
+          setLoading(false)
+          return '¡Registro exitoso!'
         },
-        body: JSON.stringify(data)
-      })
-
-      if (!response.ok) {
-        switch (response.status) {
-          case 422:
-            toast.error('Entrada invalida.')
-            break
-          case 500:
-            toast.error('Algo salió mal. Inténtalo de nuevo más tarde.')
-            break
-          default:
-            toast.error('Algo salió mal. Inténtalo de nuevo más tarde.')
+        error: (err) => {
+          setLoading(false)
+          return getErrorMessage(err)
         }
-        return
       }
-
-      form.reset()
-    })
+    )
   }
 
   return (
     <Form {...form}>
       <form
         className='space-y-4'
-        // eslint-disable-next-line no-void
-        onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
-        ref={formRef}
+        onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
           control={form.control}
@@ -168,6 +166,41 @@ export default function SignupForm ({ amount }: Amount) {
         />
         <FormField
           control={form.control}
+          name='genreISO'
+          render={({ field }) => (
+            <FormItem className='w-full'>
+              <FormLabel>Genero</FormLabel>
+              <Select onValueChange={((value: typeof field.value) => field.onChange(value))}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue
+                      placeholder='Elige tu genero'
+                      className='text-muted-foreground'
+                    />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectGroup>
+                    {GENRE.map(
+                      (genderItem) => (
+                        <SelectItem
+                          key={genderItem.title}
+                          value={genderItem.iso}
+                          className='rounded-lg hover:cursor-pointer group-hover:bg-secondary'
+                        >
+                          {genderItem.title}
+                        </SelectItem>
+                      )
+                    )}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name='password'
           render={({ field }) => (
             <FormItem>
@@ -191,7 +224,7 @@ export default function SignupForm ({ amount }: Amount) {
               <FormLabel>Confirmar contraseña</FormLabel>
               <FormControl>
                 <Input
-                  type='confirmPassword'
+                  type='password'
                   placeholder='••••••••••••'
                   {...field}
                 />
@@ -233,9 +266,9 @@ export default function SignupForm ({ amount }: Amount) {
           <Button
             className='[&>*]:text-accent-foreground lg:w-full'
             size='full'
-            disabled={isPending}
+            disabled={loading}
           >
-            {isPending
+            {loading
               ? (
                 <span className='flex items-center gap-x-2'>
                   Procesando.. <Icons.Spinner className='h-3 w-3' aria-hidden='true' />

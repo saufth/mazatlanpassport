@@ -22,19 +22,19 @@ export function PageHeader ({
   return (
     <section
       className={cn(
-        'bg-primary relative z-10 pt-spacing-7 pb-spacing-9 -mt-header-h overflow-hidden [clip-path:polygon(25%_0%,100%_0,100%_95%,0_100%,0_100%,0_0)]',
+        'bg-primary relative z-10 pt-spacing-7 pb-spacing-9 remove-site-header-spacing overflow-hidden [clip-path:polygon(25%_0%,100%_0,100%_95%,0_100%,0_100%,0_0)]',
         className
       )}
     >
-      <div className='container relative z-10 py-spacing-8'>
+      <div className='container relative z-10 pt-spacing-8 pb-spacing-9'>
         <div className='text-center'>
-          <h1 className='f-display-1 text-secondary font-bold text-balance'>
+          <h1 className='f-display-1 text-secondary font-black text-balance'>
             <Highlight index={3}>
               {title}
             </Highlight>
           </h1>
           {description && (
-            <p className='f-subhead-2 text-secondary font-medium text-balance mt-spacing-2 pt-spacing-4'>
+            <p className='f-subhead-1 text-secondary font-medium text-balance mt-spacing-4'>
               {description}
             </p>
           )}
@@ -46,8 +46,8 @@ export function PageHeader ({
           </div>
         )}
       </div>
-      <div className='absolute inset-0 bg-gradient-to-b from-accent/0 via-accent/0 to-accent/70 [clip-path:polygon(25%_0%,100%_0,100%_95%,0_100%,0_100%,0_0)]' />
-      <div className='absolute inset-0 bg-gradient-to-tl from-accent/0 via-accent/0 to-accent/50 [clip-path:polygon(25%_0%,100%_0,100%_95%,0_100%,0_100%,0_0)]' />
+      <div className='absolute inset-0 bg-gradient-to-t from-accent/95 via-accent/0 to-accent/0 [clip-path:polygon(25%_0%,100%_0,100%_95%,0_100%,0_100%,0_0)]' />
+      <div className='absolute inset-0 bg-gradient-to-tl from-accent/0 via-accent/0 to-accent/40 [clip-path:polygon(25%_0%,100%_0,100%_95%,0_100%,0_100%,0_0)]' />
       <Image
         src='/assets/ballon-sunglasses-watermelon-umbrella-palmleaf-beach.webp'
         alt=''
