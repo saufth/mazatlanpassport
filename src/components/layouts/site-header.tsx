@@ -32,7 +32,7 @@ export default function SiteHeader () {
           className='container-lg h-full flex justify-between items-center relative z-10'
           aria-label={`${siteConfig.name} directory`}
         >
-            <div className='w-auto h-10 md:h-11 lg:h-12 xl:h-[52px]'>
+          <div className='w-auto h-10 md:h-11 lg:h-12 xl:h-[52px]'>
             <Link href={homeNav.href}>
               <Icons.LogotypeAlt className='w-auto h-full' />
               <span className='sr-only'>{homeNav.title}</span>
