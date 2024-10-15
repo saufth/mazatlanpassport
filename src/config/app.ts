@@ -13,7 +13,7 @@ export const GENRE = [
   },
   {
     iso: '9',
-    title: 'No applicable'
+    title: 'No binario'
   }
 ] as const
 

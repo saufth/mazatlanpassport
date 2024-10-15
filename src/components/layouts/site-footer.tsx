@@ -17,13 +17,13 @@ export default function SiteFooter () {
           </div>
           <div className='flex flex-col md:flex-row gap-4 order-1 md:order-2 sm:pt-2'>
             <Link
-              href='/terminos-y-condiciones'
+              href='/terms'
               className='f-body-1 font-semibold text-secondary-foreground hover:text-white transition-colors'
             >
               Términos y condiciones
             </Link>
             <Link
-              href='/privacidad'
+              href='/privacy'
               className='f-body-1 font-semibold text-secondary-foreground hover:text-white transition-colors'
             >
               Política de privacidad

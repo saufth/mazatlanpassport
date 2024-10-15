@@ -39,7 +39,7 @@ export function Highlight ({
                         {highlightItem}
                         <span
                           className={cn(
-                            'w-full h-[95%] bg-accent rounded-lg absolute inset-y-0 left-px -z-10 -rotate-1',
+                            'w-full h-[95%] bg-accent rounded-3xl absolute inset-y-0 left-px -z-10 -rotate-1',
                             className
                           )}
                         />

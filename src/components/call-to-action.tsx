@@ -4,8 +4,8 @@ import { Button, type ButtonVariantProps } from '@/components/ui/button'
 import { siteNav } from '@/config/site'
 
 const callToActionRoutes = {
-  subscribe: siteNav.find((navItem) => navItem.href === '/registrarse')!,
-  login: siteNav.find((navItem) => navItem.href === '/iniciar-sesion')!
+  subscribe: siteNav.find((navItem) => navItem.href === '/signup')!,
+  login: siteNav.find((navItem) => navItem.href === '/signin')!
 }
 
 export type CallToActionRoutes = keyof typeof callToActionRoutes

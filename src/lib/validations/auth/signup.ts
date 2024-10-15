@@ -1,23 +1,49 @@
 import {
+  boolean as zodBoolean,
   object as zodObject,
   string as zodString,
+  ZodIssueCode,
   type infer as zodInfer
 } from 'zod'
 import { fullNameSchema } from '@/lib/validations/full-name'
-import { signinSchema } from '@/lib/validations/auth/signin'
+import { emailSchema } from '@/lib/validations/email'
 import { genreISOSchema } from '@/lib/validations/genre-iso'
+import { passwordWithConfirmSchema } from '@/lib/validations/password'
+import { calculateYears } from '@/lib/utils'
 
 export const signupSchema = zodObject({
-  confirmPassword: zodString({ required_error: 'Confirma tu contraseña' })
-    .min(6, { message: 'La Contraseña debe tener de 6 a 32 caracteres' })
-    .max(32, { message: 'La Contraseña debe tener de 6 a 32 caracteres' })
+  terms: zodBoolean().refine((terms) => terms, {
+    message: 'Acepta los términos de servicio y privacidad'
+  }),
+  age: zodString({ required_error: 'Ingresa tu fecha de nacimiento' })
 })
   .merge(fullNameSchema)
-  .merge(signinSchema)
+  .merge(emailSchema)
   .merge(genreISOSchema)
-  .refine(({ confirmPassword, password }) => confirmPassword === password, {
-    message: 'Las contraseñas no coinciden',
-    path: ['confirmPassword']
+  .merge(passwordWithConfirmSchema)
+  .superRefine((val, ctx) => {
+    if (val.confirmPassword !== val.password) {
+      ctx.addIssue({
+        code: ZodIssueCode.custom,
+        message: 'Las contraseñas no coinciden',
+        path: ['confirmPassword']
+      })
+    }
+
+    const yearsDifference = calculateYears(new Date(val.age), new Date())
+    if (yearsDifference < 16) {
+      ctx.addIssue({
+        code: ZodIssueCode.custom,
+        message: 'Debes ser mayor de 16 para registrarte',
+        path: ['age']
+      })
+    } else if (yearsDifference > 100) {
+      ctx.addIssue({
+        code: ZodIssueCode.custom,
+        message: 'Ingresa una edad validad',
+        path: ['age']
+      })
+    }
   })
 
 export type SignupInputs = zodInfer<typeof signupSchema>

@@ -22,11 +22,11 @@ export function PageHeader ({
   return (
     <section
       className={cn(
-        'bg-primary relative z-10 pt-spacing-7 pb-spacing-9 remove-site-header-spacing overflow-hidden [clip-path:polygon(25%_0%,100%_0,100%_95%,0_100%,0_100%,0_0)]',
+        'bg-primary relative z-10 pt-spacing-7 pb-spacing-8 remove-site-header-spacing overflow-hidden [clip-path:polygon(25%_0%,100%_0,100%_95%,0_100%,0_100%,0_0)]',
         className
       )}
     >
-      <div className='container relative z-10 pt-spacing-8 pb-spacing-9'>
+      <div className='container relative z-10 pt-spacing-7 pb-spacing-8'>
         <div className='text-center'>
           <h1 className='f-display-1 text-secondary font-black text-balance'>
             <Highlight index={3}>

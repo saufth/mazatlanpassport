@@ -161,7 +161,7 @@
   /* Typography */
 
   .f-display-1 {
-    @apply text-[3.375rem] sm:text-[4.5rem] xl:text-[6rem] leading-[1.2];
+    @apply text-[3.125rem] sm:text-[4.5rem] xl:text-[6rem] leading-[1.2];
   }
 
   .f-display-2 {

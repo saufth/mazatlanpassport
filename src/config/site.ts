@@ -20,11 +20,11 @@ export const blogNav: MainNavItem[] = [
 export const siteNav: MainNavItem[] = [
   {
     title: '¡Obten tu membresía!',
-    href: '/registrarse'
+    href: '/signup'
   },
   {
     title: 'Iniciar sesión',
-    href: '/iniciar-sesion'
+    href: '/signin'
   },
   {
     title: 'Promociones exclusivas',
@@ -47,7 +47,7 @@ export const siteNav: MainNavItem[] = [
 export const domain = 'https://mazatlanpassport.mx'
 
 const country = COUNTRIES.find((countryItem) => countryItem.alpha2 === 'MX')!
-const phone = `${country.dialCode}6692393939`
+const phone = '526692393939'
 const address = 'Mazatlán, Sinaloa.'
 export const contactConfig = {
   email: 'mazatlanpassport@gmail.com',

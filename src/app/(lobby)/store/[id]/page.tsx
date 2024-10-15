@@ -52,7 +52,7 @@ export default function StorePage ({ params }: StorePageProps) {
           </div>
           <div className='mt-spacing-3'>
             <div className='max-w-5xl'>
-              <h1 className='f-heading-3 text-secondary font-bold'>
+              <h1 className='f-heading-3 text-secondary font-semibold'>
                 {store.name}
               </h1>
               <p className='f-body-1 text-secondary font-medium'>

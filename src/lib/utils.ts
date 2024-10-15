@@ -26,17 +26,31 @@ export function toTitleCase (title: string) {
   return title.replace(/\w\S*/g, (word) => `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`)
 }
 
-export const capitalize = (text: string): string => (
-  `${text.charAt(0).toUpperCase()}${text.slice(1).toLowerCase()}`
-)
+export function capitalize (text: string) {
+  return `${text.charAt(0).toUpperCase()}${text.slice(1).toLowerCase()}`
+}
 
-export function calculateYears (dateA: Date, dateB: Date) {
+export function randomNumber (min: number, max: number) {
+  return Math.floor(Math.random() * (min - max + 1)) + max
+}
+
+export function createVerifyCode () {
+  return randomNumber(100000, 999999)
+}
+
+export function calculateYears (dateA: Date, dateB?: Date) {
+  dateB = dateB || new Date()
   let years = new Date(dateB).getFullYear() - new Date(dateA).getFullYear()
   let month = new Date(dateB).getMonth() - new Date(dateA).getMonth()
-  const dateDiff = new Date(dateB).getDay() - new Date(dateA).getDay()
-  if (dateDiff < 0) month -= 1
+  const dateDifference = new Date(dateB).getDay() - new Date(dateA).getDay()
+  if (dateDifference < 0) month -= 1
   if (month < 0) years -= 1
   return years
+}
+
+export function calculateMinutes (dateA: Date, dateB?: Date) {
+  dateB = dateB || new Date()
+  return (dateB.getTime() - dateA.getTime()) / 60000
 }
 
 export function formatPhoneNumber (phoneNumber: string | number) {

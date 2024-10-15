@@ -1,6 +1,10 @@
 'use client'
-import { useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useState, useTransition } from 'react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import {
   Form,
@@ -10,9 +14,6 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form'
-import { toast } from 'sonner'
-import { Icons } from '@/components/icons'
-import { ArrowTopRightIcon } from '@radix-ui/react-icons'
 import {
   Select,
   SelectContent,
@@ -21,6 +22,13 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
+import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { signup } from '@/lib/actions/auth'
+import { type SignupInputs, signupSchema } from '@/lib/validations/auth/signup'
+import { GENRE } from '@/config/app'
+// import { convertToSubcurrency } from '@/lib/utils'
 // import {
 //   PaymentElement as StripePaymentElement,
 //   Elements as StripeElments
@@ -28,13 +36,6 @@ import {
 //   // useStripe
 // } from '@stripe/react-stripe-js'
 // import { loadStripe } from '@stripe/stripe-js'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-// import { convertToSubcurrency } from '@/lib/utils'
-import { type SignupInputs, signupSchema } from '@/lib/validations/auth/signup'
-import { GENRE } from '@/config/app'
-import { signup } from '@/lib/actions/auth'
-import { getErrorMessage } from '@/lib/handle-error'
 // import type { Amount } from '@/types'
 
 // if (process.env.NEXT_PUBLIC_STRIPE_PK === undefined) {
@@ -57,14 +58,16 @@ import { getErrorMessage } from '@/lib/handle-error'
 // ]
 
 export default function SignupForm () {
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const router = useRouter()
+  const [isTransition, startTransition] = useTransition()
   // const stripe = useStripe()
   // const stripeElements = useElements()
 
   // const [errorMessage, setErrorMessage] = useState<string>()
   // const [clientSecret, setClientSecret] = useState<string>('')
   // const [loading, setLoading] = useState<boolean>(false)
-
-  const [loading, setLoading] = useState(false)
 
   // useEffect(() => {
   //   fetch('/api/create-payment-intent', {
@@ -86,34 +89,32 @@ export default function SignupForm () {
       email: '',
       password: '',
       confirmPassword: '',
-      genreISO: ''
+      genreISO: '',
+      age: undefined,
+      terms: false
     }
   })
 
   const onSubmit = (inputs: SignupInputs) => {
-    setLoading(true)
+    startTransition(async () => {
+      toast.message('Registrando..')
+      const response = await signup(inputs)
 
-    toast.promise(
-      signup(inputs),
-      {
-        loading: 'Registrando...',
-        success: () => {
-          form.reset()
-          setLoading(false)
-          return '¡Registro exitoso!'
-        },
-        error: (err) => {
-          setLoading(false)
-          return getErrorMessage(err)
-        }
+      if (response.error) {
+        toast.error(response.error)
+        return
       }
-    )
+
+      toast.success('¡Registro exitoso!')
+      form.reset()
+      router.push(`/signup/verify-email/${response.data!.id}`)
+    })
   }
 
   return (
     <Form {...form}>
       <form
-        className='space-y-4'
+        className='space-y-spacing-3'
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
@@ -166,6 +167,23 @@ export default function SignupForm () {
         />
         <FormField
           control={form.control}
+          name='age'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Fecha de nacimiento</FormLabel>
+              <FormControl>
+                <Input
+                  type='date'
+                  {...field}
+                  value={field.value ? field.value.toString() : ''}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name='genreISO'
           render={({ field }) => (
             <FormItem className='w-full'>
@@ -204,10 +222,22 @@ export default function SignupForm () {
           name='password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Contraseña</FormLabel>
+              <div className='flex justify-between'>
+                <FormLabel>Contraseña</FormLabel>
+                <div className='flex items-center gap-x-spacing-2'>
+                  <div
+                    onClick={() => setShowPassword(!showPassword)}
+                    className='flex items-center gap-x-spacing-1 text-xs sm:text-sm text-secondary cursor-pointer'
+                  >
+                    {showPassword
+                      ? (<>Ocultar <EyeClosedIcon className='w-3.5 sm:w-4 h-auto' /></>)
+                      : (<>Mostrar <EyeOpenIcon className='w-3.5 sm:w-4 h-auto' /></>)}
+                  </div>
+                </div>
+              </div>
               <FormControl>
                 <Input
-                  type='password'
+                  type={showPassword ? 'text' : 'password'}
                   placeholder='••••••••••••'
                   {...field}
                 />
@@ -221,15 +251,54 @@ export default function SignupForm () {
           name='confirmPassword'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirmar contraseña</FormLabel>
+              <div className='flex justify-between'>
+                <FormLabel>Confirmar contraseña</FormLabel>
+                <div className='flex items-center gap-x-spacing-2'>
+                  <div
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className='flex items-center gap-x-spacing-1 text-xs sm:text-sm text-secondary cursor-pointer'
+                  >
+                    {showConfirmPassword
+                      ? (<>Ocultar <EyeClosedIcon className='w-3.5 sm:w-4 h-auto' /></>)
+                      : (<>Mostrar <EyeOpenIcon className='w-3.5 sm:w-4 h-auto' /></>)}
+                  </div>
+                </div>
+              </div>
               <FormControl>
                 <Input
-                  type='password'
+                  type={showConfirmPassword ? 'text' : 'password'}
                   placeholder='••••••••••••'
                   {...field}
                 />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='terms'
+          render={({ field }) => (
+            <FormItem className='w-full flex space-y-0 gap-x-spacing-2 pt-spacing-4'>
+              <FormControl>
+                <Checkbox
+                  id='terms'
+                  checked={field.value}
+                  // eslint-disable-next-line react/jsx-handler-names
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className='grid gap-y-spacing-1'>
+                <FormLabel className='f-body-1 font-medium'>
+                  Acepto los terminos y condiciones
+                </FormLabel>
+                <p className='f-body-2 text-muted-foreground'>
+                  Aceptas nuestros{' '}
+                  <Link href='/terms' className='font-medium text-ring'>Terminos de Servicio</Link>{' '}
+                  y <Link href='/privacy' className='font-medium text-ring'>Politica de Privacidad</Link>.
+                </p>
+                <FormMessage />
+              </div>
             </FormItem>
           )}
         />
@@ -264,19 +333,11 @@ export default function SignupForm () {
         </div> */}
         <div className='pt-spacing-4'>
           <Button
-            className='[&>*]:text-accent-foreground lg:w-full'
+            className='lg:w-full flex items-center gap-x-spacing-2'
             size='full'
-            disabled={loading}
+            disabled={isTransition}
           >
-            {loading
-              ? (
-                <span className='flex items-center gap-x-2'>
-                  Procesando.. <Icons.Spinner className='h-3 w-3' aria-hidden='true' />
-                </span>)
-              : (
-                <span className='pt-px lg:pt-0 flex items-center gap-x-spacing-2 lg:font-medium text-xs lg:text-sm tracking-wider'>
-                  Comprar membresia <ArrowTopRightIcon className='h-3 xl:h-3 w-3.5 xl:w-3.5 [&>*]:fill-accent-foreground' aria-hidden='true' />
-                </span>)}
+            Registrarse
           </Button>
         </div>
       </form>
