@@ -56,7 +56,7 @@ const sendVerifyEmailCode = (email: string, code: number) => {
       subject: `Tu codigo de verificación es ${code}`,
       html: `
         <div style="max-width: 640px; margin: 0 auto; padding: 64px auto;">
-          <div style="font-size: 32px; font-weight: 600; padding-bottom: 12px;">${siteConfig.name}</div>
+          <div style="font-size: 28px; font-weight: 600; padding-bottom: 12px;">${siteConfig.name}</div>
           <div>Ingrese el siguiente código de verificación cuando se le solicite:</div>
           <div style="font-size: 48px; font-weight: 700; padding: 16px 0;">${code}</div>
           <div>Por seguridad, no compartas este codigo.</div>
@@ -187,7 +187,7 @@ export async function signin (input: SigninInputs) {
           }
         }
 
-        db.query(
+        await db.query(
           'DELETE FROM users_verify_codes WHERE user_row_key = ?',
           [userData.rowKey]
         )
