@@ -11,7 +11,7 @@ interface VerifyEmailPageProps {
 export default async function VetifyEmailPage ({ params }: VerifyEmailPageProps) {
   const userStatusData = await checkUserStatus(params)
 
-  if (!userStatusData.data) {
+  if (!userStatusData.data || userStatusData.data?.notFound) {
     notFound()
   }
 

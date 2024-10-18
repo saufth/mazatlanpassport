@@ -154,42 +154,8 @@ export async function signin (input: SigninInputs) {
 
     const userStatusData = await checkUserStatus({ id: userData.id })
 
-    if (userStatusData.error) {
-      if (userStatusData.error === userStatus.unverified) {
-        const [verifyCode] = await db.query<VerifyCode[]>(
-          'SELECT code, attempts, created_at AS createdAt FROM users_verify_codes WHERE user_row_key = ?',
-          [userData.rowKey]
-        )
-
-        if (verifyCode) {
-          if (calculateMinutes(new Date(verifyCode.createdAt)) < 5 && verifyCode.attempts < 2) {
-            return {
-              data: { id: userData.id },
-              error: userStatus.unverified
-            }
-          }
-
-          db.query(
-            'DELETE FROM users_verify_codes WHERE user_row_key = ?',
-            [userData.rowKey]
-          )
-        }
-
-        const code = createVerifyCode()
-
-        await db.query(
-          'INSERT INTO users_verify_codes (user_row_key, code) VALUES (?, ?)',
-          [userData.rowKey, code]
-        )
-
-        sendVerifyEmailCode(input.email, code)
-
-        return {
-          data: { id: userData.id },
-          error: userStatus.unverified
-        }
-      }
-      throw new Error(userStatusData.error)
+    if (!userStatusData.data) {
+      return userStatusData
     }
 
     const [userPassword] = await db.query<Password[]>(
@@ -205,6 +171,41 @@ export async function signin (input: SigninInputs) {
 
     if (!passwordMatch) {
       throw new Error('Contraseña incorrecta')
+    }
+
+    if (userStatusData.data.unverified) {
+      const [verifyCode] = await db.query<VerifyCode[]>(
+        'SELECT code, attempts, created_at AS createdAt FROM users_verify_codes WHERE user_row_key = ?',
+        [userData.rowKey]
+      )
+
+      if (verifyCode) {
+        if (calculateMinutes(new Date(verifyCode.createdAt)) < 5 && verifyCode.attempts < 2) {
+          return {
+            data: { id: userData.id },
+            error: userStatus.unverified
+          }
+        }
+
+        db.query(
+          'DELETE FROM users_verify_codes WHERE user_row_key = ?',
+          [userData.rowKey]
+        )
+      }
+
+      const code = createVerifyCode()
+
+      await db.query(
+        'INSERT INTO users_verify_codes (user_row_key, code) VALUES (?, ?)',
+        [userData.rowKey, code]
+      )
+
+      sendVerifyEmailCode(input.email, code)
+
+      return {
+        data: { id: userData.id },
+        error: userStatus.unverified
+      }
     }
 
     return {
@@ -251,7 +252,7 @@ export async function verifyEmail (input: VerifyCodeInputs) {
       throw new Error('El codigo ha caducado, crea otro iniciando sesión')
     }
 
-    if (verifyCode.attempts >= 2) {
+    if (verifyCode.attempts > 2) {
       deleteCurrentVerifyEmailCode()
       throw new Error('Demasiados intentos, crea otro codigo iniciando sesión')
     }
