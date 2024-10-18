@@ -1,3 +1,4 @@
+import { type JWTPayload, jwtVerify, SignJWT } from 'jose'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { siteConfig } from '@/config/site'
@@ -5,6 +6,22 @@ import type {
   DocumentElementWithFullscreen,
   DocumentWithFullscreen
 } from '@/types'
+
+const jwtSecretKey = new TextEncoder().encode(String(process.env.JWT_SECRET_KEY))
+
+export async function encryptJWT (payload: JWTPayload) {
+  return await new SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('4 weeks from now')
+    .sign(jwtSecretKey)
+}
+
+export async function decryptJWT (jwt: string | Uint8Array) {
+  return await jwtVerify(jwt, jwtSecretKey, {
+    algorithms: ['HS256']
+  })
+}
 
 export function cn (...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -28,29 +45,6 @@ export function toTitleCase (title: string) {
 
 export function capitalize (text: string) {
   return `${text.charAt(0).toUpperCase()}${text.slice(1).toLowerCase()}`
-}
-
-export function randomNumber (min: number, max: number) {
-  return Math.floor(Math.random() * (min - max + 1)) + max
-}
-
-export function createVerifyCode () {
-  return randomNumber(100000, 999999)
-}
-
-export function calculateYears (dateA: Date, dateB?: Date) {
-  dateB = dateB || new Date()
-  let years = new Date(dateB).getFullYear() - new Date(dateA).getFullYear()
-  let month = new Date(dateB).getMonth() - new Date(dateA).getMonth()
-  const dateDifference = new Date(dateB).getDay() - new Date(dateA).getDay()
-  if (dateDifference < 0) month -= 1
-  if (month < 0) years -= 1
-  return years
-}
-
-export function calculateMinutes (dateA: Date, dateB?: Date) {
-  dateB = dateB || new Date()
-  return (dateB.getTime() - dateA.getTime()) / 60000
 }
 
 export function formatPhoneNumber (phoneNumber: string | number) {
@@ -95,6 +89,29 @@ export function formatPrice ({
 
 export function convertToSubcurrency (amount: number, factor: number = 100) {
   return Math.round(amount * factor)
+}
+
+export function randomNumber (min: number, max: number) {
+  return Math.floor(Math.random() * (min - max + 1)) + max
+}
+
+export function createVerifyCode () {
+  return randomNumber(100000, 999999)
+}
+
+export function calculateYears (dateA: Date, dateB?: Date) {
+  dateB = dateB || new Date()
+  let years = new Date(dateB).getFullYear() - new Date(dateA).getFullYear()
+  let month = new Date(dateB).getMonth() - new Date(dateA).getMonth()
+  const dateDifference = new Date(dateB).getDay() - new Date(dateA).getDay()
+  if (dateDifference < 0) month -= 1
+  if (month < 0) years -= 1
+  return years
+}
+
+export function calculateMinutes (dateA: Date, dateB?: Date) {
+  dateB = dateB || new Date()
+  return (dateB.getTime() - dateA.getTime()) / 60000
 }
 
 export function requestFullScreen (element: DocumentElementWithFullscreen) {

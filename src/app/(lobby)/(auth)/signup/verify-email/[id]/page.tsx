@@ -1,7 +1,20 @@
 import Image from 'next/image'
+import { notFound } from 'next/navigation'
 import VerifyEmailForm from '@/components/forms/verify-email-form'
+import { checkUserStatus } from '@/lib/actions/users'
+import { type UUIDInputs } from '@/lib/validations/uuid'
 
-export default function VetifyEmailPage () {
+interface VerifyEmailPageProps {
+  params: UUIDInputs
+}
+
+export default async function VetifyEmailPage ({ params }: VerifyEmailPageProps) {
+  const userStatusData = await checkUserStatus(params)
+
+  if (!userStatusData.data) {
+    notFound()
+  }
+
   return (
     <section>
       <div className='container py-spacing-6'>
@@ -16,7 +29,7 @@ export default function VetifyEmailPage () {
               </p>
             </div>
             <div className='mt-spacing-4'>
-              <VerifyEmailForm />
+              <VerifyEmailForm status={userStatusData.data} />
             </div>
           </div>
           <div className='w-full lg:w-7-cols order-1 lg:order-2'>

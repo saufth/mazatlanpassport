@@ -8,3 +8,10 @@ export const redirects = {
   toVerify: '/verify-email',
   afterVerify: '/'
 } as const
+
+export const userStatus = {
+  notFound: 'La cuenta no existe',
+  inactive: 'Cuenta inactiva',
+  blocked: 'Cuanta bloqeada',
+  unverified: 'Cuenta no verificada'
+} as const

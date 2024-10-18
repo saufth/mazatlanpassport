@@ -1,30 +1,33 @@
 import Image from 'next/image'
-import LoginForm from '@/components/forms/signin-form'
+import SigninForm from '@/components/forms/signin-form'
 
 export default function SigninPage () {
   return (
     <section>
-      <div className='container pt-spacing-7'>
-        <div className='flex flex-col gap-y-spacing-4'>
-          <h1 className='text-[0.6875rem] sm:text-[0.875rem] xl:text-[1rem] uppercase text-muted-foreground font-medium text-balance leading-none tracking-wider'>
-            Inicia sesión
-          </h1>
-          <p className='f-heading-1 text-balance'>
-            Descubre Mazatlán con descuentos exclusivos
-          </p>
-        </div>
-        <div className='cols-container mt-spacing-6'>
+      <div className='container py-spacing-6'>
+        <div className='cols-container'>
           <div className='w-full lg:w-5-cols relative mt-12 lg:mt-0 order-2 lg:order-1'>
-            <LoginForm />
+            <div className='space-y-spacing-2'>
+              <h1 className='f-heading-2 font-extrabold text-secondary'>
+                Inica sesión
+              </h1>
+              <p className='f-body-1 text-primary-foreground font-medium'>
+                Descubre Mazatlán con descuentos exclusivos.
+              </p>
+            </div>
+            <div className='mt-spacing-4'>
+              <SigninForm />
+            </div>
           </div>
           <div className='w-full lg:w-7-cols order-1 lg:order-2'>
             <Image
-              src='/images/login-hero.webp'
-              alt=''
-              width={1920}
-              height={1080}
-              sizes='(max-width: 744px) 100vw, (max-width: 1280px) 100vw, (max-width: 1440px) 100vw, 100vw'
-              className='w-full'
+              src='/images/signin-hero.webp'
+              alt='Mesas de restaurante en la playa con puesta de sol en Mazatlán'
+              width={1200}
+              height={1200}
+              priority
+              // sizes='(max-width: 744px) 100vw, (max-width: 1280px) 100vw, (max-width: 1440px) 100vw, 100vw'
+              className='w-full rounded-3xl'
             />
           </div>
         </div>

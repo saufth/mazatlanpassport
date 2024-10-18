@@ -16,7 +16,7 @@ export default function SignupPage () {
           </div>
           <div className='w-full lg:w-7-cols order-1 lg:order-2'>
             <Image
-              src='/images/signin-hero.webp'
+              src='/images/signup-hero.webp'
               alt=''
               width={1200}
               height={1200}

@@ -1,7 +1,7 @@
 'use client'
-import { useRef, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
+import { useState, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
-import { Icons } from '@/components/icons'
 import { Input } from '@/components/ui/input'
 import {
   Form,
@@ -12,13 +12,17 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { toast } from 'sonner'
-import { ArrowTopRightIcon } from '@radix-ui/react-icons'
+import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { signin } from '@/lib/actions/auth'
 import { type SigninInputs, signinSchema } from '@/lib/validations/auth/signin'
+import { userStatus } from '@/lib/constants'
 
 export default function SigninForm () {
-  const [isPending, startTransition] = useTransition()
+  const router = useRouter()
+  const [isTransition, startTransition] = useTransition()
+  const [showPassword, setShowPassword] = useState(false)
 
   const form = useForm<SigninInputs>({
     resolver: zodResolver(signinSchema),
@@ -28,44 +32,33 @@ export default function SigninForm () {
     }
   })
 
-  const formRef = useRef<HTMLFormElement>(null)
-
-  const onSubmit = async (data: SigninInputs) => {
+  const onSubmit = async (input: SigninInputs) => {
     startTransition(async () => {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
+      toast.message('Registrando..')
+      const response = await signin(input)
 
-      if (!response.ok) {
-        switch (response.status) {
-          case 422:
-            toast.error('Entrada invalida.')
-            break
-          case 500:
-            toast.error('Algo salió mal. Inténtalo de nuevo más tarde.')
-            break
-          default:
-            toast.error('Algo salió mal. Inténtalo de nuevo más tarde.')
-        }
+      if (!response.data) {
+        toast.error(response.error)
         return
       }
 
-      toast.success('Hemos recibido tu mensaje. En breve serás atendido por un asesor.')
+      if (response.error === userStatus.unverified) {
+        toast.error('Ingresa el codigo enviado a tu correo electrónico')
+        router.push(`/signup/verify-email/${response.data.id}`)
+        return
+      }
+
+      toast.success('Iniciaste sesión')
       form.reset()
+      router.push(`/users/${response.data.id}`)
     })
   }
 
   return (
     <Form {...form}>
       <form
-        className='space-y-4'
-        // eslint-disable-next-line no-void
-        onSubmit={(...args) => void form.handleSubmit(onSubmit)(...args)}
-        ref={formRef}
+        className='space-y-spacing-3'
+        onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
           control={form.control}
@@ -88,11 +81,23 @@ export default function SigninForm () {
           name='password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Contraseña</FormLabel>
+              <div className='flex justify-between'>
+                <FormLabel>Contraseña</FormLabel>
+                <div className='flex items-center gap-x-spacing-2'>
+                  <div
+                    onClick={() => setShowPassword(!showPassword)}
+                    className='flex items-center gap-x-spacing-1 text-xs sm:text-sm text-secondary cursor-pointer'
+                  >
+                    {showPassword
+                      ? (<>Ocultar <EyeClosedIcon className='w-3.5 sm:w-4 h-auto' /></>)
+                      : (<>Mostrar <EyeOpenIcon className='w-3.5 sm:w-4 h-auto' /></>)}
+                  </div>
+                </div>
+              </div>
               <FormControl>
                 <Input
-                  type='password'
-                  placeholder='Ingresa tu contraseña'
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder='••••••••••••'
                   {...field}
                 />
               </FormControl>
@@ -102,19 +107,11 @@ export default function SigninForm () {
         />
         <div className='pt-spacing-4'>
           <Button
-            className='[&>*]:text-accent-foreground lg:w-full'
+            className='lg:w-full flex items-center gap-x-spacing-2'
             size='full'
-            disabled={isPending}
+            disabled={isTransition}
           >
-            {isPending
-              ? (
-                <span className='flex items-center gap-x-2'>
-                  Enviando <Icons.Spinner className='h-3 w-3' aria-hidden='true' />
-                </span>)
-              : (
-                <span className='pt-px lg:pt-0 flex items-center gap-x-spacing-2 lg:font-medium text-xs lg:text-sm tracking-wider'>
-                  Iniciar sesión <ArrowTopRightIcon className='h-3 xl:h-3 w-3.5 xl:w-3.5 [&>*]:fill-accent-foreground' aria-hidden='true' />
-                </span>)}
+            Iniciar sesión
           </Button>
         </div>
       </form>
