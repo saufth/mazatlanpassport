@@ -38,7 +38,7 @@ interface UserVerifyData
     Pick<SigninInputs, 'email'>,
     Pick<SignupInputs, 'firstName'> {}
 
-const sendVerifyEmailCode = async (email: string, code: number) => {
+const sendVerifyEmailCode = (email: string, code: number) => {
   try {
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
