@@ -38,6 +38,36 @@ interface UserVerifyData
     Pick<SigninInputs, 'email'>,
     Pick<SignupInputs, 'firstName'> {}
 
+const sendVerifyEmailCode = async (email: string, code: number) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: 'sauft.dev@gmail.com',
+        pass: String(process.env.GOOGLE_APP_PASSWORD)
+      }
+    })
+
+    await transporter.sendMail({
+      from: siteConfig.name,
+      to: email,
+      subject: `Tu codigo de verificación es ${code}`,
+      html: `
+        <div style="max-width: 640px; margin: 0 auto; padding: 64px auto;">
+          <div style="font-size: 28px; font-weight: 600; padding-bottom: 12px;">${siteConfig.name}</div>
+          <div>Ingrese el siguiente código de verificación cuando se le solicite:</div>
+          <div style="font-size: 48px; font-weight: 700; padding: 16px 0;">${code}</div>
+          <div>Por seguridad, no compartas este codigo.</div>
+        </div>
+      `
+    })
+  } catch {
+    throw new Error('Problemas al envias codigo de verificación, intenta crear otro iniciando sesión')
+  }
+}
+
 export async function signup (input: SignupInputs) {
   try {
     if (!input.terms) {
@@ -89,30 +119,7 @@ export async function signup (input: SignupInputs) {
       [userKey.rowKey, code]
     )
 
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      auth: {
-        user: 'sauft.dev@gmail.com',
-        pass: String(process.env.GOOGLE_APP_PASSWORD)
-      }
-    })
-
-    transporter.sendMail({
-      from: siteConfig.name,
-      to: input.email,
-      subject: `Tu codigo de verificación es ${code}`,
-      text: '¡Verifica tu cuenta y comienza a disfrutas de beneficios exclusivos!',
-      html: `
-        <div style="max-width: 640px; margin: 0 auto; padding: 64px auto;">
-          <div style="font-size: 28px; font-weight: 600; padding-bottom: 12px;">${siteConfig.name}</div>
-          <div>Ingrese el siguiente código de verificación cuando se le solicite:</div>
-          <div style="font-size: 48px; font-weight: 700; padding: 16px 0;">${code}</div>
-          <div>Por seguridad, no compartas este codigo.</div>
-        </div>
-      `
-    })
+    sendVerifyEmailCode(input.email, code)
 
     return {
       data: { id: userId },
@@ -185,30 +192,7 @@ export async function signin (input: SigninInputs) {
         [userData.rowKey, code]
       )
 
-      const transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: {
-          user: 'sauft.dev@gmail.com',
-          pass: String(process.env.GOOGLE_APP_PASSWORD)
-        }
-      })
-
-      transporter.sendMail({
-        from: siteConfig.name,
-        to: input.email,
-        subject: `Tu codigo de verificación es ${code}`,
-        text: '¡Verifica tu cuenta y comienza a disfrutas de beneficios exclusivos!',
-        html: `
-          <div style="max-width: 640px; margin: 0 auto; padding: 64px auto;">
-            <div style="font-size: 28px; font-weight: 600; padding-bottom: 12px;">${siteConfig.name}</div>
-            <div>Ingrese el siguiente código de verificación cuando se le solicite:</div>
-            <div style="font-size: 48px; font-weight: 700; padding: 16px 0;">${code}</div>
-            <div>Por seguridad, no compartas este codigo.</div>
-          </div>
-        `
-      })
+      sendVerifyEmailCode(input.email, code)
 
       return {
         data: { id: userData.id },
