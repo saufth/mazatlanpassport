@@ -267,7 +267,7 @@ export async function verifyEmail (input: VerifyCodeInputs) {
 
     if (verifyCode.code !== input.code) {
       await db.query(
-        'UPDATE users_verify_codes SET attempts = ?',
+        'UPDATE users_verify_codes SET attempts = ?, updated_at = (NOW())',
         [verifyCode.attempts + 1]
       )
       throw new Error('Codigo incorrecto')
