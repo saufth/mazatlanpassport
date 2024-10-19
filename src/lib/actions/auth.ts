@@ -119,7 +119,7 @@ export async function signup (input: SignupInputs) {
       [userKey.rowKey, code]
     )
 
-    sendVerifyEmailCode(input.email, code)
+    await sendVerifyEmailCode(input.email, code)
 
     return {
       data: { id: userId },
@@ -192,7 +192,7 @@ export async function signin (input: SigninInputs) {
         [userData.rowKey, code]
       )
 
-      sendVerifyEmailCode(input.email, code)
+      await sendVerifyEmailCode(input.email, code)
 
       return {
         data: { id: userData.id },
