@@ -4,6 +4,7 @@ import { jwtVerify, SignJWT, type JWTPayload } from 'jose'
 import { createSessionExpirationDate, createSessionName } from '@/lib/utils'
 import { getErrorMessage } from '@/lib/handle-error'
 import { type UUIDInputs } from '@/lib/validations/uuid'
+import { domain } from '@/config/site'
 import type { Roles } from '@/types'
 
 const jwtSecretKey = new TextEncoder().encode(String(process.env.JWT_SECRET_KEY))
@@ -34,13 +35,14 @@ export async function createSession (inputs: UUIDInputs, role: Roles) {
     const sessionName = createSessionName(role)
     const expires = createSessionExpirationDate(role)
     const session = await encryptJWT({ ...inputs, expires }, role)
-    const cookie = await cookies()
+    const cookieStore = await cookies()
 
-    cookie.set(sessionName, session, {
+    cookieStore.set(sessionName, session, {
+      domain,
       expires,
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
       path: '/'
     })
 
@@ -58,8 +60,8 @@ export async function createSession (inputs: UUIDInputs, role: Roles) {
 
 export async function getSessionToken (role: Roles) {
   try {
-    const cookie = await cookies()
-    const session = cookie.get(createSessionName(role))?.value
+    const cookieStore = await cookies()
+    const session = cookieStore.get(createSessionName(role))?.value
 
     return {
       data: session,
@@ -112,10 +114,11 @@ export async function updateSession (request: NextRequest, role: Roles) {
     res.cookies.set({
       name: sessionName,
       value,
+      domain,
       httpOnly: true,
       expires,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
       path: '/'
     })
 
@@ -133,8 +136,8 @@ export async function updateSession (request: NextRequest, role: Roles) {
 
 export async function deleteSession (role: Roles) {
   try {
-    const cookie = await cookies()
-    cookie.set(createSessionName(role), '', { expires: new Date(0) })
+    const cookieStore = await cookies()
+    cookieStore.set(createSessionName(role), '', { expires: new Date(0) })
   } catch {
     throw new Error('Hubo un problema al intentar eliminar la sesión, intentalo de nuevo más tarde.')
   }
