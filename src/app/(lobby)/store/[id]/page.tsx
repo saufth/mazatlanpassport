@@ -9,11 +9,11 @@ import { promos } from '@/config/promos'
 import type { UUIDInputs } from '@/lib/validations/uuid'
 
 interface StorePageProps {
-  params: UUIDInputs
+  params: Promise<UUIDInputs>
 }
 
 export async function generateMetadata ({ params }: StorePageProps): Promise<Metadata> {
-  const storeId = decodeURIComponent(params.id)
+  const { id: storeId } = await params
   const store = stores.find(storeItem => storeItem.id === storeId)!
 
   if (!store) { return {} }
@@ -25,8 +25,8 @@ export async function generateMetadata ({ params }: StorePageProps): Promise<Met
   }
 }
 
-export default function StorePage ({ params }: StorePageProps) {
-  const storeId = params.id
+export default async function StorePage ({ params }: StorePageProps) {
+  const { id: storeId } = await params
 
   const store = stores.find(storeItem => storeItem.id === storeId)!
   // const company = stores.find(companyItem => companyItem.id === storeId)!
