@@ -3,28 +3,27 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { PromoCard } from '@/components/promo-card'
-import { domain } from '@/config/site'
+// import { domain } from '@/config/site'
 import { stores } from '@/config/stores'
 import { promos } from '@/config/promos'
+import type { UUIDInputs } from '@/lib/validations/uuid'
 
 interface StorePageProps {
-  params: {
-    id: string
-  }
+  params: UUIDInputs
 }
 
-export async function generateMetadata ({ params }: StorePageProps): Promise<Metadata> {
-  const storeId = decodeURIComponent(params.id)
-  const store = stores.find(storeItem => storeItem.id === storeId)!
+// export async function generateMetadata ({ params }: StorePageProps): Promise<Metadata> {
+//   const storeId = decodeURIComponent(params.id)
+//   const store = stores.find(storeItem => storeItem.id === storeId)!
 
-  if (!store) { return {} }
+//   if (!store) { return {} }
 
-  return {
-    metadataBase: new URL(domain),
-    title: store.id,
-    description: store.description
-  }
-}
+//   return {
+//     metadataBase: new URL(domain),
+//     title: store.id,
+//     description: store.description
+//   }
+// }
 
 export default function StorePage ({ params }: StorePageProps) {
   const storeId = params.id
