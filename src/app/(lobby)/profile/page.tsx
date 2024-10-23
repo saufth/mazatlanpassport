@@ -13,7 +13,7 @@ export default async function ProfilePage () {
 
   if (!session.data) {
     await signout(role)
-    redirect('/#home')
+    redirect(`/#${session.data}`)
   }
 
   const userId = { id: String(session.data.id) }
