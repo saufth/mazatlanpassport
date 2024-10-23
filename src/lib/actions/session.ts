@@ -41,7 +41,7 @@ export async function createSession (inputs: UUIDInputs, role: Roles) {
       domain,
       expires,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'none',
       path: '/'
     })
 
@@ -116,7 +116,7 @@ export async function updateSession (request: NextRequest, role: Roles) {
       domain,
       expires,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'none',
       path: '/'
     })
 
