@@ -1,5 +1,4 @@
 import { redirect } from 'next/navigation'
-import { toast } from 'sonner'
 import QRCodeImage from '@/components/qr-code'
 import { deleteSession, getSession } from '@/lib/actions/session'
 import { getUserProfile } from '@/lib/actions/users'
@@ -12,7 +11,6 @@ export default async function ProfilePage () {
   const session = await getSession(role)
 
   if (!session.data) {
-    toast.error('Hubo un problema con la sesión, provafor, vuelva a iniciar sesión.')
     await deleteSession(role)
     redirect(redirects.toSignin)
   }
@@ -22,14 +20,12 @@ export default async function ProfilePage () {
 
   if (!userProfile.data) {
     if (userProfile.error) {
-      toast.error(userProfile.error)
       if (userProfile.error === userStatus.unverified) {
         redirect(redirects.toSignin)
       }
       await deleteSession(role)
       redirect(redirects.afterLogout)
     }
-    toast.error(userProfile.error)
     await deleteSession(role)
     redirect(redirects.toSignin)
   }
