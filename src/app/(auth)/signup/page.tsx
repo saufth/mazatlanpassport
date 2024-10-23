@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import SignupForm from '@/components/forms/signup-form'
 
-export default function SignupPage () {
+export default async function SignupPage () {
   return (
     <section>
       <div className='container py-spacing-6'>

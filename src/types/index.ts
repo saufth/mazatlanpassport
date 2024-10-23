@@ -1,4 +1,5 @@
 import { type ReactNode } from 'react'
+import { roles } from '@/lib/constants'
 import { type Author as NextAuthor } from 'next/dist/lib/metadata/types/metadata-types'
 
 export interface Title {
@@ -77,6 +78,8 @@ export interface SiteConfig {
 }
 
 export type NavItemExternal = Pick<SiteConfig, 'name' | 'url'> & Partial<ImageData>
+
+export type Roles = keyof typeof roles
 
 export interface DocumentWithFullscreen extends Document {
   mozFullScreenElement?: Element;

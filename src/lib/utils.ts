@@ -1,26 +1,20 @@
-import { type JWTPayload, jwtVerify, SignJWT } from 'jose'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { roles } from '@/lib/constants'
 import { siteConfig } from '@/config/site'
 import type {
   DocumentElementWithFullscreen,
-  DocumentWithFullscreen
+  DocumentWithFullscreen,
+  Roles
 } from '@/types'
 
-const jwtSecretKey = new TextEncoder().encode(String(process.env.JWT_SECRET_KEY))
-
-export async function encryptJWT (payload: JWTPayload) {
-  return await new SignJWT(payload)
-    .setProtectedHeader({ alg: 'HS256' })
-    .setIssuedAt()
-    .setExpirationTime('4 weeks from now')
-    .sign(jwtSecretKey)
+export function createSessionExpirationDate (role: Roles) {
+  const hours = role === roles.user ? 720 : 1
+  return new Date(Date.now() + hours * 60 * 60000)
 }
 
-export async function decryptJWT (jwt: string | Uint8Array) {
-  return await jwtVerify(jwt, jwtSecretKey, {
-    algorithms: ['HS256']
-  })
+export function createSessionName (role: Roles) {
+  return `${role}Session`
 }
 
 export function cn (...inputs: ClassValue[]) {

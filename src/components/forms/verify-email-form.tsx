@@ -16,22 +16,12 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { verifyEmail } from '@/lib/actions/auth'
 import { type VerifyCodeInputs, verifyCodeSchema } from '@/lib/validations/verify-code'
-import { userStatus } from '@/lib/constants'
+import type { UUIDInputs } from '@/lib/validations/uuid'
 
-export default function VerifyEmailForm ({ status }: { status: Record<keyof typeof userStatus, boolean> }) {
+export default function VerifyEmailForm () {
   const router = useRouter()
-  const { id } = useParams<{ id: string }>()
+  const { id } = useParams<UUIDInputs>()
   const [isTransition, startTransition] = useTransition()
-
-  if (!status.unverified) {
-    toast.error('Usuario actualmente verificado')
-    router.push(`/users/${id}`)
-  }
-
-  if (status.inactive || status.blocked) {
-    toast.error('Al parecer hay problemas con esta cuenta, ponte en contato con un administrador')
-    router.push('/')
-  }
 
   const form = useForm<VerifyCodeInputs>({
     resolver: zodResolver(verifyCodeSchema),
@@ -53,7 +43,7 @@ export default function VerifyEmailForm ({ status }: { status: Record<keyof type
 
       toast.success('Verificación exitoso!')
       form.reset()
-      router.push(`/users/${id}`)
+      router.push('/profile')
     })
   }
 

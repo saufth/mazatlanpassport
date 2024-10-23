@@ -1,7 +1,8 @@
 'use server'
-import bcrypt from 'bcrypt'
-import crypto from 'crypto'
+import { cookies } from 'next/headers'
+import bcrypt from 'bcryptjs'
 import nodemailer from 'nodemailer'
+import { roles, userStatus } from '@/lib/constants'
 import { db } from '@/lib/database'
 import { checkUserStatus } from '@/lib/actions/users'
 import { type RowDataPacket } from 'mysql2'
@@ -9,10 +10,11 @@ import { type SignupInputs } from '@/lib/validations/auth/signup'
 import { type VerifyCodeInputs } from '@/lib/validations/verify-code'
 import { type UUIDInputs } from '@/lib/validations/uuid'
 import { type SigninInputs } from '@/lib/validations/auth/signin'
-import { userStatus } from '@/lib/constants'
 import { getErrorMessage } from '@/lib/handle-error'
+import { createSession, deleteSession, getSessionToken } from '@/lib/actions/session'
 import { calculateMinutes, createVerifyCode } from '@/lib/utils'
 import { siteConfig } from '@/config/site'
+import type { Roles } from '@/types'
 
 interface RowKey extends RowDataPacket {
   rowKey: number
@@ -70,6 +72,12 @@ const sendVerifyEmailCode = async (email: string, code: number) => {
 
 export async function signup (input: SignupInputs) {
   try {
+    const session = await getSessionToken(roles.user)
+
+    if (session.data) {
+      throw new Error('Actualmente tienes una sesión activa, solo puedes iniciar sesión en una cuenta a la vez')
+    }
+
     if (!input.terms) {
       throw new Error('Acepta los términos de servicio y privacidad')
     }
@@ -83,7 +91,7 @@ export async function signup (input: SignupInputs) {
       throw new Error('El correo electrónico ya esta siendo usado')
     }
 
-    const userId = crypto.randomUUID()
+    const userId = { id: crypto.randomUUID() }
     const encryptedPassword = await bcrypt.hash(input.password, 10)
 
     if (!encryptedPassword) {
@@ -93,19 +101,19 @@ export async function signup (input: SignupInputs) {
     await db.query(
       'INSERT INTO users (id, email, password, first_name, last_name, genre_iso, birthday) VALUES (UUID_TO_BIN(?, TRUE), ?, ?, ?, ?, ?, ?)',
       [
-        userId,
+        userId.id,
         input.email,
         encryptedPassword,
         input.firstName,
         input.lastName,
         Number(input.genreISO),
-        new Date(input.age)
+        new Date(input.birthday)
       ]
     )
 
     const [userKey] = await db.query<RowKey[]>(
       'SELECT row_key AS rowKey FROM users WHERE id = UUID_TO_BIN(?, TRUE)',
-      [userId]
+      [userId.id]
     )
 
     if (!userKey) {
@@ -122,7 +130,7 @@ export async function signup (input: SignupInputs) {
     await sendVerifyEmailCode(input.email, code)
 
     return {
-      data: { id: userId },
+      data: userId,
       error: null
     }
   } catch (err) {
@@ -135,6 +143,12 @@ export async function signup (input: SignupInputs) {
 
 export async function signin (input: SigninInputs) {
   try {
+    const session = await getSessionToken(roles.user)
+
+    if (session.data) {
+      throw new Error('Actualmente tienes una sesión activa, solo puedes iniciar sesión en una cuenta a la vez')
+    }
+
     const [userData] = await db.query<RowKeyID[]>(
       'SELECT row_key AS rowKey, BIN_TO_UUID(id, TRUE) AS id FROM users WHERE email = ?',
       [input.email]
@@ -144,9 +158,11 @@ export async function signin (input: SigninInputs) {
       throw new Error('El usuario no existe')
     }
 
-    const userStatusData = await checkUserStatus({ id: userData.id })
+    const userId: UUIDInputs = { id: userData.id }
 
-    if (!userStatusData.data) {
+    const userStatusData = await checkUserStatus(userId)
+
+    if (userStatusData.error && userStatusData.error !== userStatus.unverified) {
       return userStatusData
     }
 
@@ -165,7 +181,7 @@ export async function signin (input: SigninInputs) {
       throw new Error('Contraseña incorrecta')
     }
 
-    if (userStatusData.data.unverified) {
+    if (userStatusData.error === userStatus.unverified) {
       const [verifyCode] = await db.query<VerifyCode[]>(
         'SELECT code, attempts, created_at AS createdAt FROM users_verify_codes WHERE user_row_key = ?',
         [userData.rowKey]
@@ -174,7 +190,7 @@ export async function signin (input: SigninInputs) {
       if (verifyCode) {
         if (calculateMinutes(new Date(verifyCode.createdAt)) < 5 && verifyCode.attempts < 2) {
           return {
-            data: { id: userData.id },
+            data: userId,
             error: userStatus.unverified
           }
         }
@@ -195,13 +211,19 @@ export async function signin (input: SigninInputs) {
       await sendVerifyEmailCode(input.email, code)
 
       return {
-        data: { id: userData.id },
+        data: userId,
         error: userStatus.unverified
       }
     }
 
+    const newSession = await createSession(userId, roles.user)
+
+    if (newSession.error) {
+      throw new Error(newSession.error)
+    }
+
     return {
-      data: { id: userData.id },
+      data: userId,
       error: null
     }
   } catch (err) {
@@ -214,6 +236,20 @@ export async function signin (input: SigninInputs) {
 
 export async function verifyEmail (input: VerifyCodeInputs) {
   try {
+    const session = await getSessionToken(roles.user)
+
+    if (session.data) {
+      throw new Error('Actualmente tienes una sesión activa, solo puedes iniciar sesión en una cuenta a la vez')
+    }
+
+    const userId: UUIDInputs = { id: input.id }
+
+    const userStatusData = await checkUserStatus(userId)
+
+    if (userStatusData.error && userStatusData.error !== userStatus.unverified) {
+      return userStatusData
+    }
+
     const [userData] = await db.query<UserVerifyData[]>(
       'SELECT row_key AS rowKey, first_name AS firstName, email FROM users WHERE id = UUID_TO_BIN(?, TRUE)',
       [input.id]
@@ -264,6 +300,12 @@ export async function verifyEmail (input: VerifyCodeInputs) {
 
     deleteCurrentVerifyEmailCode()
 
+    const newSession = await createSession(userId, roles.user)
+
+    if (newSession.error) {
+      throw new Error(newSession.error)
+    }
+
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
       port: 465,
@@ -286,6 +328,22 @@ export async function verifyEmail (input: VerifyCodeInputs) {
         </div>
       `
     })
+
+    return {
+      data: null,
+      error: null
+    }
+  } catch (err) {
+    return {
+      data: null,
+      error: getErrorMessage(err)
+    }
+  }
+}
+
+export async function signout (role: Roles) {
+  try {
+    await deleteSession(role)
 
     return {
       data: null,

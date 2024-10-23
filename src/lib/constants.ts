@@ -1,12 +1,18 @@
 export const unknownError = 'Se ha producido un error desconocido. Por favor, inténtelo de nuevo más tarde.'
 
 export const redirects = {
-  toLogin: '/signin',
+  toSignin: '/signin',
   toSignup: '/signup',
   afterLogin: '/',
   afterLogout: '/',
   toVerify: '/verify-email',
   afterVerify: '/'
+} as const
+
+export const roles = {
+  user: 'user',
+  admin: 'admin',
+  root: 'root'
 } as const
 
 export const userStatus = {

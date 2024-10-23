@@ -15,7 +15,7 @@ export const signupSchema = zodObject({
   terms: zodBoolean().refine((terms) => terms, {
     message: 'Acepta los términos de servicio y privacidad'
   }),
-  age: zodString({ required_error: 'Ingresa tu fecha de nacimiento' })
+  birthday: zodString({ required_error: 'Ingresa tu fecha de nacimiento' })
 })
   .merge(fullNameSchema)
   .merge(emailSchema)
@@ -30,18 +30,18 @@ export const signupSchema = zodObject({
       })
     }
 
-    const yearsDifference = calculateYears(new Date(val.age), new Date())
+    const yearsDifference = calculateYears(new Date(val.birthday), new Date())
     if (yearsDifference < 16) {
       ctx.addIssue({
         code: ZodIssueCode.custom,
         message: 'Debes ser mayor de 16 para registrarte',
-        path: ['age']
+        path: ['birthday']
       })
     } else if (yearsDifference > 100) {
       ctx.addIssue({
         code: ZodIssueCode.custom,
         message: 'Ingresa una edad validad',
-        path: ['age']
+        path: ['birthday']
       })
     }
   })

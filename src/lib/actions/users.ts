@@ -4,12 +4,18 @@ import { db } from '@/lib/database'
 import { userStatus } from '@/lib/constants'
 import { getErrorMessage } from '@/lib/handle-error'
 import { type UUIDInputs } from '@/lib/validations/uuid'
+import { SignupInputs } from '../validations/auth/signup'
+import { error } from 'console'
 
 interface UserStatus extends RowDataPacket {
   verifiedAt?: string
   blocked: boolean
   status: boolean
 }
+
+interface UserProfile
+  extends RowDataPacket,
+    Omit<SignupInputs, 'password' | 'confirmPassword' | 'terms'> {}
 
 export async function checkUserStatus (input: UUIDInputs) {
   try {
@@ -18,31 +24,53 @@ export async function checkUserStatus (input: UUIDInputs) {
       [input.id]
     )
 
-    const data: Record<keyof typeof userStatus, boolean> = {
-      notFound: false,
-      inactive: false,
-      blocked: false,
-      unverified: false
-    }
-
     if (!userStatusData) {
-      data.notFound = true
+      throw new Error(userStatus.notFound)
     }
 
     if (!userStatusData.status) {
-      data.inactive = true
+      throw new Error(userStatus.inactive)
     }
 
     if (userStatusData.blocked) {
-      data.blocked = true
+      throw new Error(userStatus.blocked)
     }
 
     if (!userStatusData.verifiedAt) {
-      data.unverified = true
+      throw new Error(userStatus.unverified)
     }
 
     return {
-      data,
+      data: null,
+      error: null
+    }
+  } catch (err) {
+    return {
+      data: null,
+      error: getErrorMessage(err)
+    }
+  }
+}
+
+export async function getUserProfile (input: UUIDInputs) {
+  try {
+    const status = await checkUserStatus(input)
+  
+    if (status.error) {
+      throw new Error(status.error)
+    }
+    
+    const [userProfile] = await db.query<UserProfile[]>(
+      'SELECT first_name AS firstName, last_name AS lastName, email, birthday, genre_iso AS genreISO FROM users WHERE id = UUID_TO_BIN(?, TRUE);',
+      [input.id]
+    )
+  
+    if (!userProfile) {
+      throw new Error('Hubo un problema al intentar obtener datos de perfil, intentalo de nuevo más tarde.')
+    }
+  
+    return {
+      data: userProfile,
       error: null
     }
   } catch (err) {

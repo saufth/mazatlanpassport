@@ -44,7 +44,7 @@ export const siteNav: MainNavItem[] = [
   }
 ]
 
-export const domain = 'https://mazatlanpassport.mx'
+export const domain = 'mazatlanpassport.mx'
 
 const country = COUNTRIES.find((countryItem) => countryItem.alpha2 === 'MX')!
 const phone = '526692393939'

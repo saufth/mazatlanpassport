@@ -90,7 +90,7 @@ export default function SignupForm () {
       password: '',
       confirmPassword: '',
       genreISO: '',
-      age: undefined,
+      birthday: undefined,
       terms: false
     }
   })
@@ -167,7 +167,7 @@ export default function SignupForm () {
         />
         <FormField
           control={form.control}
-          name='age'
+          name='birthday'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Fecha de nacimiento</FormLabel>

@@ -34,7 +34,7 @@ export default function SigninForm () {
 
   const onSubmit = async (input: SigninInputs) => {
     startTransition(async () => {
-      toast.message('Registrando..')
+      toast.message('Iniciando sesión..')
       const response = await signin(input)
 
       if (!response.data) {
@@ -50,7 +50,7 @@ export default function SigninForm () {
 
       toast.success('Iniciaste sesión')
       form.reset()
-      router.push(`/users/${response.data.id}`)
+      router.push('/profile')
     })
   }
 
@@ -107,7 +107,7 @@ export default function SigninForm () {
         />
         <div className='pt-spacing-4'>
           <Button
-            className='lg:w-full flex items-center gap-x-spacing-2'
+            className='lg:w-full'
             size='full'
             disabled={isTransition}
           >

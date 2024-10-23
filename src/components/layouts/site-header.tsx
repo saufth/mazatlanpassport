@@ -7,7 +7,7 @@ import { CallToAction } from '@/components/call-to-action'
 import { Icons } from '@/components/icons'
 import { siteConfig } from '@/config/site'
 
-export default function SiteHeader () {
+export default function SiteHeader ({ actions = true }: { actions?: boolean }) {
   const { scrollYProgress } = useScroll()
   const [isOnTop, setIsOnTop] = useState(true)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -39,20 +39,22 @@ export default function SiteHeader () {
             </Link>
           </div>
           <div className='flex items-center gap-x-spacing-4'>
-            <div className='hidden lg:flex items-center gap-x-spacing-3'>
-              <CallToAction
-                to='login'
-                onClick={closeMenu}
-                size='default'
-                variant='ghost'
-                className='inline-flex'
-              />
-              <CallToAction
-                onClick={closeMenu}
-                size='default'
-                className='inline-flex'
-              />
-            </div>
+            {actions && (
+              <div className='hidden lg:flex items-center gap-x-spacing-3'>
+                <CallToAction
+                  to='login'
+                  onClick={closeMenu}
+                  size='default'
+                  variant='ghost'
+                  className='inline-flex'
+                />
+                <CallToAction
+                  onClick={closeMenu}
+                  size='default'
+                  className='inline-flex'
+                />
+              </div>
+            )}
             <button className='w-11 h-4 relative scale-90 sm:scale-100' onClick={toggleMenu}>
               <motion.span
                 initial={{
