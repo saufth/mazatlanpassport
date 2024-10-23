@@ -40,7 +40,6 @@ export async function createSession (inputs: UUIDInputs, role: Roles) {
     cookieStore.set(sessionName, session, {
       domain,
       expires,
-      httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/'
@@ -115,7 +114,6 @@ export async function updateSession (request: NextRequest, role: Roles) {
       name: sessionName,
       value,
       domain,
-      httpOnly: true,
       expires,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
