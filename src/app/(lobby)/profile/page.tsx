@@ -1,11 +1,11 @@
-import QRCodeImage from "@/components/qr-code";
-import { GENRE } from "@/config/app";
-import { deleteSession, getSession } from "@/lib/actions/session";
-import { getUserProfile } from "@/lib/actions/users";
-import { redirects, roles, userStatus } from "@/lib/constants";
-import { absoluteUrl } from "@/lib/utils";
-import { redirect } from "next/navigation";
-import { toast } from "sonner";
+import QRCodeImage from '@/components/qr-code'
+import { GENRE } from '@/config/app'
+import { deleteSession, getSession } from '@/lib/actions/session'
+import { getUserProfile } from '@/lib/actions/users'
+import { redirects, roles, userStatus } from '@/lib/constants'
+import { absoluteUrl } from '@/lib/utils'
+import { redirect } from 'next/navigation'
+import { toast } from 'sonner'
 
 export default async function ProfilePage () {
   const role = roles.user
@@ -35,11 +35,10 @@ export default async function ProfilePage () {
   }
 
   const profile = userProfile.data
-  
 
   return (
     <div>
-      <div className="container py-spacing-6">
+      <div className='container py-spacing-6'>
         <div>
           {`${profile.firstName} ${profile.lastName}`}
         </div>
