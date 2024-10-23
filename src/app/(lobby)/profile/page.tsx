@@ -12,7 +12,7 @@ export default async function ProfilePage () {
   const session = await getSession(role)
 
   if (!session.data) {
-    redirect('/#home')
+    redirect(`/#${String(session.data)}`)
   }
 
   const userId = { id: String(session.data.id) }
