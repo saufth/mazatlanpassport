@@ -1,7 +1,7 @@
-import { cn } from '@/lib/utils'
-import { ImageProps } from '@/types'
 import Image from 'next/image'
 import QRCode from 'qrcode'
+import { cn } from '@/lib/utils'
+import type { ImageProps } from '@/types'
 
 interface QRCodeImageProps extends Omit<ImageProps, 'alt'> {
   className?: string

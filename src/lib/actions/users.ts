@@ -4,8 +4,7 @@ import { db } from '@/lib/database'
 import { userStatus } from '@/lib/constants'
 import { getErrorMessage } from '@/lib/handle-error'
 import { type UUIDInputs } from '@/lib/validations/uuid'
-import { SignupInputs } from '../validations/auth/signup'
-import { error } from 'console'
+import { type SignupInputs } from '@/lib/validations/auth/signup'
 
 interface UserStatus extends RowDataPacket {
   verifiedAt?: string
@@ -55,20 +54,20 @@ export async function checkUserStatus (input: UUIDInputs) {
 export async function getUserProfile (input: UUIDInputs) {
   try {
     const status = await checkUserStatus(input)
-  
+
     if (status.error) {
       throw new Error(status.error)
     }
-    
+
     const [userProfile] = await db.query<UserProfile[]>(
       'SELECT first_name AS firstName, last_name AS lastName, email, birthday, genre_iso AS genreISO FROM users WHERE id = UUID_TO_BIN(?, TRUE);',
       [input.id]
     )
-  
+
     if (!userProfile) {
       throw new Error('Hubo un problema al intentar obtener datos de perfil, intentalo de nuevo más tarde.')
     }
-  
+
     return {
       data: userProfile,
       error: null

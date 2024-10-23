@@ -1,5 +1,4 @@
 'use server'
-import { cookies } from 'next/headers'
 import bcrypt from 'bcryptjs'
 import nodemailer from 'nodemailer'
 import { roles, userStatus } from '@/lib/constants'

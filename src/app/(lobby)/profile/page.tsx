@@ -1,11 +1,11 @@
+import { redirect } from 'next/navigation'
+import { toast } from 'sonner'
 import QRCodeImage from '@/components/qr-code'
-import { GENRE } from '@/config/app'
 import { deleteSession, getSession } from '@/lib/actions/session'
 import { getUserProfile } from '@/lib/actions/users'
 import { redirects, roles, userStatus } from '@/lib/constants'
 import { absoluteUrl } from '@/lib/utils'
-import { redirect } from 'next/navigation'
-import { toast } from 'sonner'
+import { GENRE } from '@/config/app'
 
 export default async function ProfilePage () {
   const role = roles.user
