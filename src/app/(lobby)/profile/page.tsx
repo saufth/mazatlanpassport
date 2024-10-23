@@ -12,8 +12,7 @@ export default async function ProfilePage () {
   const session = await getSession(role)
 
   if (!session.data) {
-    await signout(role)
-    redirect(redirects.toSignin)
+    redirect('/#home')
   }
 
   const userId = { id: String(session.data.id) }
@@ -22,13 +21,12 @@ export default async function ProfilePage () {
   if (!userProfile.data) {
     if (userProfile.error) {
       if (userProfile.error === userStatus.unverified) {
-        redirect(redirects.toSignin)
+        redirect('/#home2')
       }
-      await signout(role)
-      redirect(redirects.afterLogout)
+      redirect('/#home3')
     }
     await signout(role)
-    redirect(redirects.toSignin)
+    redirect('/#home4')
   }
 
   const profile = userProfile.data
