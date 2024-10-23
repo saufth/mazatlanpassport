@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import QRCodeImage from '@/components/qr-code'
 import { getSession } from '@/lib/actions/session'
 import { getUserProfile } from '@/lib/actions/users'
-import { roles, userStatus } from '@/lib/constants'
+import { redirects, roles, userStatus } from '@/lib/constants'
 import { absoluteUrl } from '@/lib/utils'
 import { GENRE } from '@/config/app'
 import { signout } from '@/lib/actions/auth'
@@ -12,7 +12,8 @@ export default async function ProfilePage () {
   const session = await getSession(role)
 
   if (!session.data) {
-    redirect(`/#${String(session.data)}`)
+    await signout(role)
+    redirect(redirects.toSignin)
   }
 
   const userId = { id: String(session.data.id) }
@@ -21,12 +22,13 @@ export default async function ProfilePage () {
   if (!userProfile.data) {
     if (userProfile.error) {
       if (userProfile.error === userStatus.unverified) {
-        redirect('/#home2')
+        redirect(redirects.toSignin)
       }
-      redirect('/#home3')
+      await signout(role)
+      redirect(redirects.afterLogout)
     }
     await signout(role)
-    redirect('/#home4')
+    redirect(redirects.toSignin)
   }
 
   const profile = userProfile.data
