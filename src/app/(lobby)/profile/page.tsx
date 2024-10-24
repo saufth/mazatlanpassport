@@ -1,11 +1,11 @@
-import { redirect } from 'next/navigation'
+// import { redirect } from 'next/navigation'
 import QRCodeImage from '@/components/qr-code'
 import { getSession } from '@/lib/actions/session'
 import { getUserProfile } from '@/lib/actions/users'
-import { redirects, roles } from '@/lib/constants'
+import { roles } from '@/lib/constants'
 import { absoluteUrl } from '@/lib/utils'
 import { GENRE } from '@/config/app'
-import { signout } from '@/lib/actions/auth'
+// import { signout } from '@/lib/actions/auth'
 
 export default async function ProfilePage () {
   const role = roles.user
