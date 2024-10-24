@@ -38,7 +38,7 @@ export default async function ProfilePage () {
     <div>
       <div className='container py-spacing-6'>
         {session.data?.toString()}
-        {session.error?.toString()}
+        {session.error}
         {/* <div>
           {`${profile.firstName} ${profile.lastName}`}
         </div>
