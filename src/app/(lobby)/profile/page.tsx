@@ -37,7 +37,7 @@ export default async function ProfilePage () {
   return (
     <div>
       <div className='container py-spacing-6'>
-        {userId.}
+        {userId.id}
         {/* <div>
           {`${profile.firstName} ${profile.lastName}`}
         </div>
