@@ -77,7 +77,12 @@ export async function getSessionToken (role: Roles) {
 export async function getSession (role: Roles) {
   try {
     const session = await getSessionToken(role)
-    const decryptedJwt = session.data ? await decryptJWT(session.data) : null
+
+    if (!session.data) {
+      throw new Error('No se encontro ninguna sesión.')
+    }
+
+    const decryptedJwt = await decryptJWT(session.data)
 
     return {
       data: decryptedJwt,
