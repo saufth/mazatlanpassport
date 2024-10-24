@@ -17,7 +17,7 @@ export default async function ProfilePage () {
   //   redirect(redirects.toSignin)
   // }
 
-  // const userId = { id: String(session.data.id) }
+  const userId = { id: String(session.data?.id) }
   // const userProfile = await getUserProfile(userId)
 
   // if (!userProfile.data) {
@@ -37,8 +37,7 @@ export default async function ProfilePage () {
   return (
     <div>
       <div className='container py-spacing-6'>
-        {session.data?.toString()}
-        {session.error}
+        {userId.}
         {/* <div>
           {`${profile.firstName} ${profile.lastName}`}
         </div>
