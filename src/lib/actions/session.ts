@@ -12,6 +12,7 @@ const jwtSecretKey = new TextEncoder().encode(String(process.env.JWT_SECRET_KEY)
 export async function encryptJWT (payload: JWTPayload, role: Roles) {
   try {
     return await new SignJWT(payload)
+      .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
       .setExpirationTime(createSessionExpirationDate(role))
       .sign(jwtSecretKey)
@@ -22,7 +23,7 @@ export async function encryptJWT (payload: JWTPayload, role: Roles) {
 
 export async function decryptJWT (jwt: string | Uint8Array) {
   try {
-    const { payload } = await jwtVerify(jwt, jwtSecretKey)
+    const { payload } = await jwtVerify(jwt, jwtSecretKey, { algorithms: ['HS256'] })
     return payload
   } catch (err) {
     throw new Error('Hubo un problema al intentar verificar la sesión, intentalo de nuevo más tarde.')
