@@ -11,10 +11,10 @@ export default async function ProfilePage () {
   const role = roles.user
   const session = await getSession(role)
 
-  if (session.error) {
-    await signout(role)
-    redirect(redirects.toSignin)
-  }
+  // if (session.error) {
+  //   await signout(role)
+  //   redirect(redirects.toSignin)
+  // }
 
   const userId = { id: String(session.data?.id) }
   const userProfile = await getUserProfile(userId)
