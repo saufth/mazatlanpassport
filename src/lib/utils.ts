@@ -1,21 +1,10 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { roles } from '@/lib/constants'
 import { siteConfig } from '@/config/site'
 import type {
   DocumentElementWithFullscreen,
-  DocumentWithFullscreen,
-  Roles
+  DocumentWithFullscreen
 } from '@/types'
-
-export function createSessionExpirationDate (role: Roles) {
-  const hours = role === roles.user ? 720 : 1
-  return new Date(Date.now() + hours * 60 * 60000)
-}
-
-export function createSessionName (role: Roles) {
-  return `${role}Session`
-}
 
 export function cn (...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -104,8 +93,7 @@ export function calculateYears (dateA: Date, dateB?: Date) {
 }
 
 export function calculateMinutes (dateA: Date, dateB?: Date) {
-  dateB = dateB || new Date()
-  return (dateB.getTime() - dateA.getTime()) / 60000
+  return ((dateB || new Date()).getTime() - dateA.getTime()) / 60000
 }
 
 export function requestFullScreen (element: DocumentElementWithFullscreen) {
