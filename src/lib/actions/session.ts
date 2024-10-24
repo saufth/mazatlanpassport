@@ -12,8 +12,6 @@ const jwtSecretKey = new TextEncoder().encode(String(process.env.JWT_SECRET_KEY)
 export async function encryptJWT (payload: JWTPayload, role: Roles) {
   try {
     return await new SignJWT(payload)
-      .setProtectedHeader({ alg: 'HS256' })
-      .setIssuedAt()
       .setExpirationTime(createSessionExpirationDate(role))
       .sign(jwtSecretKey)
   } catch {
@@ -23,7 +21,7 @@ export async function encryptJWT (payload: JWTPayload, role: Roles) {
 
 export async function decryptJWT (jwt: string | Uint8Array) {
   try {
-    const { payload } = await jwtVerify(jwt, jwtSecretKey, { algorithms: ['HS256'] })
+    const { payload } = await jwtVerify(jwt, jwtSecretKey)
     return payload
   } catch (err) {
     throw new Error('Hubo un problema al intentar verificar la sesión, intentalo de nuevo más tarde.')
@@ -34,10 +32,10 @@ export async function createSession (inputs: UUIDInputs, role: Roles) {
   try {
     const sessionName = createSessionName(role)
     const expires = createSessionExpirationDate(role)
-    const session = await encryptJWT({ ...inputs, expires }, role)
+    const encryptedSession = await encryptJWT({ ...inputs, expires }, role)
     const cookieStore = await cookies()
 
-    cookieStore.set(sessionName, session, {
+    cookieStore.set(sessionName, encryptedSession, {
       domain,
       expires,
       secure: process.env.NODE_ENV === 'production',
