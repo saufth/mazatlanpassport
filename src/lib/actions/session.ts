@@ -12,6 +12,7 @@ const jwtSecretKey = new TextEncoder().encode(String(process.env.JWT_SECRET_KEY)
 export async function encryptJWT (payload: JWTPayload, role: Roles) {
   try {
     return await new SignJWT(payload)
+      .setIssuedAt()
       .setExpirationTime(createSessionExpirationDate(role))
       .sign(jwtSecretKey)
   } catch {

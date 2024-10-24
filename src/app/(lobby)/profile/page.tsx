@@ -24,10 +24,8 @@ export default async function ProfilePage () {
       if (userProfile.error === userStatus.unverified) {
         redirect('/#home1')
       }
-      await signout(role)
       redirect('/#home2')
     }
-    await signout(role)
     redirect('/#home3')
   }
 
