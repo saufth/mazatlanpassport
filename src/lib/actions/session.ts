@@ -38,10 +38,11 @@ export async function createSession (inputs: UUIDInputs, role: Roles) {
     const cookieStore = await cookies()
 
     cookieStore.set(sessionName, encryptedSession, {
-      domain,
       expires,
+      domain,
+      httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none',
+      sameSite: 'strict',
       path: '/'
     })
 
@@ -118,10 +119,11 @@ export async function updateSession (request: NextRequest, role: Roles) {
     res.cookies.set({
       name: sessionName,
       value,
-      domain,
       expires,
+      domain,
+      httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'none',
+      sameSite: 'strict',
       path: '/'
     })
 
