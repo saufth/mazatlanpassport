@@ -142,7 +142,14 @@ export async function updateSession (request: NextRequest, role: Roles) {
 export async function deleteSession (role: Roles) {
   try {
     const cookieStore = await cookies()
-    cookieStore.set(createSessionName(role), '', { expires: new Date(0) })
+    cookieStore.set(createSessionName(role), '', {
+      expires: new Date(0),
+      domain,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/'
+    })
   } catch {
     throw new Error('Hubo un problema al intentar eliminar la sesión, intentalo de nuevo más tarde.')
   }
