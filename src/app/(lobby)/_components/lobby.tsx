@@ -9,7 +9,6 @@ import { StoresCarousel } from '@/components/stores-carousel'
 // import { StoresCarousel } from '@/components/stores-carousel'
 
 export function Lobby () {
-  const jwtSecretKey = String(process.env.JWT_SECRET_KEY)
   return (
     <>
       <PageHeader
@@ -73,7 +72,6 @@ export function Lobby () {
         <div className='absolute inset-0 bg-gradient-to-t from-accent/35 via-transparent to-transparent' />
         <div className='absolute inset-0 bg-gradient-to-tl from-transparent via-transparent to-accent/35' />
       </section>
-      {jwtSecretKey}
       {/* <section id='preguntas-frecuentes' className='bg-secondary'>
         <div className='container py-spacing-9'>
           <div className='flex flex-col gap-y-spacing-3'>
