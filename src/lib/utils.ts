@@ -30,6 +30,10 @@ export function capitalize (text: string) {
   return `${text.charAt(0).toUpperCase()}${text.slice(1).toLowerCase()}`
 }
 
+export function range (start: number, end: number, step: number) {
+  return Array.from({ length: (end - start) / step + 1 }, (_, i) => start + (i * step))
+}
+
 export function formatPhoneNumber (phoneNumber: string | number) {
   const cleanedNumber = String(phoneNumber).replace(/\D/g, '')
 

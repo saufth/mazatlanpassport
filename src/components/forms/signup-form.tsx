@@ -23,12 +23,13 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { format, subYears } from 'date-fns'
+import { format, getYear, getMonth } from 'date-fns'
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signup } from '@/lib/actions/auth'
 import { type SignupInputs, signupSchema } from '@/lib/validations/auth/signup'
+import { cn, range } from '@/lib/utils'
 import { GENRE } from '@/config/app'
 import 'react-datepicker/dist/react-datepicker.css'
 // import { convertToSubcurrency } from '@/lib/utils'
@@ -93,7 +94,7 @@ export default function SignupForm () {
       password: '',
       confirmPassword: '',
       genreISO: '',
-      birthday: subYears(new Date(), 16).toString(),
+      birthday: format(new Date(), 'dd/MM/yyyy'),
       terms: false
     }
   })
@@ -112,6 +113,39 @@ export default function SignupForm () {
       form.reset()
       router.push(`/signup/verify-email/${response.data!.id}`)
     })
+  }
+
+  const currentYear = getYear(new Date())
+  const years = range(currentYear - 100, currentYear, 1)
+  const months = {
+    en: [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ],
+    es: [
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre'
+    ]
   }
 
   return (
@@ -178,11 +212,65 @@ export default function SignupForm () {
                 <DatePicker
                   {...field}
                   dateFormat='dd/MM/yyyy'
-                  selected={new Date(field.value)}
-                  onSelect={(date) => { date && field.onChange(date.toString()) }}
-                  value={format(field.value, 'dd/MM/yyyy')}
+                  placeholderText='dd/mm/aaaa'
+                  onSelect={(date) => { date && field.onChange(format(date, 'dd/MM/yyyy')) }}
                   className='w-full outline-offset-0 f-body-2 outline-2 text-inherit ring-shadow border rounded-lg bg-input p-2.5 sm:p-3 transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-0 focus-visible:ring-ring focus-visible:border-ring/50 disabled:cursor-not-allowed disabled:opacity-50'
                   wrapperClassName='w-full'
+                  renderCustomHeader={({
+                    date,
+                    changeYear,
+                    changeMonth,
+                    decreaseMonth,
+                    increaseMonth,
+                    prevMonthButtonDisabled,
+                    nextMonthButtonDisabled
+                  }) => (
+                    <div className='flex justify-center gap-x-1 my-2.5'>
+                      <div
+                        onClick={() => { !prevMonthButtonDisabled && decreaseMonth() }}
+                        className={cn(
+                          'py-1 px-2 border border-muted-foreground rounded-md',
+                          !prevMonthButtonDisabled && 'cursor-pointer'
+                        )}
+                      >
+                        {'<'}
+                      </div>
+                      <select
+                        className='bg-input px-1 border border-muted-foreground rounded-md'
+                        value={getYear(date)}
+                        onChange={({ target: { value } }) => changeYear(Number(value))}
+                      >
+                        {years.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+
+                      <select
+                        className='bg-input px-1 border border-muted-foreground rounded-md'
+                        value={months.es[getMonth(date)]}
+                        onChange={({ target: { value } }) =>
+                          changeMonth(months.es.indexOf(value))}
+                      >
+                        {months.es.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+
+                      <div
+                        onClick={() => { !nextMonthButtonDisabled && increaseMonth() }}
+                        className={cn(
+                          'py-1 px-2 border border-muted-foreground rounded-md',
+                          !nextMonthButtonDisabled && 'cursor-pointer'
+                        )}
+                      >
+                        {'>'}
+                      </div>
+                    </div>
+                  )}
                 />
               </FormControl>
               <FormMessage />
