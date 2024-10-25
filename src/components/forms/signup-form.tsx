@@ -100,7 +100,6 @@ export default function SignupForm () {
   })
 
   const onSubmit = (inputs: SignupInputs) => {
-    console.log(inputs)
     startTransition(async () => {
       toast.message('Registrando..')
       const response = await signup(inputs)
@@ -117,7 +116,7 @@ export default function SignupForm () {
   }
 
   const currentYear = getYear(new Date())
-  const years = range(currentYear - 100, currentYear, 1)
+  const years = range(currentYear - 100, currentYear)
   const months = {
     en: [
       'January',
@@ -147,6 +146,11 @@ export default function SignupForm () {
       'Noviembre',
       'Diciembre'
     ]
+  }
+
+  const createDateDMY = (dateDMY: string) => {
+    const dateValues = dateDMY.split('/')
+    return new Date(`${dateValues[1]}/${dateValues[0]}/${dateValues[2]}`)
   }
 
   return (
@@ -214,9 +218,15 @@ export default function SignupForm () {
                   {...field}
                   dateFormat='dd/MM/yyyy'
                   placeholderText='dd/mm/aaaa'
+                  selected={createDateDMY(field.value)}
                   onSelect={(date) => { date && field.onChange(format(date, 'dd/MM/yyyy')) }}
-                  className='w-full outline-offset-0 f-body-2 outline-2 text-inherit ring-shadow border rounded-lg bg-input p-2.5 sm:p-3 transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-0 focus-visible:ring-ring focus-visible:border-ring/50 disabled:cursor-not-allowed disabled:opacity-50'
+                  className='w-full outline-offset-0 f-body-2 outline-2 text-inherit ring-shadow border rounded-lg bg-input p-2.5 sm:p-3 cursor-pointer select-none'
                   wrapperClassName='w-full'
+                  customInput={(
+                    <div>
+                      {field.value}
+                    </div>
+                  )}
                   renderCustomHeader={({
                     date,
                     changeYear,
@@ -251,8 +261,7 @@ export default function SignupForm () {
                       <select
                         className='bg-input px-1 border border-muted-foreground rounded-md'
                         value={months.es[getMonth(date)]}
-                        onChange={({ target: { value } }) =>
-                          changeMonth(months.es.indexOf(value))}
+                        onChange={({ target: { value } }) => changeMonth(months.es.indexOf(value))}
                       >
                         {months.es.map((option) => (
                           <option key={option} value={option}>

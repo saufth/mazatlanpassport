@@ -30,7 +30,7 @@ export function capitalize (text: string) {
   return `${text.charAt(0).toUpperCase()}${text.slice(1).toLowerCase()}`
 }
 
-export function range (start: number, end: number, step: number) {
+export function range (start: number, end: number, step: number = 1) {
   return Array.from({ length: (end - start) / step + 1 }, (_, i) => start + (i * step))
 }
 
