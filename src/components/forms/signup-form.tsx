@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState, useTransition } from 'react'
+import DatePicker from 'react-datepicker'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -22,12 +23,14 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
+import { format, subYears } from 'date-fns'
 import { EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signup } from '@/lib/actions/auth'
 import { type SignupInputs, signupSchema } from '@/lib/validations/auth/signup'
 import { GENRE } from '@/config/app'
+import 'react-datepicker/dist/react-datepicker.css'
 // import { convertToSubcurrency } from '@/lib/utils'
 // import {
 //   PaymentElement as StripePaymentElement,
@@ -90,7 +93,7 @@ export default function SignupForm () {
       password: '',
       confirmPassword: '',
       genreISO: '',
-      birthday: undefined,
+      birthday: subYears(new Date(), 16).toString(),
       terms: false
     }
   })
@@ -172,10 +175,14 @@ export default function SignupForm () {
             <FormItem>
               <FormLabel>Fecha de nacimiento</FormLabel>
               <FormControl>
-                <Input
-                  type='date'
+                <DatePicker
                   {...field}
-                  value={field.value ? field.value.toString() : ''}
+                  dateFormat='dd/MM/yyyy'
+                  selected={new Date(field.value)}
+                  onSelect={(date) => { date && field.onChange(date.toString()) }}
+                  value={format(field.value, 'dd/MM/yyyy')}
+                  className='w-full outline-offset-0 f-body-2 outline-2 text-inherit ring-shadow border rounded-lg bg-input p-2.5 sm:p-3 transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-0 focus-visible:ring-ring focus-visible:border-ring/50 disabled:cursor-not-allowed disabled:opacity-50'
+                  wrapperClassName='w-full'
                 />
               </FormControl>
               <FormMessage />
