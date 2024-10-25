@@ -183,7 +183,7 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`users` (
   `last_name` VARCHAR(50) NOT NULL,
   `phone` BIGINT UNSIGNED NULL,
   `genre_iso` TINYINT UNSIGNED NOT NULL,
-  `birthday` DATE NOT NULL,
+  `birthdate` DATE NOT NULL,
   `newsletters` TINYINT UNSIGNED NOT NULL DEFAULT 1,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `updated_at` TIMESTAMP NULL,

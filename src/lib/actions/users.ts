@@ -60,7 +60,7 @@ export async function getUserProfile (input: UUIDInputs) {
     }
 
     const [userProfile] = await db.query<UserProfile[]>(
-      'SELECT first_name AS firstName, last_name AS lastName, email, birthday, genre_iso AS genreISO FROM users WHERE id = UUID_TO_BIN(?, TRUE);',
+      'SELECT first_name AS firstName, last_name AS lastName, email, birthdate, genre_iso AS genreISO FROM users WHERE id = UUID_TO_BIN(?, TRUE);',
       [input.id]
     )
 

@@ -1,5 +1,7 @@
 // import { redirect } from 'next/navigation'
 import QRCodeImage from '@/components/qr-code'
+import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
 import { getSession } from '@/lib/actions/session'
 import { getUserProfile } from '@/lib/actions/users'
 import { roles } from '@/lib/constants'
@@ -46,7 +48,7 @@ export default async function ProfilePage () {
           {GENRE.find((genreItem) => String(profile?.genreISO) === genreItem.iso)?.title}
         </div>
         <div>
-          {String(profile?.birthday)}
+          {profile && profile.birthdate ? format(new Date(profile.birthdate), 'PPP', { locale: es }) : 'not-found'}
         </div>
         <QRCodeImage src={absoluteUrl(`/profile/${userId}`)} />
       </div>

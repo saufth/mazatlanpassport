@@ -98,7 +98,7 @@ export async function signup (input: SignupInputs) {
     }
 
     await db.query(
-      'INSERT INTO users (id, email, password, first_name, last_name, genre_iso, birthday) VALUES (UUID_TO_BIN(?, TRUE), ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO users (id, email, password, first_name, last_name, genre_iso, birthdate) VALUES (UUID_TO_BIN(?, TRUE), ?, ?, ?, ?, ?, STR_TO_DATE(?, "%d/%m/%Y"))',
       [
         userId.id,
         input.email,
@@ -106,7 +106,7 @@ export async function signup (input: SignupInputs) {
         input.firstName,
         input.lastName,
         Number(input.genreISO),
-        new Date(input.birthday)
+        input.birthdate
       ]
     )
 

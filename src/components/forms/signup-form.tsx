@@ -94,12 +94,13 @@ export default function SignupForm () {
       password: '',
       confirmPassword: '',
       genreISO: '',
-      birthday: format(new Date(), 'dd/MM/yyyy'),
+      birthdate: format(new Date(), 'dd/MM/yyyy'),
       terms: false
     }
   })
 
   const onSubmit = (inputs: SignupInputs) => {
+    console.log(inputs)
     startTransition(async () => {
       toast.message('Registrando..')
       const response = await signup(inputs)
@@ -204,7 +205,7 @@ export default function SignupForm () {
         />
         <FormField
           control={form.control}
-          name='birthday'
+          name='birthdate'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Fecha de nacimiento</FormLabel>
@@ -230,7 +231,7 @@ export default function SignupForm () {
                         onClick={() => { !prevMonthButtonDisabled && decreaseMonth() }}
                         className={cn(
                           'py-1 px-2 border border-muted-foreground rounded-md',
-                          !prevMonthButtonDisabled && 'cursor-pointer'
+                          !prevMonthButtonDisabled ? 'cursor-pointer' : 'bg-muted'
                         )}
                       >
                         {'<'}
@@ -264,7 +265,7 @@ export default function SignupForm () {
                         onClick={() => { !nextMonthButtonDisabled && increaseMonth() }}
                         className={cn(
                           'py-1 px-2 border border-muted-foreground rounded-md',
-                          !nextMonthButtonDisabled && 'cursor-pointer'
+                          !nextMonthButtonDisabled ? 'cursor-pointer' : 'bg-muted'
                         )}
                       >
                         {'>'}
