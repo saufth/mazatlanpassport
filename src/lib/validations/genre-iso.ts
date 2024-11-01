@@ -3,11 +3,11 @@ import {
   object as zodObject,
   type infer as zodInfer
 } from 'zod'
-import { GENRE } from '@/config/app'
+import { genre } from '@/lib/constants'
 
 export const genreISOSchema = zodObject({
   genreISO: ZodString({ required_error: 'El Genero es requqrido' })
-    .refine((genreISO) => GENRE.find(genreItem => genreISO === genreItem.iso),
+    .refine((genreISO) => genre.find(genreItem => genreISO === genreItem.iso),
       { message: 'El Genero es ivalido' }
     )
 })

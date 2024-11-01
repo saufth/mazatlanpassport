@@ -30,7 +30,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { signup } from '@/lib/actions/auth'
 import { type SignupInputs, signupSchema } from '@/lib/validations/auth/signup'
 import { cn, range } from '@/lib/utils'
-import { GENRE } from '@/config/app'
+import { genre } from '@/lib/constants'
 import 'react-datepicker/dist/react-datepicker.css'
 // import { convertToSubcurrency } from '@/lib/utils'
 // import {
@@ -304,14 +304,14 @@ export default function SignupForm () {
                 </FormControl>
                 <SelectContent>
                   <SelectGroup>
-                    {GENRE.map(
+                    {genre.map(
                       (genderItem) => (
                         <SelectItem
-                          key={genderItem.title}
+                          key={genderItem.title.es}
                           value={genderItem.iso}
                           className='rounded-lg hover:cursor-pointer group-hover:bg-secondary'
                         >
-                          {genderItem.title}
+                          {genderItem.title.es}
                         </SelectItem>
                       )
                     )}

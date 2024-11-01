@@ -1,7 +1,7 @@
 import type { Author as NextAuthor } from 'next/dist/lib/metadata/types/metadata-types'
 import { createWhatsappUrl, formatPhoneNumber } from '@/lib/utils'
 import { blog } from '@/config/blog'
-import { COUNTRIES } from '@/config/app'
+import { countries } from '@/lib/constants'
 import type { MainNavItem, NavItem } from '@/types'
 
 export const author: NextAuthor = {
@@ -38,7 +38,7 @@ export const siteNav: MainNavItem[] = [
 
 const phone = String(process.env.NEXT_PUBLIC_APP_PHONE)
 const address = 'Mazatlán, Sinaloa.'
-const country = COUNTRIES.find((countryItem) => countryItem.alpha2 === 'MX')!
+const country = countries.find((countryItem) => countryItem.alpha2 === 'MX')!
 export const contactConfig = {
   email: String(process.env.NEXT_PUBLIC_EMAIL),
   phone: {
