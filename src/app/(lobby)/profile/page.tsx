@@ -52,8 +52,8 @@ export default async function ProfilePage () {
                     className='rounded-[28px]'
                   />
                 </div>
-                <Icons.Logomark className='w-auto h-[80%] md:h-[116%] absolute -bottom-16 -right-0 -z-10 opacity-20' />
-                <div className='absolute inset-0 -z-10 bg-gradient-to-l from-secondary via-secondary/30 to-secondary/3 backdrop-blur-[2px] rounded-[40px]' />
+                <Icons.Logomark className='w-auto h-[90%] md:h-[120%] absolute -bottom-16 -right-0 -z-10 opacity-20' />
+                <div className='absolute inset-0 -z-10 bg-gradient-to-l from-secondary via-secondary/20 to-secondary/0 backdrop-blur rounded-[40px]' />
               </div>
             </div>
           </div>
