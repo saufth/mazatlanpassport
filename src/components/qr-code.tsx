@@ -17,7 +17,7 @@ export default async function QRCodeImage ({
   return (
     <AspectRatio
       ratio={1 / 1}
-      className='aspect-[1/1]'
+      className='aspect-square'
     >
       <Image
         src={qrcode}
