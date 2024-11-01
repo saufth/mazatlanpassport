@@ -10,7 +10,7 @@ import {
 import { cn, formatPrice } from '@/lib/utils'
 
 interface PromoCardProps {
-  id: string
+  // id: string
   name: string
   description: string
   price: number
@@ -20,7 +20,7 @@ interface PromoCardProps {
 }
 
 export function PromoCard ({
-  id,
+  // id,
   name,
   description,
   price,

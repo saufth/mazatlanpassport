@@ -2,7 +2,7 @@
 import bcrypt from 'bcryptjs'
 import nodemailer from 'nodemailer'
 import { roles, userStatus } from '@/lib/constants'
-import { db } from '@/lib/database'
+import { db } from '@/db'
 import { checkUserStatus } from '@/lib/actions/users'
 import { type RowDataPacket } from 'mysql2'
 import { type SignupInputs } from '@/lib/validations/auth/signup'
@@ -126,6 +126,8 @@ export async function signup (input: SignupInputs) {
       [userKey.rowKey, code]
     )
 
+    await db.end()
+
     await sendVerifyEmailCode(input.email, code)
 
     return {
@@ -133,6 +135,7 @@ export async function signup (input: SignupInputs) {
       error: null
     }
   } catch (err) {
+    await db.end()
     return {
       data: null,
       error: getErrorMessage(err)
@@ -162,6 +165,7 @@ export async function signin (input: SigninInputs) {
     const userStatusData = await checkUserStatus(userId)
 
     if (userStatusData.error && userStatusData.error !== userStatus.unverified) {
+      await db.end()
       return userStatusData
     }
 
@@ -188,6 +192,7 @@ export async function signin (input: SigninInputs) {
 
       if (verifyCode) {
         if (calculateMinutes(new Date(verifyCode.createdAt)) < 5 && verifyCode.attempts < 2) {
+          await db.end()
           return {
             data: userId,
             error: userStatus.unverified
@@ -207,6 +212,8 @@ export async function signin (input: SigninInputs) {
         [userData.rowKey, code]
       )
 
+      await db.end()
+
       await sendVerifyEmailCode(input.email, code)
 
       return {
@@ -214,6 +221,8 @@ export async function signin (input: SigninInputs) {
         error: userStatus.unverified
       }
     }
+
+    await db.end()
 
     const newSession = await createSession(userId, roles.user)
 
@@ -226,6 +235,7 @@ export async function signin (input: SigninInputs) {
       error: null
     }
   } catch (err) {
+    await db.end()
     return {
       data: null,
       error: getErrorMessage(err)
@@ -299,6 +309,8 @@ export async function verifyEmail (input: VerifyCodeInputs) {
 
     deleteCurrentVerifyEmailCode()
 
+    await db.end()
+
     const newSession = await createSession(userId, roles.user)
 
     if (newSession.error) {
@@ -333,6 +345,7 @@ export async function verifyEmail (input: VerifyCodeInputs) {
       error: null
     }
   } catch (err) {
+    await db.end()
     return {
       data: null,
       error: getErrorMessage(err)

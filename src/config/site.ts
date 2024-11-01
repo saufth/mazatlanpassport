@@ -1,12 +1,8 @@
-import { Author as NextAuthor } from 'next/dist/lib/metadata/types/metadata-types'
-import { blog } from '@/config/blog'
-import type {
-  SiteConfig,
-  MainNavItem,
-  NavItem
-} from '@/types'
-import { COUNTRIES } from './app'
+import type { Author as NextAuthor } from 'next/dist/lib/metadata/types/metadata-types'
 import { createWhatsappUrl, formatPhoneNumber } from '@/lib/utils'
+import { blog } from '@/config/blog'
+import { COUNTRIES } from '@/config/app'
+import type { MainNavItem, NavItem } from '@/types'
 
 export const author: NextAuthor = {
   name: 'saufth',
@@ -31,26 +27,20 @@ export const siteNav: MainNavItem[] = [
     href: '/#promociones-exclusivas'
   },
   // {
-  //   title: 'Quiénes somos',
-  //   href: '/#nosotros'
+  //   title: 'Preguntas frecuentes',
+  //   href: '/#preguntas-frecuentes'
   // },
-  {
-    title: 'Preguntas frecuentes',
-    href: '/#preguntas-frecuentes'
-  },
   {
     title: 'Contacto',
     href: '/contacto'
   }
 ]
 
-export const domain = 'mazatlanpassport.mx'
-
-const country = COUNTRIES.find((countryItem) => countryItem.alpha2 === 'MX')!
-const phone = '526692393939'
+const phone = String(process.env.NEXT_PUBLIC_APP_PHONE)
 const address = 'Mazatlán, Sinaloa.'
+const country = COUNTRIES.find((countryItem) => countryItem.alpha2 === 'MX')!
 export const contactConfig = {
-  email: 'mazatlanpassport@gmail.com',
+  email: String(process.env.NEXT_PUBLIC_EMAIL),
   phone: {
     number: phone,
     displayNumber: formatPhoneNumber(phone),
@@ -87,15 +77,14 @@ export const socialNav: NavItem[] = [
   }
 ]
 
-export const siteConfig: SiteConfig = {
+export const siteConfig = {
   name: 'Mazatlán Passport',
   slogan: '¡Descuentos exclusivos en Mazatlán!',
-  description: 'Sé socio y accede a descuentos exclusivos en los mejores lugares de Mazatlán',
-  url: `https://${domain}`,
-  author,
+  description: 'Promociones exclusivas para viajeros inteligentes.',
+  url: String(process.env.NEXT_PUBLIC_APP_URL),
   mainNav: [
     {
-      title: 'Página principal',
+      title: 'Inicio',
       href: '/'
     },
     ...siteNav

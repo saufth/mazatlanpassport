@@ -23,7 +23,7 @@ export default function SignoutButtons () {
       }
 
       toast.success('Cerraste sesión.')
-      router.push(redirects.afterLogout)
+      router.push(redirects.afterSignout)
     })
   }
 

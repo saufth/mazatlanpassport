@@ -4,9 +4,9 @@ import { jwtVerify, SignJWT, type JWTPayload } from 'jose'
 import { getErrorMessage } from '@/lib/handle-error'
 import { type UUIDInputs } from '@/lib/validations/uuid'
 import { roles } from '@/lib/constants'
-import { domain } from '@/config/site'
 import type { Roles } from '@/types'
 
+const domain = String(process.env.APP_DOMAIN)
 const jwtSecretKey = new TextEncoder().encode(String(process.env.JWT_SECRET_KEY))
 
 const createSessionName = (role: Roles) => {
@@ -34,7 +34,7 @@ export async function decryptSession (jwt: string | Uint8Array) {
   try {
     const { payload } = await jwtVerify(jwt, jwtSecretKey, { algorithms: ['HS256'] })
     return payload
-  } catch (err) {
+  } catch {
     throw new Error('Hubo un problema al intentar verificar la sesión, intentalo de nuevo más tarde.')
   }
 }
@@ -106,6 +106,23 @@ export async function getSession (role: Roles) {
   }
 }
 
+export async function checkSession (role: Roles) {
+  try {
+    const cookieStore = await cookies()
+    const isSession = cookieStore.has(createSessionName(role))
+  
+    return {
+      data: isSession,
+      error: null
+    }
+  } catch (err) {
+    return {
+      data: null,
+      error: getErrorMessage(err)
+    }
+  }
+}
+
 export async function updateSession (request: NextRequest, role: Roles) {
   try {
     const sessionName = createSessionName(role)
@@ -150,16 +167,8 @@ export async function updateSession (request: NextRequest, role: Roles) {
 
 export async function deleteSession (role: Roles) {
   try {
-    const cookieStore = await cookies()
-    cookieStore.set(createSessionName(role), '', {
-      expires: new Date(0),
-      domain: process.env.NODE_ENV === 'production' ? domain : undefined,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      path: '/'
-    })
-  } catch {
-    throw new Error('Hubo un problema al intentar eliminar la sesión, intentalo de nuevo más tarde.')
+    (await cookies()).delete(createSessionName(role))
+  } catch (err) {
+    throw new Error(getErrorMessage(err))
   }
 }

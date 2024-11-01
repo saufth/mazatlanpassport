@@ -1,6 +1,6 @@
 'use server'
 import { type RowDataPacket } from 'mysql2'
-import { db } from '@/lib/database'
+import { db } from '@/db'
 import { userStatus } from '@/lib/constants'
 import { getErrorMessage } from '@/lib/handle-error'
 import { type UUIDInputs } from '@/lib/validations/uuid'
@@ -39,11 +39,14 @@ export async function checkUserStatus (input: UUIDInputs) {
       throw new Error(userStatus.unverified)
     }
 
+    await db.end()
+
     return {
       data: null,
       error: null
     }
   } catch (err) {
+    await db.end()
     return {
       data: null,
       error: getErrorMessage(err)

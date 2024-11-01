@@ -219,7 +219,7 @@ export default function SignupForm () {
                   dateFormat='dd/MM/yyyy'
                   placeholderText='dd/mm/aaaa'
                   selected={createDateDMY(field.value)}
-                  onSelect={(date) => { date && field.onChange(format(date, 'dd/MM/yyyy')) }}
+                  onSelect={(date) => { if (date) field.onChange(format(date, 'dd/MM/yyyy')) }}
                   className='w-full outline-offset-0 f-body-2 outline-2 text-inherit ring-shadow border rounded-lg bg-input p-2.5 sm:p-3 cursor-pointer select-none'
                   wrapperClassName='w-full'
                   customInput={(
@@ -238,7 +238,7 @@ export default function SignupForm () {
                   }) => (
                     <div className='flex justify-center gap-x-1 my-2.5'>
                       <div
-                        onClick={() => { !prevMonthButtonDisabled && decreaseMonth() }}
+                        onClick={() => { if (!prevMonthButtonDisabled) decreaseMonth() }}
                         className={cn(
                           'py-1 px-2 border border-muted-foreground rounded-md',
                           !prevMonthButtonDisabled ? 'cursor-pointer' : 'bg-muted'
@@ -271,7 +271,7 @@ export default function SignupForm () {
                       </select>
 
                       <div
-                        onClick={() => { !nextMonthButtonDisabled && increaseMonth() }}
+                        onClick={() => { if (!nextMonthButtonDisabled) increaseMonth() }}
                         className={cn(
                           'py-1 px-2 border border-muted-foreground rounded-md',
                           !nextMonthButtonDisabled ? 'cursor-pointer' : 'bg-muted'

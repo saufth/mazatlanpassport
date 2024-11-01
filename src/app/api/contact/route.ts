@@ -2,12 +2,11 @@ import { NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
 import { ZodError } from 'zod'
 import { contactSchema } from '@/lib/validations/contact'
-import { siteConfig, contactConfig, domain } from '@/config/site'
-
-// export const runtime = 'edge'
+import { siteConfig, contactConfig } from '@/config/site'
 
 export async function POST (req: Request) {
   try {
+    const domain = String(process.env.APP_DOMAIN)
     const requestBody = await req.json()
     const validatedRequestBody = contactSchema.parse(requestBody)
 
@@ -18,7 +17,7 @@ export async function POST (req: Request) {
       secure: true,
       auth: {
         user: contactConfig.email,
-        pass: String(process.env.EMIAL_CONTACT)
+        pass: String(process.env.EMAIL_PASSWORD)
       }
     })
 

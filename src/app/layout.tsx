@@ -2,12 +2,12 @@ import { type PropsWithChildren } from 'react'
 import { type Metadata, type Viewport } from 'next'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
 import ThemeProvider from '@/components/layouts/theme-provider'
-import { Toaster } from '@/components/ui/toaster'
+import { Toaster } from '@/components/ui/sonner'
 import GoogleSearchScript from '@/components/layouts/google-seacrch-script'
 import { cn } from '@/lib/utils'
 import { fontHeader, fontSans } from '@/lib/fonts'
-import { siteConfig } from '@/config/site'
-import '@/styles/globals.css'
+import { siteConfig, author } from '@/config/site'
+import '@/app/globals.css'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -51,9 +51,9 @@ export const metadata: Metadata = {
     'Recuerdos Mazatlan Sinaload',
     'Recuerdos Mazatlán Sinaload'
   ],
-  authors: siteConfig.author,
-  creator: siteConfig.author.name,
-  publisher: siteConfig.author.name,
+  authors: author,
+  creator: author.name,
+  publisher: author.name,
   applicationName: siteConfig.name,
   generator: 'Next.js',
   robots: 'index, follow',
@@ -81,16 +81,15 @@ export const viewport: Viewport = {
 
 export default function RootLayout ({ children }: PropsWithChildren) {
   return (
-    <html
-      lang='es'
-      suppressHydrationWarning
-      className={cn(
-        fontHeader.variable,
-        fontSans.variable,
-        'font-sans antialiased !scroll-smooth'
-      )}
-    >
-      <body className='bg-background min-h-screen'>
+    <html lang='es'>
+      <body
+        suppressHydrationWarning
+        className={cn(
+          'bg-background min-h-screen font-sans antialiased !scroll-smooth',
+          fontHeader.variable,
+          fontSans.variable
+        )}
+      >
         <ThemeProvider attribute='class' defaultTheme='system'>
           {children}
           <Toaster />

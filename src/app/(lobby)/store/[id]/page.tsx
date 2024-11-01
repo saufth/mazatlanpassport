@@ -3,10 +3,10 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { PromoCard } from '@/components/promo-card'
-import { domain } from '@/config/site'
+import type { UUIDInputs } from '@/lib/validations/uuid'
+import { siteConfig } from '@/config/site'
 import { stores } from '@/config/stores'
 import { promos } from '@/config/promos'
-import type { UUIDInputs } from '@/lib/validations/uuid'
 
 interface StorePageProps {
   params: Promise<UUIDInputs>
@@ -19,7 +19,7 @@ export async function generateMetadata ({ params }: StorePageProps): Promise<Met
   if (!store) { return {} }
 
   return {
-    metadataBase: new URL(domain),
+    metadataBase: new URL(siteConfig.url),
     title: store.id,
     description: store.description
   }

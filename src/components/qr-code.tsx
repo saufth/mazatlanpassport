@@ -1,30 +1,34 @@
 import Image from 'next/image'
+import { AspectRatio } from '@/components/ui/aspect-ratio'
 import QRCode from 'qrcode'
 import { cn } from '@/lib/utils'
-import type { ImageProps } from '@/types'
 
-interface QRCodeImageProps extends Omit<ImageProps, 'alt'> {
+interface QRCodeImageProps {
+  data: string
   className?: string
 }
 
 export default async function QRCodeImage ({
-  src,
-  width = 250,
-  height = 250,
+  data,
   className
 }: QRCodeImageProps) {
-  const qrcode = await QRCode.toDataURL(src)
+  const qrcode = await QRCode.toDataURL(data)
 
   return (
-    <Image
-      src={qrcode}
-      alt=''
-      width={width}
-      height={height}
-      className={cn(
-        'rounded-3xl',
-        className
-      )}
-    />
+    <AspectRatio
+      ratio={1 / 1}
+      className='aspect-[1/1]'
+    >
+      <Image
+        src={qrcode}
+        alt=''
+        sizes='(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, (min-width: 475px) 50vw, 100vw'
+        fill
+        className={cn(
+          'object-cover',
+          className
+        )}
+      />
+    </AspectRatio>
   )
 }

@@ -1,2 +1,0 @@
-INSERT INTO `mazatlanpassport`.`admins` (`id`, `email`, `password`, `root_row_key`) VALUES
-((UUID_TO_BIN('0b94cc58-3f25-4243-b24c-b83f000dc37b', TRUE)), 'marketing@todossantos.com', '$2y$10$TeZ/czO5gMPYqMtb/SL7sumqlK/.88jGqdgixkX0A45K4U/dEaSSu', 1);

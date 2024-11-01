@@ -3,7 +3,7 @@ import { useRef, useTransition } from 'react'
 import { Button } from '@/components/ui/button'
 import { Icons } from '@/components/icons'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/text-area'
+import { Textarea } from '@/components/ui/textarea'
 import {
   Form,
   FormControl,

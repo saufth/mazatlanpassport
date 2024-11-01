@@ -3,8 +3,8 @@ export const unknownError = 'Se ha producido un error desconocido. Por favor, in
 export const redirects = {
   toSignin: '/signin',
   toSignup: '/signup',
-  afterLogin: '/',
-  afterLogout: '/',
+  afterSignin: '/',
+  afterSignout: '/',
   toVerify: '/verify-email',
   afterVerify: '/'
 } as const
