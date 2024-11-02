@@ -83,7 +83,6 @@ export default function RootLayout ({ children }: PropsWithChildren) {
   return (
     <html lang='es'>
       <body
-        suppressHydrationWarning
         className={cn(
           'bg-background min-h-screen font-sans antialiased !scroll-smooth',
           fontHeader.variable,

@@ -7,7 +7,6 @@ const NextThemeProvider = dynamic(
   { ssr: false }
 )
 
-
 export default function ThemeProvider ({ children, ...props }: ThemeProviderProps) {
   return (
     <NextThemeProvider {...props}>
