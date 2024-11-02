@@ -110,7 +110,7 @@ export async function checkSession (role: Roles) {
   try {
     const cookieStore = await cookies()
     const isSession = cookieStore.has(createSessionName(role))
-  
+
     return {
       data: isSession,
       error: null
