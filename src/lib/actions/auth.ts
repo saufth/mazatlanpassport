@@ -75,7 +75,7 @@ export async function signup (input: SignupInputs) {
   try {
     const session = await getSessionStatus(roles.user)
 
-    if (session.data) {
+    if (session.data?.status) {
       throw new Error('Actualmente tienes una sesión activa, solo puedes iniciar sesión en una cuenta a la vez')
     }
 
@@ -431,12 +431,10 @@ export async function resetPasswordEmailCode (input: EmailInputs) {
 
     const code = createVerifyCode()
 
-    if (!verifyCode) {
-      await db.query(
-        'INSERT INTO users_recovery_codes (user_row_key, code) VALUES (?, ?)',
-        [userKeys.rowKey, code]
-      )
-    }
+    await db.query(
+      'INSERT INTO users_recovery_codes (user_row_key, code) VALUES (?, ?)',
+      [userKeys.rowKey, code]
+    )
 
     await db.end()
 
