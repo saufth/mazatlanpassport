@@ -168,7 +168,17 @@ export async function updateSession (request: NextRequest, role: Roles) {
 
 export async function deleteSession (role: Roles) {
   try {
-    (await cookies()).delete(createSessionName(role))
+    const sessionName = createSessionName(role)
+    const cookieStore = await cookies()
+
+    cookieStore.set(sessionName, '', {
+      expires: new Date(0),
+      domain: process.env.NODE_ENV === 'production' ? domain : undefined,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/'
+    })
   } catch (err) {
     throw new Error(getErrorMessage(err))
   }
