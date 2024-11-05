@@ -1,10 +1,10 @@
-import { CardError } from '@/components/cards/card-error'
-import { Shell } from '@/components/shells/shell'
+import { ErrorCard } from '@/components/error-card'
+import { Shell } from '@/components/shell'
 
 export default function ProductNotFound () {
   return (
     <Shell variant='centered' className='max-w-md'>
-      <CardError
+      <ErrorCard
         title='No hemos encontrado este producto'
         description='Probablemente el producto ha expirado'
         retryLink='/'

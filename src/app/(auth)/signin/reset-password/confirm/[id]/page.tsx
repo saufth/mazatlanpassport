@@ -1,7 +1,7 @@
 import Image from 'next/image'
-import VerifyEmailForm from '@/app/(auth)/_components/verify-email-form'
+import ResetPasswordForm from '@/app/(auth)/_components/reset-password-form'
 
-export default async function VetifyEmailPage () {
+export default async function ResetPasswordEmailPage () {
   return (
     <section>
       <div className='container py-spacing-6'>
@@ -9,14 +9,14 @@ export default async function VetifyEmailPage () {
           <div className='w-full lg:w-5-cols relative mt-12 lg:mt-0 order-2 lg:order-1'>
             <div className='space-y-spacing-2'>
               <h1 className='f-heading-2 font-extrabold text-secondary'>
-                Verifica tu correo electrónico
+                Recuperar contraseña
               </h1>
               <p className='f-body-1 text-primary-foreground font-medium'>
-                Verifica tu correo electrónico para terminar tu registro.
+                Ingresa tu correo electrónico y te enviaremos un código de verificación.
               </p>
             </div>
             <div className='mt-spacing-4'>
-              <VerifyEmailForm />
+              <ResetPasswordForm />
             </div>
           </div>
           <div className='w-full lg:w-7-cols order-1 lg:order-2'>

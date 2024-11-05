@@ -1,16 +1,20 @@
 import SiteHeaderContent from '@/components/layouts/site-header-content'
-import { getSessionToken } from '@/lib/actions/session'
+import { getSessionStatus } from '@/lib/actions/session'
 import { roles } from '@/lib/constants'
 
-export default async function SiteHeader ({ actions = true }: { actions?: boolean }) {
-  const role = roles.user
-  const sessionToken = await getSessionToken(role)
+interface SiteHeaderProps {
+  actions?: boolean
+}
 
-  const isSession = typeof sessionToken.data === 'string'
+export default async function SiteHeader ({ actions = true }: SiteHeaderProps) {
+  const sessionStatus = await getSessionStatus(roles.user)
 
   return (
     <header>
-      <SiteHeaderContent actions={actions} auth={isSession} />
+      <SiteHeaderContent
+        actions={actions}
+        auth={sessionStatus.data?.status}
+      />
     </header>
   )
 }

@@ -3,14 +3,16 @@ import bcrypt from 'bcryptjs'
 import nodemailer from 'nodemailer'
 import { roles, userStatus } from '@/lib/constants'
 import { db } from '@/db'
-import { checkUserStatus } from '@/lib/actions/users'
+import { checkUserStatus, checkUserStatusByEmail } from '@/lib/actions/users'
 import { type RowDataPacket } from 'mysql2'
-import { type SignupInputs } from '@/lib/validations/auth/signup'
-import { type VerifyCodeInputs } from '@/lib/validations/verify-code'
-import { type UUIDInputs } from '@/lib/validations/uuid'
+import { type EmailInputs } from '@/lib/validations/email'
+import { type ResetPasswordInputs } from '@/lib/validations/auth/reset-password'
 import { type SigninInputs } from '@/lib/validations/auth/signin'
+import { type SignupInputs } from '@/lib/validations/auth/signup'
+import { type UUIDInputs } from '@/lib/validations/uuid'
+import { type VerifyCodeInputs } from '@/lib/validations/verify-code'
 import { getErrorMessage } from '@/lib/handle-error'
-import { createSession, deleteSession, getSessionToken } from '@/lib/actions/session'
+import { createSession, deleteSession, getSessionStatus } from '@/lib/actions/session'
 import { calculateMinutes, createVerifyCode } from '@/lib/utils'
 import { siteConfig } from '@/config/site'
 import type { Roles } from '@/types'
@@ -23,7 +25,7 @@ interface RowID extends RowDataPacket, UUIDInputs {}
 
 interface RowKeyID extends RowKey, UUIDInputs {}
 
-interface Password extends RowDataPacket {
+interface UserKeys extends RowKey, UUIDInputs {
   password: string
 }
 
@@ -46,35 +48,39 @@ const sendVerifyEmailCode = async (email: string, code: number) => {
       port: 465,
       secure: true,
       auth: {
-        user: 'sauft.dev@gmail.com',
-        pass: String(process.env.GOOGLE_APP_PASSWORD)
+        user: String(process.env.APP_EMAIL),
+        pass: String(process.env.APP_EMAIL_PASSWORD)
       }
     })
 
     await transporter.sendMail({
       from: siteConfig.name,
       to: email,
-      subject: `Tu codigo de verificación es ${code}`,
+      subject: `Tu código de verificación es ${code}`,
       html: `
         <div style="max-width: 640px; margin: 0 auto; padding: 64px auto;">
           <div style="font-size: 28px; font-weight: 600; padding-bottom: 12px;">${siteConfig.name}</div>
-          <div>Ingrese el siguiente código de verificación cuando se le solicite:</div>
+          <div>Ingrese el siguiente código de verificación cuando se te solicite:</div>
           <div style="font-size: 48px; font-weight: 700; padding: 16px 0;">${code}</div>
-          <div>Por seguridad, no compartas este codigo.</div>
+          <div>Por seguridad, no compartas este código.</div>
         </div>
       `
     })
-  } catch {
-    throw new Error('Problemas al envias codigo de verificación, intenta crear otro iniciando sesión')
+  } catch (err) {
+    throw new Error(getErrorMessage(err))
   }
 }
 
 export async function signup (input: SignupInputs) {
   try {
-    const session = await getSessionToken(roles.user)
+    const session = await getSessionStatus(roles.user)
 
     if (session.data) {
       throw new Error('Actualmente tienes una sesión activa, solo puedes iniciar sesión en una cuenta a la vez')
+    }
+
+    if (session.error) {
+      throw new Error(session.error)
     }
 
     if (!input.terms) {
@@ -87,6 +93,7 @@ export async function signup (input: SignupInputs) {
     )
 
     if (userWithSameEmail) {
+      await db.end()
       throw new Error('El correo electrónico ya esta siendo usado')
     }
 
@@ -94,6 +101,7 @@ export async function signup (input: SignupInputs) {
     const encryptedPassword = await bcrypt.hash(input.password, 10)
 
     if (!encryptedPassword) {
+      await db.end()
       throw new Error('Error al intentar encriptar contraseña, intentalo de nuevo más tarde')
     }
 
@@ -116,6 +124,7 @@ export async function signup (input: SignupInputs) {
     )
 
     if (!userKey) {
+      await db.end()
       throw new Error('Error al obetener datos de cuenta')
     }
 
@@ -135,7 +144,6 @@ export async function signup (input: SignupInputs) {
       error: null
     }
   } catch (err) {
-    await db.end()
     return {
       data: null,
       error: getErrorMessage(err)
@@ -145,49 +153,45 @@ export async function signup (input: SignupInputs) {
 
 export async function signin (input: SigninInputs) {
   try {
-    const session = await getSessionToken(roles.user)
+    const session = await getSessionStatus(roles.user)
 
-    if (session.data) {
+    if (session.data?.status) {
       throw new Error('Actualmente tienes una sesión activa, solo puedes iniciar sesión en una cuenta a la vez')
     }
 
-    const [userData] = await db.query<RowKeyID[]>(
-      'SELECT row_key AS rowKey, BIN_TO_UUID(id, TRUE) AS id FROM users WHERE email = ?',
+    if (session.error) {
+      throw new Error(session.error)
+    }
+
+    const status = await checkUserStatusByEmail({ email: input.email })
+
+    if (status.error && status.error !== userStatus.unverified) {
+      return status
+    }
+
+    const [userKeys] = await db.query<UserKeys[]>(
+      'SELECT row_key, BIN_TO_UUID(id, TRUE) AS id, password FROM users WHERE email = ?',
       [input.email]
     )
 
-    if (!userData) {
-      throw new Error('El usuario no existe')
-    }
-
-    const userId: UUIDInputs = { id: userData.id }
-
-    const userStatusData = await checkUserStatus(userId)
-
-    if (userStatusData.error && userStatusData.error !== userStatus.unverified) {
+    if (!userKeys) {
       await db.end()
-      return userStatusData
-    }
-
-    const [userPassword] = await db.query<Password[]>(
-      'SELECT password FROM users WHERE row_key = ?',
-      [userData.rowKey]
-    )
-
-    if (!userPassword) {
       throw new Error('Contraseña no encontrada, intentalo de nuevo más tarde')
     }
 
-    const passwordMatch = await bcrypt.compare(input.password, userPassword.password)
+    const passwordMatch = await bcrypt.compare(input.password, userKeys.password)
 
     if (!passwordMatch) {
+      await db.end()
       throw new Error('Contraseña incorrecta')
     }
 
-    if (userStatusData.error === userStatus.unverified) {
+    const userId = { id: userKeys.id }
+
+    if (status.error === userStatus.unverified) {
       const [verifyCode] = await db.query<VerifyCode[]>(
         'SELECT code, attempts, created_at AS createdAt FROM users_verify_codes WHERE user_row_key = ?',
-        [userData.rowKey]
+        [userKeys.rowKey]
       )
 
       if (verifyCode) {
@@ -201,7 +205,7 @@ export async function signin (input: SigninInputs) {
 
         await db.query(
           'DELETE FROM users_verify_codes WHERE user_row_key = ?',
-          [userData.rowKey]
+          [userKeys.rowKey]
         )
       }
 
@@ -209,7 +213,7 @@ export async function signin (input: SigninInputs) {
 
       await db.query(
         'INSERT INTO users_verify_codes (user_row_key, code) VALUES (?, ?)',
-        [userData.rowKey, code]
+        [userKeys.rowKey, code]
       )
 
       await db.end()
@@ -235,7 +239,6 @@ export async function signin (input: SigninInputs) {
       error: null
     }
   } catch (err) {
-    await db.end()
     return {
       data: null,
       error: getErrorMessage(err)
@@ -245,18 +248,22 @@ export async function signin (input: SigninInputs) {
 
 export async function verifyEmail (input: VerifyCodeInputs) {
   try {
-    const session = await getSessionToken(roles.user)
+    const session = await getSessionStatus(roles.user)
 
-    if (session.data) {
+    if (session.data?.status) {
       throw new Error('Actualmente tienes una sesión activa, solo puedes iniciar sesión en una cuenta a la vez')
+    }
+
+    if (session.error) {
+      throw new Error(session.error)
     }
 
     const userId: UUIDInputs = { id: input.id }
 
-    const userStatusData = await checkUserStatus(userId)
+    const status = await checkUserStatus(userId)
 
-    if (userStatusData.error && userStatusData.error !== userStatus.unverified) {
-      return userStatusData
+    if (status.error && status.error !== userStatus.unverified) {
+      return status
     }
 
     const [userData] = await db.query<UserVerifyData[]>(
@@ -265,6 +272,7 @@ export async function verifyEmail (input: VerifyCodeInputs) {
     )
 
     if (!userData) {
+      await db.end()
       throw new Error('No hemos encontrado la cuenta con este ID')
     }
 
@@ -274,7 +282,8 @@ export async function verifyEmail (input: VerifyCodeInputs) {
     )
 
     if (!verifyCode) {
-      throw new Error('Codigo no encontrado, crea otro iniciando sesión')
+      await db.end()
+      throw new Error('Código no encontrado, crea otro iniciando sesión')
     }
 
     const deleteCurrentVerifyEmailCode = () => {
@@ -286,12 +295,14 @@ export async function verifyEmail (input: VerifyCodeInputs) {
 
     if (calculateMinutes(new Date(verifyCode.createdAt)) >= 5) {
       deleteCurrentVerifyEmailCode()
-      throw new Error('El codigo ha caducado, crea otro iniciando sesión')
+      await db.end()
+      throw new Error('El código ha caducado, crea otro iniciando sesión')
     }
 
     if (verifyCode.attempts > 2) {
       deleteCurrentVerifyEmailCode()
-      throw new Error('Demasiados intentos, crea otro codigo iniciando sesión')
+      await db.end()
+      throw new Error('Demasiados intentos, crea otro código iniciando sesión')
     }
 
     if (verifyCode.code !== input.code) {
@@ -299,7 +310,8 @@ export async function verifyEmail (input: VerifyCodeInputs) {
         'UPDATE users_verify_codes SET attempts = ?, updated_at = (NOW())',
         [verifyCode.attempts + 1]
       )
-      throw new Error('Codigo incorrecto')
+      await db.end()
+      throw new Error('Código incorrecto')
     }
 
     await db.query(
@@ -322,8 +334,8 @@ export async function verifyEmail (input: VerifyCodeInputs) {
       port: 465,
       secure: true,
       auth: {
-        user: 'sauft.dev@gmail.com',
-        pass: String(process.env.GOOGLE_APP_PASSWORD)
+        user: String(process.env.APP_EMAIL),
+        pass: String(process.env.APP_EMAIL_PASSWORD)
       }
     })
 
@@ -345,7 +357,6 @@ export async function verifyEmail (input: VerifyCodeInputs) {
       error: null
     }
   } catch (err) {
-    await db.end()
     return {
       data: null,
       error: getErrorMessage(err)
@@ -356,6 +367,223 @@ export async function verifyEmail (input: VerifyCodeInputs) {
 export async function signout (role: Roles) {
   try {
     await deleteSession(role)
+
+    return {
+      data: null,
+      error: null
+    }
+  } catch (err) {
+    return {
+      data: null,
+      error: getErrorMessage(err)
+    }
+  }
+}
+
+export async function resetPasswordEmailCode (input: EmailInputs) {
+  try {
+    const session = await getSessionStatus(roles.user)
+
+    if (session.data?.status) {
+      throw new Error('Actualmente tienes una sesión activa, actualiza tus datos en la configuración de tu perfil')
+    }
+
+    if (session.error) {
+      throw new Error(session.error)
+    }
+
+    const status = await checkUserStatusByEmail({ email: input.email })
+
+    if (status.error) {
+      throw new Error(status.error)
+    }
+
+    const [userKeys] = await db.query<RowKeyID[]>(
+      'SELECT row_key AS rowKey, BIN_TO_UUID(id, TRUE) AS id FROM users WHERE email = ?',
+      [input.email]
+    )
+
+    if (!userKeys) {
+      await db.end()
+      throw new Error('Hubo un problema al solicitar llave de usuario, intentalo de nuevo más tarde')
+    }
+
+    const [verifyCode] = await db.query<VerifyCode[]>(
+      'SELECT code, attempts, created_at AS createdAt FROM users_recovery_codes WHERE user_row_key = ?',
+      [userKeys.rowKey]
+    )
+
+    if (verifyCode) {
+      if (calculateMinutes(new Date(verifyCode.createdAt)) < 5 && verifyCode.attempts < 2) {
+        await db.end()
+        console.log('Enter')
+        return {
+          data: { id: userKeys.id },
+          error: null
+        }
+      }
+
+      await db.query(
+        'DELETE FROM users_recovery_codes WHERE user_row_key = ?',
+        [userKeys.rowKey]
+      )
+    }
+
+    const code = createVerifyCode()
+
+    if (!verifyCode) {
+      await db.query(
+        'INSERT INTO users_recovery_codes (user_row_key, code) VALUES (?, ?)',
+        [userKeys.rowKey, code]
+      )
+    }
+
+    await db.end()
+
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: String(process.env.APP_EMAIL),
+        pass: String(process.env.APP_EMAIL_PASSWORD)
+      }
+    })
+
+    await transporter.sendMail({
+      from: siteConfig.name,
+      to: input.email,
+      subject: `Tu código de recuperación es ${code}`,
+      html: `
+        <div style="max-width: 640px; margin: 0 auto; padding: 64px auto;">
+          <div style="font-size: 28px; font-weight: 600; padding-bottom: 12px;">${siteConfig.name}</div>
+          <div>Ingrese el siguiente código de recuperación cuando se te solicite:</div>
+          <div style="font-size: 48px; font-weight: 700; padding: 16px 0;">${code}</div>
+          <div>Por seguridad, no compartas este código.</div>
+        </div>
+      `
+    })
+
+    return {
+      data: { id: userKeys.id },
+      error: null
+    }
+  } catch (err) {
+    return {
+      data: null,
+      error: getErrorMessage(err)
+    }
+  }
+}
+
+export async function resetPassword (input: ResetPasswordInputs) {
+  try {
+    const session = await getSessionStatus(roles.user)
+
+    if (session.data?.status) {
+      throw new Error('Actualmente tienes una sesión activa, actualiza tus datos en la configuración de tu perfil')
+    }
+
+    if (session.error) {
+      throw new Error(session.error)
+    }
+
+    const userId: UUIDInputs = { id: input.id }
+
+    const status = await checkUserStatus(userId)
+
+    if (status.error && status.error !== userStatus.unverified) {
+      throw new Error(status.error)
+    }
+
+    const [userData] = await db.query<UserVerifyData[]>(
+      'SELECT row_key AS rowKey, first_name AS firstName, email FROM users WHERE id = UUID_TO_BIN(?, TRUE)',
+      [input.id]
+    )
+
+    if (!userData) {
+      await db.end()
+      throw new Error('No hemos encontrado la cuenta con este ID')
+    }
+
+    const [verifyCode] = await db.query<VerifyCode[]>(
+      'SELECT code, attempts, created_at AS createdAt FROM users_recovery_codes WHERE user_row_key = ?',
+      [userData.rowKey]
+    )
+
+    if (!verifyCode) {
+      await db.end()
+      throw new Error('Código no encontrado')
+    }
+
+    const deleteCurrentRecoveryEmailCode = () => {
+      db.query(
+        'DELETE FROM users_recovery_codes WHERE user_row_key = ?',
+        [userData.rowKey]
+      )
+    }
+
+    if (calculateMinutes(new Date(verifyCode.createdAt)) >= 5) {
+      deleteCurrentRecoveryEmailCode()
+      await db.end()
+      throw new Error('El código ha caducado')
+    }
+
+    if (verifyCode.attempts > 2) {
+      deleteCurrentRecoveryEmailCode()
+      await db.end()
+      throw new Error('Demasiados intentos')
+    }
+
+    if (verifyCode.code !== input.code) {
+      await db.query(
+        'UPDATE users_recovery_codes SET attempts = ?, updated_at = (NOW())',
+        [verifyCode.attempts + 1]
+      )
+      await db.end()
+      throw new Error('Código incorrecto')
+    }
+
+    deleteCurrentRecoveryEmailCode()
+
+    const encryptedPassword = await bcrypt.hash(input.password, 10)
+
+    if (!encryptedPassword) {
+      await db.end()
+      throw new Error('Error al intentar encriptar contraseña, intentalo de nuevo más tarde')
+    }
+
+    await db.query(
+      'UPDATE users SET password = ? WHERE id = UUID_TO_BIN(?, TRUE);',
+      [
+        encryptedPassword,
+        input.id
+      ]
+    )
+
+    await db.end()
+
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      auth: {
+        user: String(process.env.APP_EMAIL),
+        pass: String(process.env.APP_EMAIL_PASSWORD)
+      }
+    })
+
+    await transporter.sendMail({
+      from: siteConfig.name,
+      to: userData.email,
+      subject: `${userData.firstName}, tu contraseña se actualizó exitosamente`,
+      html: `
+        <div style="max-width: 640px; margin: 0 auto; padding: 64px auto;">
+          <div style="font-size: 32px; font-weight: 600; padding-bottom: 12px;">${siteConfig.name}</div>
+          <div>${userData.firstName}, tu contraseña se actualizó exitosamente.</div>
+        </div>
+      `
+    })
 
     return {
       data: null,

@@ -106,13 +106,14 @@ export async function getSession (role: Roles) {
   }
 }
 
-export async function checkSession (role: Roles) {
+export async function getSessionStatus (role: Roles) {
   try {
     const cookieStore = await cookies()
-    const isSession = cookieStore.has(createSessionName(role))
 
     return {
-      data: isSession,
+      data: {
+        status: cookieStore.has(createSessionName(role))
+      },
       error: null
     }
   } catch (err) {

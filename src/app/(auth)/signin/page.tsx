@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import SigninForm from '@/components/forms/signin-form'
+import SigninForm from '@/app/(auth)/_components/signin-form'
 
 export default async function SigninPage () {
   return (

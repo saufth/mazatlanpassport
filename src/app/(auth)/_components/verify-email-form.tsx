@@ -58,7 +58,7 @@ export default function VerifyEmailForm () {
           name='code'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Codigo de verificación</FormLabel>
+              <FormLabel>Código de verificación</FormLabel>
               <FormControl>
                 <Input
                   inputMode='numeric'
@@ -80,7 +80,7 @@ export default function VerifyEmailForm () {
             disabled={isTransition}
             type='submit'
           >
-            Verificar codigo
+            Verificar código
           </Button>
         </div>
       </form>

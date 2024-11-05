@@ -1,5 +1,5 @@
 import QRCodeImage from '@/components/qr-code'
-import ManagePlan from '@/components/forms/manage-plan-form'
+import ManagePlan from '@/components/manage-plan-form'
 import { Icons } from '@/components/icons'
 import { absoluteUrl, formatPrice } from '@/lib/utils'
 import { pricing } from '@/config/pricing'

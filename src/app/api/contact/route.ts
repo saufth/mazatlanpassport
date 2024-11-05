@@ -17,7 +17,7 @@ export async function POST (req: Request) {
       secure: true,
       auth: {
         user: contactConfig.email,
-        pass: String(process.env.EMAIL_PASSWORD)
+        pass: String(process.env.APP_EMAIL_PASSWORD)
       }
     })
 
