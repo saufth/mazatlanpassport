@@ -13,8 +13,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { type FullNameInputs } from '@/lib/validations/full-name'
 import { cn } from '@/lib/utils'
+import { type FullNameInputs } from '@/lib/validations/full-name'
 
 interface ProfileButtonProps
   extends ComponentPropsWithRef<typeof DropdownMenuTrigger>,
@@ -64,9 +64,10 @@ export default function AuthDropdown ({
           {...props}
         >
           <Avatar className='size-8'>
-            {/* <AvatarImage /> */}
-            <AvatarFallback className='bg-gradient-to-tr from-secondary via-secondary to-fuchsia-700 text-white -tracking-[0.1em]'>
-              {initials}
+            <AvatarFallback className='bg-gradient-to-tr from-accent via-accent to-amber-700'>
+              <span className='pr-px text-white -tracking-[0.1em] leading-none'>
+                {initials}
+              </span>
             </AvatarFallback>
           </Avatar>
         </Button>
