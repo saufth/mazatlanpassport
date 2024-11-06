@@ -5,6 +5,7 @@ import { getSession } from '@/lib/actions/session'
 import { roles, userStatus } from '@/lib/constants'
 import { getErrorMessage } from '@/lib/handle-error'
 import { type EmailInputs } from '@/lib/validations/email'
+import { type FullNameInputs } from '@/lib/validations/full-name'
 import { type UUIDInputs } from '@/lib/validations/uuid'
 import { type SignupInputs } from '@/lib/validations/auth/signup'
 
@@ -17,6 +18,8 @@ interface Email extends RowDataPacket, EmailInputs {}
 interface UserProfile
   extends RowDataPacket,
     Omit<SignupInputs, 'password' | 'confirmPassword' | 'terms'> {}
+
+interface UserFullName extends RowDataPacket, FullNameInputs {}
 
 interface UserStatus extends RowDataPacket {
   verifiedAt?: string
@@ -37,6 +40,29 @@ export async function currentUser () {
 
     return {
       data: userId,
+      error: null
+    }
+  } catch (err) {
+    return {
+      data: null,
+      error: getErrorMessage(err)
+    }
+  }
+}
+
+export async function getUserFullName (input: UUIDInputs) {
+  try {
+    const [userFullName] = await db.query<UserFullName[]>(
+      'SELECT first_name AS firstName, last_name AS lastName FROM users WHERE id = UUID_TO_BIN(?, TRUE);',
+      [input.id]
+    )
+
+    if (!userFullName) {
+      throw new Error('Nombre del usuario no encontrado.')
+    }
+
+    return {
+      data: userFullName,
       error: null
     }
   } catch (err) {

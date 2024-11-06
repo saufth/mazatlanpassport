@@ -1,5 +1,6 @@
 import SiteHeaderContent from '@/components/layouts/site-header-content'
-import { getSessionStatus } from '@/lib/actions/session'
+import { getSession } from '@/lib/actions/session'
+import { getUserFullName } from '@/lib/actions/users'
 import { roles } from '@/lib/constants'
 
 interface SiteHeaderProps {
@@ -7,13 +8,15 @@ interface SiteHeaderProps {
 }
 
 export default async function SiteHeader ({ actions = true }: SiteHeaderProps) {
-  const sessionStatus = await getSessionStatus(roles.user)
+  const session = await getSession(roles.user)
+  const userId = !session.error ? { id: String(session.data!.id) } : null
+  const userFullName = userId ? await getUserFullName(userId) : null
 
   return (
     <header>
       <SiteHeaderContent
         actions={actions}
-        auth={sessionStatus.data?.status}
+        user={userFullName?.data}
       />
     </header>
   )

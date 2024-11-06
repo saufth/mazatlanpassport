@@ -14,8 +14,8 @@ export function Lobby () {
       <PageHeader
         title={siteConfig.slogan}
         description={`${siteConfig.description}.`}
-        to='subscribe'
-        toAlt='login'
+        to='signup'
+        toAlt='signin'
       />
       <section className='bg-gradient-to-b from-ring via-secondary/95 to-ring pt-32 -mt-36'>
         <div className='container py-spacing-9'>

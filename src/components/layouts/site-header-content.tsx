@@ -2,18 +2,23 @@
 import Link from 'next/link'
 import Menu from '@/components/layouts/menu'
 import { useState } from 'react'
-import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion'
-import { CallToAction } from '@/components/call-to-action'
+import {
+  AnimatePresence,
+  motion,
+  useMotionValueEvent,
+  useScroll
+} from 'framer-motion'
+import AuthDropdown from '@/components/layouts/auth-dropdown'
 import { Icons } from '@/components/icons'
 import { siteConfig } from '@/config/site'
-import { Button } from '../ui/button'
+import { type FullNameInputs } from '@/lib/validations/full-name'
 
 interface SiteHeaderContentProps {
   actions?: boolean
-  auth?: boolean
+  user?: FullNameInputs | null
 }
 
-export default function SiteHeaderContent ({ actions = true, auth = false }: SiteHeaderContentProps) {
+export default function SiteHeaderContent ({ actions = true, user }: SiteHeaderContentProps) {
   const { scrollYProgress } = useScroll()
   const [isOnTop, setIsOnTop] = useState(true)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -45,40 +50,7 @@ export default function SiteHeaderContent ({ actions = true, auth = false }: Sit
             </Link>
           </div>
           <div className='flex items-center gap-x-spacing-4'>
-            <div className='hidden lg:flex items-center gap-x-spacing-3'>
-              {(actions && !auth) && (
-                <>
-                  <CallToAction
-                    to='login'
-                    onClick={closeMenu}
-                    size='default'
-                    variant='ghost'
-                    className='inline-flex'
-                  />
-                  <CallToAction
-                    onClick={closeMenu}
-                    size='default'
-                    className='inline-flex'
-                  />
-                </>
-              )}
-            </div>
-            <div className='flex items-center gap-x-spacing-3'>
-              {auth && (
-                <>
-                  <Button asChild variant='ghost' size='sm'>
-                    <Link href='/signout'>
-                      Cerrar sesión
-                    </Link>
-                  </Button>
-                  <Button asChild variant='ghost' size='sm'>
-                    <Link href='/profile'>
-                      Perfil
-                    </Link>
-                  </Button>
-                </>
-              )}
-            </div>
+            <AuthDropdown user={user} actions={actions} action={closeMenu} />
             <button className='w-11 h-4 relative scale-90 sm:scale-100' onClick={toggleMenu}>
               <motion.span
                 initial={{
