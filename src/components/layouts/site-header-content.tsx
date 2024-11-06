@@ -38,7 +38,7 @@ export default function SiteHeaderContent ({ actions = true, user }: SiteHeaderC
 
   return (
     <>
-      <div className='site-header w-full sticky top-0 left-0 z-40 overflow-hidden'>
+      <header className='site-header w-full sticky top-0 left-0 z-40 overflow-hidden'>
         <nav
           className='container-lg h-full flex justify-between items-center relative z-10'
           aria-label={`${siteConfig.name} directory`}
@@ -102,7 +102,7 @@ export default function SiteHeaderContent ({ actions = true, user }: SiteHeaderC
         >
           <div className='w-full h-full relative bg-gradient-to-r from-accent/30 via-transparent to-transparent' />
         </motion.div>
-      </div>
+      </header>
       <AnimatePresence>
         {isMenuOpen && <Menu action={closeMenu} />}
       </AnimatePresence>

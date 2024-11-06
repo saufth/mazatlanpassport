@@ -13,11 +13,9 @@ export default async function SiteHeader ({ actions = true }: SiteHeaderProps) {
   const userFullName = userId ? await getUserFullName(userId) : null
 
   return (
-    <header>
-      <SiteHeaderContent
-        actions={actions}
-        user={userFullName?.data}
-      />
-    </header>
+    <SiteHeaderContent
+      actions={actions}
+      user={userFullName?.data}
+    />
   )
 }
