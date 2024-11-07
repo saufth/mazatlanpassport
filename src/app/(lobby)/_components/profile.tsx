@@ -1,7 +1,7 @@
 import QRCodeImage from '@/components/qr-code'
 import ManagePlan from '@/components/manage-plan-form'
 import { Icons } from '@/components/icons'
-import { absoluteUrl, formatPrice } from '@/lib/utils'
+import { absoluteUrl } from '@/lib/utils'
 import { type SignupInputs } from '@/lib/validations/auth/signup'
 import { type UUIDInputs } from '@/lib/validations/uuid'
 import type { PlanWithPrice } from '@/types'
