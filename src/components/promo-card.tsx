@@ -46,16 +46,10 @@ export function PromoCard ({
           </CardTitle>
           <div className='flex gap-x-spacing-2'>
             <div className='f-body-2 text-[#8EC78D] font-medium'>
-              {formatPrice({
-                price: price - (price * (discount / 100)),
-                minimumFractionDigits: 2
-              })}
+              {formatPrice((price - (price * (discount / 100))), { minimumFractionDigits: 2 })}
             </div>
             <div className='f-body-2 text-secondary-foreground font-medium line-through'>
-              {formatPrice({
-                price,
-                minimumFractionDigits: 2
-              })}
+              {formatPrice(price, { minimumFractionDigits: 2 })}
             </div>
             <div className='f-body-2 text-primary'>
               {`-${discount}%`}

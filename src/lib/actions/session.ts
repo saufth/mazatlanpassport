@@ -6,15 +6,20 @@ import { type UUIDInputs } from '@/lib/validations/uuid'
 import { roles } from '@/lib/constants'
 import type { Roles } from '@/types'
 
-const domain = String(process.env.APP_DOMAIN)
-const jwtSecretKey = new TextEncoder().encode(String(process.env.JWT_SECRET_KEY))
+const domain = process.env.APP_DOMAIN as string
+
+const jwtSecretKeys: Record<Roles, Uint8Array> = {
+  user: new TextEncoder().encode(process.env.JWT_USERS_SECRET_KEY as string),
+  admin: new TextEncoder().encode(process.env.JWT_ADMINS_SECRET_KEY as string),
+  root: new TextEncoder().encode(process.env.JWT_ROOTS_SECRET_KEY as string)
+}
 
 const createSessionName = (role: Roles) => {
   return `${role}Session`
 }
 
 const createSessionExpirationDate = (role: Roles) => {
-  const hours = role === roles.user ? 720 : 1
+  const hours = role === roles.user ? 1 : 1
   return new Date(Date.now() + hours * 60 * 60000)
 }
 
@@ -24,15 +29,19 @@ export async function encryptSession (payload: JWTPayload, role: Roles) {
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
       .setExpirationTime(createSessionExpirationDate(role))
-      .sign(jwtSecretKey)
+      .sign(jwtSecretKeys[role])
   } catch {
     throw new Error('Hubo un problema al intentar guardar la sesión, intentalo de nuevo más tarde.')
   }
 }
 
-export async function decryptSession (jwt: string | Uint8Array) {
+export async function decryptSession (jwt: string | Uint8Array, role: Roles) {
   try {
-    const { payload } = await jwtVerify(jwt, jwtSecretKey, { algorithms: ['HS256'] })
+    const { payload } = await jwtVerify(
+      jwt,
+      jwtSecretKeys[role],
+      { algorithms: ['HS256'] }
+    )
     return payload
   } catch {
     throw new Error('Hubo un problema al intentar verificar la sesión, intentalo de nuevo más tarde.')
@@ -92,7 +101,7 @@ export async function getSession (role: Roles) {
       throw new Error('Hubo un problema al intentar obtener datos de sesión.')
     }
 
-    const decryptedJwt = await decryptSession(session.data)
+    const decryptedJwt = await decryptSession(session.data, role)
 
     return {
       data: decryptedJwt,
@@ -138,7 +147,7 @@ export async function updateSession (request: NextRequest, role: Roles) {
 
     const expires = createSessionExpirationDate(role)
 
-    const decryptedJwt = await decryptSession(session)
+    const decryptedJwt = await decryptSession(session, role)
     decryptedJwt.expires = expires
 
     const res = NextResponse.next()

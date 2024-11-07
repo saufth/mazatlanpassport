@@ -6,7 +6,7 @@ import { siteConfig, contactConfig } from '@/config/site'
 
 export async function POST (req: Request) {
   try {
-    const domain = String(process.env.APP_DOMAIN)
+    const domain = process.env.APP_DOMAIN as string
     const requestBody = await req.json()
     const validatedRequestBody = contactSchema.parse(requestBody)
 
@@ -16,8 +16,8 @@ export async function POST (req: Request) {
       port: 465,
       secure: true,
       auth: {
-        user: contactConfig.email,
-        pass: String(process.env.APP_EMAIL_PASSWORD)
+        user: process.env.EMAIL_FROM_ADDRESS as string,
+        pass: process.env.EMAIL_FROM_PASSWORD as string
       }
     })
 

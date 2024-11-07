@@ -379,23 +379,6 @@ export default function SignupForm () {
             )}
           />
           {/* <div>
-            <div className='cols-container pb-spacing-4'>
-              {suscriptionTypes.map((suscriptionTypeItem, key) => {
-                return (
-                  <div
-                    className='w-1/2-cols p-spacing-2 border-b-2 border-ring last:border-muted-foreground shadow-lg shadow-black/30'
-                    key={`${suscriptionTypeItem.title}-${key}`}
-                  >
-                    <div>
-                      Plan {suscriptionTypeItem.title}
-                    </div>
-                    <div className='text-lg font-medium'>
-                      {formatPrice(suscriptionTypeItem.price)}
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
             <StripeElments
               stripe={stripePromise}
               options={{

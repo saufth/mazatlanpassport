@@ -9,7 +9,7 @@ interface SiteHeaderProps {
 
 export default async function SiteHeader ({ actions = true }: SiteHeaderProps) {
   const session = await getSession(roles.user)
-  const userId = !session.error ? { id: String(session.data!.id) } : null
+  const userId = !session.error ? { id: session.data!.id as string } : null
   const userFullName = userId ? await getUserFullName(userId) : null
 
   return (

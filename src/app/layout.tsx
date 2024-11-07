@@ -1,6 +1,6 @@
 import { type PropsWithChildren } from 'react'
 import { type Metadata, type Viewport } from 'next'
-import { TailwindIndicator } from '@/components/tailwind-indicator'
+import { TailwindIndicator } from '@/components/layouts/tailwind-indicator'
 import ThemeProvider from '@/components/layouts/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import GoogleSearchScript from '@/components/layouts/google-seacrch-script'

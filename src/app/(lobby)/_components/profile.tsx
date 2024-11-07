@@ -2,15 +2,16 @@ import QRCodeImage from '@/components/qr-code'
 import ManagePlan from '@/components/manage-plan-form'
 import { Icons } from '@/components/icons'
 import { absoluteUrl, formatPrice } from '@/lib/utils'
-import { pricing } from '@/config/pricing'
 import { type SignupInputs } from '@/lib/validations/auth/signup'
 import { type UUIDInputs } from '@/lib/validations/uuid'
+import type { PlanWithPrice } from '@/types'
 
 interface ProfileProps {
   profile: UUIDInputs & Omit<SignupInputs, 'password' | 'confirmPassword' | 'terms'>
+  plans: PlanWithPrice[]
 }
 
-export default function Profile ({ profile }: ProfileProps) {
+export default function Profile ({ profile, plans }: ProfileProps) {
   return (
     <div>
       <div className='container py-spacing-6 space-y-spacing-6'>
@@ -48,24 +49,29 @@ export default function Profile ({ profile }: ProfileProps) {
             Activa tu membresía y comienza a disfrutar de descuentos exclusivos
           </div>
           <div className='cols-container gap-y-gutter mt-spacing-5'>
-            {pricing.map((pricingItem, key) => (
+            {plans.map((planItem, key) => (
               <div
                 className='w-6-cols md:w-4-cols lg:w-6-cols p-6 rounded-3xl bg-secondary-foreground'
-                key={`${pricingItem.title}-${key}`}
+                key={`${planItem.title}-${key}`}
               >
                 <div className='space-y-2'>
                   <div className='flex justify-between'>
                     <div className='f-subhead-3 text-secondary font-bold'>
-                      {pricingItem.title}
+                      {planItem.title}
                     </div>
-                    <span className='f-body-1 font-extrabold text-green-700 pl-2'>{`${formatPrice({ price: pricingItem.price })}`}</span>
+                    <span className='f-body-1 font-extrabold text-green-700 pl-2'>
+                      {planItem.price}
+                    </span>
                   </div>
                   <div className='max-w-sm f-body-1 text-secondary font-medium text-balance'>
-                    {pricingItem.description}
+                    {planItem.description}
                   </div>
                 </div>
                 <div className='mt-12'>
-                  <ManagePlan title={pricingItem.title} amount={pricingItem.price} />
+                  <ManagePlan
+                    title={planItem.title}
+                    amount={Number(planItem.price)}
+                  />
                 </div>
               </div>
             ))}

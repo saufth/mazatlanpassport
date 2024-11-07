@@ -36,11 +36,11 @@ export const siteNav: MainNavItem[] = [
   }
 ]
 
-const phone = String(process.env.NEXT_PUBLIC_APP_PHONE)
-const address = 'Mazatlán, Sinaloa.'
 const country = countries.find((countryItem) => countryItem.alpha2 === 'MX')!
+const address = 'Mazatlán, Sinaloa.'
+const phone = process.env.NEXT_PUBLIC_APP_PHONE_NUMBER as string
 export const contactConfig = {
-  email: String(process.env.NEXT_PUBLIC_EMAIL),
+  email: process.env.NEXT_APP_PUBLIC_EMAIL_ADDRESS as string,
   phone: {
     number: phone,
     displayNumber: formatPhoneNumber(phone),
@@ -81,7 +81,7 @@ export const siteConfig = {
   name: 'Mazatlán Passport',
   slogan: '¡Descuentos exclusivos en Mazatlán!',
   description: 'Promociones exclusivas para viajeros inteligentes.',
-  url: String(process.env.NEXT_PUBLIC_APP_URL),
+  url: process.env.NEXT_PUBLIC_APP_URL as string,
   mainNav: [
     {
       title: 'Inicio',
@@ -90,3 +90,5 @@ export const siteConfig = {
     ...siteNav
   ]
 }
+
+export type SiteConfig = typeof siteConfig

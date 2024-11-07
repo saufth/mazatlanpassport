@@ -39,22 +39,15 @@ export function range (start: number, end: number, step: number = 1) {
   return Array.from({ length: (end - start) / step + 1 }, (_, i) => start + (i * step))
 }
 
-export function formatPrice ({
-  price,
-  currency = 'mxn',
-  notation = 'standard',
-  minimumFractionDigits = 0
-} : {
+export function formatPrice (
   price: number | string,
-  currency?: 'usd' | 'eur' | 'mxn',
-  notation?: 'compact' | 'engineering' | 'scientific' | 'standard',
-  minimumFractionDigits?: number
-}) {
+  opts: Intl.NumberFormatOptions = {}
+) {
   return new Intl.NumberFormat('es-MX', {
     style: 'currency',
-    currency,
-    notation,
-    minimumFractionDigits
+    currency: opts.currency ?? 'MXN',
+    notation: opts.notation ?? 'compact',
+    ...opts
   }).format(Number(price))
 }
 

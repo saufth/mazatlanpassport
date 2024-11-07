@@ -1,16 +1,54 @@
 'use server'
-import Stripe from 'stripe'
+import { unstable_cache as cache } from 'next/cache'
 import { currentUser, getUserEmail } from '@/lib/actions/users'
-import { absoluteUrl } from '@/lib/utils'
 import { getErrorMessage } from '@/lib/handle-error'
-
-const stripe = new Stripe(String(process.env.STRIPE_SECRET_KEY))
+import { stripe } from '@/lib/stripe'
+import { absoluteUrl, formatPrice } from '@/lib/utils'
+import { pricingConfig } from '@/config/pricing'
+import type { PlanWithPrice } from '@/types'
 
 interface StripeInputs {
   title: string
   amount: number
 }
 
+// Retrieve prices for all plans from Stripe
+export async function getPlans (): Promise<PlanWithPrice[]> {
+  return await cache(
+    async () => {
+      const weekPriceId = pricingConfig.plans.week.stripePriceId
+      const monthPriceId = pricingConfig.plans.month.stripePriceId
+
+      const [weekPrice, monthPrice] = await Promise.all([
+        stripe.prices.retrieve(weekPriceId),
+        stripe.prices.retrieve(monthPriceId)
+      ])
+
+      const currency = monthPrice.currency
+
+      return Object.values(pricingConfig.plans).map((plan) => {
+        const price =
+          plan.stripePriceId === monthPriceId
+            ? monthPrice
+            : plan.stripePriceId === weekPriceId
+              ? weekPrice
+              : null
+
+        return {
+          ...plan,
+          price: formatPrice((price?.unit_amount ?? 0) / 100, { currency })
+        }
+      })
+    },
+    ['subscription-plans'],
+    {
+      revalidate: 3600, // every hour
+      tags: ['subscription-plans']
+    }
+  )()
+}
+
+// Managing subscription
 export async function managePlan (input: StripeInputs) {
   try {
     const userId = await currentUser()
@@ -25,13 +63,12 @@ export async function managePlan (input: StripeInputs) {
       throw new Error(email.error)
     }
 
-    const billingUrl = absoluteUrl('/profile/billing')
+    const billingUrl = absoluteUrl('/profile')
 
     const stripeSession = await stripe.checkout.sessions.create({
       success_url: billingUrl,
       cancel_url: billingUrl,
       payment_method_types: ['card'],
-      billing_address_collection: 'auto',
       customer_email: email.data.email,
       mode: 'payment',
       line_items: [

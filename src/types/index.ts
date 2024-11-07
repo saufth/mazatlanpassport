@@ -57,10 +57,6 @@ export interface Category extends Item {
   items: Subcategory[]
 }
 
-export interface Product extends Item {
-  author: string
-}
-
 export interface CardStackItem {
   name: string
   designation: string
@@ -68,15 +64,20 @@ export interface CardStackItem {
   image: ImageProps
 }
 
-export interface SiteConfig {
+export interface NavItemExternal extends Partial<ImageData> {
   name: string,
-  slogan: string
-  description: string,
-  url: URL | string,
-  author: NextAuthor,
-  mainNav: MainNavItem[]
+  url: URL | string
 }
 
-export type NavItemExternal = Pick<SiteConfig, 'name' | 'url'> & Partial<ImageData>
+export interface Plan {
+  id: 'week' | 'month'
+  title: string
+  description: string
+  stripePriceId: string
+}
+
+export interface PlanWithPrice extends Plan {
+  price: string
+}
 
 export type Roles = keyof typeof roles
