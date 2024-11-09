@@ -225,11 +225,11 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`users_stores_likes` (
     REFERENCES `mazatlanpassport`.`stores` (`row_key`))
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`suscriptions_types` (
+CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`plans` (
   `row_key` SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(50) NOT NULL,
   `description` VARCHAR(255) NOT NULL,
-  `cost` FLOAT NOT NULL,
+  `stripePriceId` VARCHAR(30) NOT NULL,
   `days` SMALLINT UNSIGNED NOT NULL,
   `concurrent` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `cash` TINYINT UNSIGNED NOT NULL DEFAULT 0,
@@ -242,13 +242,13 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`suscriptions_types` (
   PRIMARY KEY (`row_key`),
   UNIQUE INDEX `row_key_UNIQUE` (`row_key` ASC),
   UNIQUE INDEX `title_UNIQUE` (`title` ASC),
-  CONSTRAINT `chk_suscriptions_types-title`
+  CONSTRAINT `chk_plans-title`
     CHECK (LENGTH(`title`) >= 3),
-  CONSTRAINT `chk_suscriptions_types-description`
+  CONSTRAINT `chk_plans-description`
     CHECK (LENGTH(`description`) >= 12),
-  CONSTRAINT `chk_suscriptions_types-cost`
-    CHECK (`cost` >= 99 AND `cost` < 10000),
-  CONSTRAINT `chk_suscriptions_types-days`
+  CONSTRAINT `chk_plans-stripePriceId`
+    CHECK (LENGTH(`stripePriceId`) = 30),
+  CONSTRAINT `chk_plans-days`
     CHECK (`days` >= 1 AND `days` <= 365))
 ENGINE = InnoDB;
 
@@ -267,8 +267,7 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`suscriptions` (
   `currency` VARCHAR(3) NOT NULL,
   `cash` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `payment_url` VARCHAR(255) NULL,
-  `user_row_key` INT UNSIGNED NOT NULL,
-  `suscription_type_row_key` SMALLINT UNSIGNED NOT NULL,
+  `plan_row_key` SMALLINT UNSIGNED NOT NULL,
   `expired` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `expires_at` TIMESTAMP NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
@@ -278,14 +277,10 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`suscriptions` (
   PRIMARY KEY (`row_key`),
   UNIQUE INDEX `row_key_UNIQUE` (`row_key` ASC),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  INDEX `fk_suscriptions-users_idx` (`user_row_key` ASC),
-  INDEX `fk_suscriptions-suscriptions_types_idx` (`suscription_type_row_key` ASC),
-  CONSTRAINT `fk_suscriptions-users`
-    FOREIGN KEY (`user_row_key`)
-    REFERENCES `mazatlanpassport`.`users` (`row_key`),
-  CONSTRAINT `fk_suscriptions-suscriptions_types`
-    FOREIGN KEY (`suscription_type_row_key`)
-    REFERENCES `mazatlanpassport`.`suscriptions_types` (`row_key`),
+  INDEX `fk_suscriptions-plans_idx` (`plan_row_key` ASC),
+  CONSTRAINT `fk_suscriptions-plans`
+    FOREIGN KEY (`plan_row_key`)
+    REFERENCES `mazatlanpassport`.`plans` (`row_key`),
   CONSTRAINT `chk_suscriptions-first_name`
     CHECK (LENGTH(`first_name`) >= 3),
   CONSTRAINT `chk_suscriptions-last_name`
@@ -436,26 +431,6 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`roots_recovery_codes` (
     CHECK (`attempts` <= 3))
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`roots_update_codes` (
-  `root_row_key` TINYINT UNSIGNED NOT NULL,
-  `code` MEDIUMINT UNSIGNED NOT NULL,
-  `attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
-  `updated_at` TIMESTAMP NULL,
-  `deleted_at` TIMESTAMP NULL,
-  `status` TINYINT UNSIGNED NOT NULL DEFAULT 1,
-  PRIMARY KEY (`root_row_key`),
-  UNIQUE INDEX `root_row_key_UNIQUE` (`root_row_key` ASC),
-  INDEX `fk_roots_update_codes-roots_idx` (`root_row_key` ASC),
-  CONSTRAINT `fk_roots_update_codes-roots`
-    FOREIGN KEY (`root_row_key`)
-    REFERENCES `mazatlanpassport`.`roots` (`row_key`),
-  CONSTRAINT `chk_roots_update_codes-code`
-    CHECK (`code` >= 100000 AND `code` <= 999999),
-  CONSTRAINT `chk_roots_update_codes-attempts`
-    CHECK (`attempts` <= 3))
-ENGINE = InnoDB;
-
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`admins_verify_codes` (
   `admin_row_key` INT UNSIGNED NOT NULL,
   `code` MEDIUMINT UNSIGNED NOT NULL,
@@ -496,26 +471,6 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`admins_recovery_codes` (
     CHECK (`attempts` <= 3))
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`admins_update_codes` (
-  `admin_row_key` INT UNSIGNED NOT NULL,
-  `code` MEDIUMINT UNSIGNED NOT NULL,
-  `attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
-  `updated_at` TIMESTAMP NULL,
-  `deleted_at` TIMESTAMP NULL,
-  `status` TINYINT UNSIGNED NOT NULL DEFAULT 1,
-  PRIMARY KEY (`admin_row_key`),
-  UNIQUE INDEX `admin_row_key_UNIQUE` (`admin_row_key` ASC),
-  INDEX `fk_admins_update_codes-admins_idx` (`admin_row_key` ASC),
-  CONSTRAINT `fk_admins_update_codes-admins`
-    FOREIGN KEY (`admin_row_key`)
-    REFERENCES `mazatlanpassport`.`admins` (`row_key`),
-  CONSTRAINT `chk_admins_update_codes-code`
-    CHECK (`code` >= 100000 AND `code` <= 999999),
-  CONSTRAINT `chk_admins_update_codes-attempts`
-    CHECK (`attempts` <= 3))
-ENGINE = InnoDB;
-
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`users_verify_codes` (
   `user_row_key` INT UNSIGNED NOT NULL,
   `code` MEDIUMINT UNSIGNED NOT NULL,
@@ -553,25 +508,5 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`users_recovery_codes` (
   CONSTRAINT `chk_users_recovery_codes-code`
     CHECK (`code` >= 100000 AND `code` <= 999999),
   CONSTRAINT `chk_users_recovery_codes-attempts`
-    CHECK (`attempts` <= 3))
-ENGINE = InnoDB;
-
-CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`users_update_codes` (
-  `user_row_key` INT UNSIGNED NOT NULL,
-  `code` MEDIUMINT UNSIGNED NOT NULL,
-  `attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
-  `updated_at` TIMESTAMP NULL,
-  `deleted_at` TIMESTAMP NULL,
-  `status` TINYINT UNSIGNED NOT NULL DEFAULT 1,
-  PRIMARY KEY (`user_row_key`),
-  UNIQUE INDEX `user_row_key_UNIQUE` (`user_row_key` ASC),
-  INDEX `fk_users_update_codes-users_idx` (`user_row_key` ASC),
-  CONSTRAINT `fk_users_update_codes-users`
-    FOREIGN KEY (`user_row_key`)
-    REFERENCES `mazatlanpassport`.`users` (`row_key`),
-  CONSTRAINT `chk_users_update_codes-code`
-    CHECK (`code` >= 100000 AND `code` <= 999999),
-  CONSTRAINT `chk_users_update_codes-attempts`
     CHECK (`attempts` <= 3))
 ENGINE = InnoDB;

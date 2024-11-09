@@ -5,12 +5,8 @@ import { getErrorMessage } from '@/lib/handle-error'
 import { stripe } from '@/lib/stripe'
 import { absoluteUrl, formatPrice } from '@/lib/utils'
 import { pricingConfig } from '@/config/pricing'
+import { type ManagePlanInputs } from '@/lib/validations/stripe'
 import type { PlanWithPrice } from '@/types'
-
-interface StripeInputs {
-  title: string
-  amount: number
-}
 
 // Retrieve prices for all plans from Stripe
 export async function getPlans (): Promise<PlanWithPrice[]> {
@@ -49,7 +45,7 @@ export async function getPlans (): Promise<PlanWithPrice[]> {
 }
 
 // Managing subscription
-export async function managePlan (input: StripeInputs) {
+export async function managePlan (input: ManagePlanInputs) {
   try {
     const userId = await currentUser()
 
@@ -65,24 +61,37 @@ export async function managePlan (input: StripeInputs) {
 
     const billingUrl = absoluteUrl('/profile')
 
+    // If the user is already subscribed to a plan, we redirect them to the Stripe billing portal
+    if (input.isSubscribed && input.stripeCustomerId) {
+      const stripeSession = await stripe.billingPortal.sessions.create({
+        customer: input.stripeCustomerId,
+        return_url: billingUrl
+      })
+
+      return {
+        data: {
+          url: stripeSession.url
+        },
+        error: null
+      }
+    }
+
     const stripeSession = await stripe.checkout.sessions.create({
       success_url: billingUrl,
       cancel_url: billingUrl,
       payment_method_types: ['card'],
-      customer_email: email.data.email,
       mode: 'payment',
+      billing_address_collection: 'auto',
+      customer_email: email.data.email,
       line_items: [
         {
-          price_data: {
-            currency: 'mxn',
-            product_data: {
-              name: input.title
-            },
-            unit_amount: (input.amount * 100)
-          },
+          price: input.stripePriceId,
           quantity: 1
         }
-      ]
+      ],
+      metadata: {
+        userId: userId.data.id
+      }
     })
 
     return {

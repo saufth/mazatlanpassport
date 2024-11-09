@@ -76,7 +76,7 @@ export async function getUserFullName (input: UUIDInputs) {
 export async function getUserEmail (input: UUIDInputs) {
   try {
     const [userEmail] = await db.query<Email[]>(
-      'SELECT verified_at AS verifiedAt, blocked, status FROM users WHERE id = UUID_TO_BIN(?, TRUE);',
+      'SELECT email FROM users WHERE id = UUID_TO_BIN(?, TRUE);',
       [input.id]
     )
 

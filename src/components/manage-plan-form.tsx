@@ -3,11 +3,9 @@ import { FormEvent, useTransition } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { managePlan } from '@/lib/actions/stripe'
+import { type ManagePlanInputs } from '@/lib/validations/stripe'
 
-interface ManagePlanProps {
-  title: string
-  amount: number
-}
+type ManagePlanProps = ManagePlanInputs
 
 export default function ManagePlan (props: ManagePlanProps) {
   const [isTransition, startTransition] = useTransition()

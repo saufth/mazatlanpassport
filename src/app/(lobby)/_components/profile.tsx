@@ -1,17 +1,17 @@
 import QRCodeImage from '@/components/qr-code'
 import ManagePlan from '@/components/manage-plan-form'
 import { Icons } from '@/components/icons'
-import { absoluteUrl } from '@/lib/utils'
-import { type SignupInputs } from '@/lib/validations/auth/signup'
+import { type FullNameInputs } from '@/lib/validations/full-name'
 import { type UUIDInputs } from '@/lib/validations/uuid'
+import { absoluteUrl } from '@/lib/utils'
 import type { PlanWithPrice } from '@/types'
 
 interface ProfileProps {
-  profile: UUIDInputs & Omit<SignupInputs, 'password' | 'confirmPassword' | 'terms'>
+  user: UUIDInputs & FullNameInputs
   plans: PlanWithPrice[]
 }
 
-export default function Profile ({ profile, plans }: ProfileProps) {
+export default function Profile ({ user, plans }: ProfileProps) {
   return (
     <div>
       <div className='container py-spacing-6 space-y-spacing-6'>
@@ -25,7 +25,7 @@ export default function Profile ({ profile, plans }: ProfileProps) {
                 <div className='w-full'>
                   <div className='space-y-1'>
                     <div className='f-subhead-1 font-bold text-white'>
-                      {`${profile?.firstName} ${profile?.lastName}`}
+                      {`${user?.firstName} ${user?.lastName}`}
                     </div>
                     <div className='f-subhead-3 text-destructive font-medium'>
                       Inactivo
@@ -34,7 +34,7 @@ export default function Profile ({ profile, plans }: ProfileProps) {
                 </div>
                 <div className='max-w-40 h-auto aspect-square'>
                   <QRCodeImage
-                    data={absoluteUrl(`/profile/${profile.id}`)}
+                    data={absoluteUrl(`/profile/${user.id}`)}
                     className='rounded-[28px]'
                   />
                 </div>
@@ -68,10 +68,7 @@ export default function Profile ({ profile, plans }: ProfileProps) {
                   </div>
                 </div>
                 <div className='mt-12'>
-                  <ManagePlan
-                    title={planItem.title}
-                    amount={Number(planItem.price)}
-                  />
+                  <ManagePlan stripePriceId={planItem.stripePriceId} />
                 </div>
               </div>
             ))}

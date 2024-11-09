@@ -3,14 +3,14 @@ import Profile from '@/app/(lobby)/_components/profile'
 import { redirects, roles, userStatus } from '@/lib/constants'
 import { getPlans } from '@/lib/actions/stripe'
 import { getSession } from '@/lib/actions/session'
-import { getUserProfile } from '@/lib/actions/users'
+import { getUserFullName } from '@/lib/actions/users'
 
 export default async function ProfilePage () {
   const role = roles.user
   const session = await getSession(role)
 
   const userId = { id: session.data?.id as string }
-  const userProfile = await getUserProfile(userId)
+  const userProfile = await getUserFullName(userId)
 
   if (!userProfile.data) {
     if (userProfile.error) {
@@ -24,12 +24,11 @@ export default async function ProfilePage () {
   }
 
   const profile = userProfile.data
-
   const plans = await getPlans()
 
   return (
     <Profile
-      profile={{
+      user={{
         ...userId,
         ...profile
       }}

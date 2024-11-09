@@ -63,8 +63,8 @@ export default function AuthDropdown ({
           className={cn('size-9 px-0 py-0 rounded-full bg-transparent', className)}
           {...props}
         >
-          <Avatar className='size-8'>
-            <AvatarFallback className='bg-gradient-to-tr from-accent via-accent to-amber-700'>
+          <Avatar className='bg-white size-9'>
+            <AvatarFallback className='bg-gradient-to-tr from-accent via-accent/70 to-accent/50'>
               <span className='pr-px text-white -tracking-[0.1em] leading-none'>
                 {initials}
               </span>
@@ -74,11 +74,9 @@ export default function AuthDropdown ({
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56' align='end' forceMount>
         <DropdownMenuLabel className='font-normal'>
-          <div className='flex flex-col space-y-1'>
-            <p className='text-sm font-medium leading-none'>
-              {user.firstName} {user.lastName}
-            </p>
-          </div>
+          <p className='text-sm font-medium leading-none'>
+            {user.firstName} {user.lastName}
+          </p>
         </DropdownMenuLabel>
         <DropdownMenuSeparator className='bg-secondary-foreground' />
         <DropdownMenuGroup>
