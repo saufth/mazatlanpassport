@@ -76,7 +76,7 @@ export const siteConfig = {
   name: 'Mazatlán Passport',
   slogan: '¡Descuentos exclusivos en Mazatlán!',
   description: 'Promociones exclusivas para viajeros inteligentes.',
-  url: 'https://kz2qvwcp-3000.usw3.devtunnels.ms',
+  url: 'https://mazatlanpassport.mx',
   mainNav: [
     {
       title: 'Inicio',
