@@ -7,7 +7,6 @@ import {
 
 export const managePlanSchema = zodObject({
   stripePriceId: zodString(),
-  stripeCustomerId: zodString().optional().nullable(),
   isSubscribed: zodBoolean().optional()
 })
 

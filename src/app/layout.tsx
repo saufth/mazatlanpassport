@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/sonner'
 import GoogleSearchScript from '@/components/layouts/google-seacrch-script'
 import { cn } from '@/lib/utils'
 import { fontHeader, fontSans } from '@/lib/fonts'
-import { siteConfig, author } from '@/config/site'
+import { siteConfig } from '@/config/site'
 import '@/app/globals.css'
 
 export const metadata: Metadata = {
@@ -51,9 +51,9 @@ export const metadata: Metadata = {
     'Recuerdos Mazatlan Sinaload',
     'Recuerdos Mazatlán Sinaload'
   ],
-  authors: author,
-  creator: author.name,
-  publisher: author.name,
+  authors: siteConfig.author,
+  creator: siteConfig.author.name,
+  publisher: siteConfig.author.name,
   applicationName: siteConfig.name,
   generator: 'Next.js',
   robots: 'index, follow',

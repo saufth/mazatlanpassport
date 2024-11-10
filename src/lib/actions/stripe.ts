@@ -59,18 +59,13 @@ export async function managePlan (input: ManagePlanInputs) {
       throw new Error(email.error)
     }
 
-    const billingUrl = absoluteUrl('/profile')
+    const billingUrl = absoluteUrl('/')
 
-    // If the user is already subscribed to a plan, we redirect them to the Stripe billing portal
-    if (input.isSubscribed && input.stripeCustomerId) {
-      const stripeSession = await stripe.billingPortal.sessions.create({
-        customer: input.stripeCustomerId,
-        return_url: billingUrl
-      })
-
+    // If the user is already subscribed to a plan, we redirect them to profile page
+    if (input.isSubscribed) {
       return {
         data: {
-          url: stripeSession.url
+          url: billingUrl
         },
         error: null
       }
@@ -90,7 +85,8 @@ export async function managePlan (input: ManagePlanInputs) {
         }
       ],
       metadata: {
-        userId: userId.data.id
+        userId: userId.data.id,
+        priceId: input.stripePriceId
       }
     })
 

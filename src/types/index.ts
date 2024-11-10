@@ -1,6 +1,5 @@
 import { type ReactNode } from 'react'
 import { roles } from '@/lib/constants'
-import { type Author as NextAuthor } from 'next/dist/lib/metadata/types/metadata-types'
 
 export interface Title {
   title: string
@@ -11,8 +10,6 @@ export interface Description {
 }
 
 export type Header = Title & Description
-
-export type Author = Required<NextAuthor> & Description
 
 export interface ImageProps {
   src: string

@@ -1,13 +1,8 @@
-import type { Author as NextAuthor } from 'next/dist/lib/metadata/types/metadata-types'
 import { createWhatsappUrl, formatPhoneNumber } from '@/lib/utils'
 import { blog } from '@/config/blog'
 import { countries } from '@/lib/constants'
+import type { Author } from 'next/dist/lib/metadata/types/metadata-types'
 import type { MainNavItem, NavItem } from '@/types'
-
-export const author: NextAuthor = {
-  name: 'saufth',
-  url: 'https://github.com/saufth'
-}
 
 export const blogNav: MainNavItem[] = [
   ...blog.map((blogItem) => ({ title: blogItem.title, href: blogItem.slug }))
@@ -38,9 +33,9 @@ export const siteNav: MainNavItem[] = [
 
 const country = countries.find((countryItem) => countryItem.alpha2 === 'MX')!
 const address = 'Mazatlán, Sinaloa.'
-const phone = process.env.NEXT_PUBLIC_APP_PHONE_NUMBER as string
+const phone = '526692393939'
 export const contactConfig = {
-  email: process.env.NEXT_APP_PUBLIC_EMAIL_ADDRESS as string,
+  email: 'mazatlanpassport@gmail.com',
   phone: {
     number: phone,
     displayNumber: formatPhoneNumber(phone),
@@ -81,14 +76,18 @@ export const siteConfig = {
   name: 'Mazatlán Passport',
   slogan: '¡Descuentos exclusivos en Mazatlán!',
   description: 'Promociones exclusivas para viajeros inteligentes.',
-  url: process.env.NEXT_PUBLIC_APP_URL as string,
+  url: 'https://kz2qvwcp-3000.usw3.devtunnels.ms',
   mainNav: [
     {
       title: 'Inicio',
       href: '/'
     },
     ...siteNav
-  ]
+  ] satisfies MainNavItem[],
+  author: {
+    name: 'saufth',
+    url: 'https://github.com/saufth'
+  } satisfies Author
 }
 
 export type SiteConfig = typeof siteConfig

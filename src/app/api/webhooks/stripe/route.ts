@@ -4,12 +4,19 @@ import type Stripe from 'stripe'
 // import { z } from 'zod'
 import { stripe } from '@/lib/stripe'
 
+interface CheckoutItemSchema {
+  userId: string
+  priceId: string
+}
+
 export async function POST (req: Request) {
   const body = await req.text()
   const headersList = await headers()
   const signature = headersList.get('Stripe-Signature') ?? ''
 
   let event: Stripe.Event
+
+  console.log('Webhook')
 
   try {
     event = stripe.webhooks.constructEvent(
@@ -24,23 +31,25 @@ export async function POST (req: Request) {
     )
   }
 
+  console.log(event.data.object)
+  console.log('\n\n\n')
+
   switch (event.type) {
     // Handling subscription events
     case 'checkout.session.completed':{
       const checkoutSessionCompleted = event.data.object
 
-      // If there is a user id, and no cart id in the metadata, then this is a new subscription
-      if (
-        checkoutSessionCompleted?.metadata?.userId &&
-        !checkoutSessionCompleted?.metadata?.cartId
-      ) {
-        // Retrieve the subscription details from Stripe
-        const subscription = await stripe.subscriptions.retrieve(
-          checkoutSessionCompleted.subscription as string
-        )
+      const paymentIntentId = checkoutSessionCompleted?.id
+      const orderAmount = checkoutSessionCompleted?.amount_total
+      const checkoutItems = checkoutSessionCompleted?.metadata as unknown as CheckoutItemSchema[]
 
-        console.log(subscription)
-      }
+      console.log(checkoutSessionCompleted)
+      console.log('\n\n\n')
+      console.log(paymentIntentId)
+      console.log('\n\n\n')
+      console.log(orderAmount)
+      console.log('\n\n\n')
+      console.log(checkoutItems)
 
       break
     }

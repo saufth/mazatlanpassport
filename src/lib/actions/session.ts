@@ -20,7 +20,7 @@ const createSessionName = (role: Roles) => {
 
 const createSessionExpirationDate = (role: Roles) => {
   const hours = role === roles.user ? 1 : 1
-  return new Date(Date.now() + hours * 60 * 60000)
+  return new Date(Date.now() + hours * 10 * 60000)
 }
 
 export async function encryptSession (payload: JWTPayload, role: Roles) {
