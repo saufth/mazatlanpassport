@@ -42,7 +42,7 @@ export async function POST (req: Request) {
 
         try {
           await db.query(
-            'INSERT INTO subscriptions (id, user_id, title, description, days, stripe_price_id, stripe_payment_id, expires_at) VALUES (UUID_TO_BIN(?, TRUE), ?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO subscriptions (id, user_id, title, description, days, stripe_price_id, stripe_payment_id, expires_at) VALUES (UUID_TO_BIN(?, TRUE), UUID_TO_BIN(?, TRUE), ?, ?, ?, ?, ?, ?)',
             [
               crypto.randomUUID(),
               checkoutSessionCompleted.metadata.userId,

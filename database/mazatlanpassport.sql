@@ -250,10 +250,10 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`subscriptions` (
     CHECK (LENGTH(`description`) >= 12),
   CONSTRAINT `chk_subscriptions-days`
     CHECK (`days` = 7 OR `days` = 30),
-  CONSTRAINT `chk_subscriptions-stripe_payment_id`
-    CHECK (LENGTH(`stripe_payment_id`) = 66),
   CONSTRAINT `chk_subscriptions-stripe_price_id`
-    CHECK (LENGTH(`stripe_payment_id`) = 30))
+    CHECK (LENGTH(`stripe_price_id`) = 30),
+  CONSTRAINT `chk_subscriptions-stripe_payment_id`
+    CHECK (LENGTH(`stripe_payment_id`) = 66))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`products` (
