@@ -243,22 +243,12 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`subscriptions` (
   PRIMARY KEY (`row_key`),
   UNIQUE INDEX `row_key_UNIQUE` (`row_key` ASC),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  CONSTRAINT `chk_subscriptions-first_name`
-    CHECK (LENGTH(`first_name`) >= 3),
-  CONSTRAINT `chk_subscriptions-last_name`
-    CHECK (LENGTH(`last_name`) >= 3),
-  CONSTRAINT `chk_subscriptions-email`
-    CHECK (LENGTH(`email`) >= 6),
   CONSTRAINT `chk_subscriptions-title`
     CHECK (LENGTH(`title`) >= 3),
   CONSTRAINT `chk_subscriptions-description`
     CHECK (LENGTH(`description`) >= 12),
   CONSTRAINT `chk_subscriptions-days`
     CHECK (`days` = 7 OR `days` = 30),
-  CONSTRAINT `chk_subscriptions-amount`
-    CHECK (`amount` <= 99999),
-  CONSTRAINT `chk_subscriptions-currency`
-    CHECK (LENGTH(`currency`) = 3),
   CONSTRAINT `chk_subscriptions-stripe_payment_id`
     CHECK (LENGTH(`stripe_payment_id`) = 66))
 ENGINE = InnoDB;
