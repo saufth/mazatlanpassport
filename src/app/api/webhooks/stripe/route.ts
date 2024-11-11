@@ -11,7 +11,7 @@
 
 export async function POST (request: Request) {
   console.log('Webhook start')
-  return Response.json(request)
+  return Response.json({ res: await request.json() })
   // const body = await req.text()
   // const headersList = await headers()
   // const signature = headersList.get('Stripe-Signature') ?? ''
