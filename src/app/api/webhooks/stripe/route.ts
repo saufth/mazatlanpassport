@@ -1,10 +1,9 @@
 import { headers } from 'next/headers'
-import { addMinutes } from 'date-fns'
 import type Stripe from 'stripe'
+import { addMinutes } from 'date-fns'
+import { db } from '@/db'
 import { stripe } from '@/lib/stripe'
 import { pricingConfig } from '@/config/pricing'
-import type { Plan } from '@/types'
-import { db } from '@/db'
 
 export async function POST (req: Request) {
   const body = await req.text()
@@ -36,8 +35,10 @@ export async function POST (req: Request) {
         checkoutSessionCompleted?.metadata?.userId &&
         checkoutSessionCompleted?.metadata?.priceId
       ) {
-        const priceId = checkoutSessionCompleted?.metadata?.priceId as Plan['id']
-        const priceData = pricingConfig.plans[priceId]
+        const priceData =
+          pricingConfig.plans.week.stripePriceId === checkoutSessionCompleted.metadata.priceId
+            ? pricingConfig.plans.week
+            : pricingConfig.plans.month
 
         console.log('Inserting...')
         try {
