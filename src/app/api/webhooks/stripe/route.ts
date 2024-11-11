@@ -55,7 +55,7 @@ export async function POST (req: Request) {
         } catch (err) {
           return new Response(
             `Database Error: ${err instanceof Error ? err.message : 'Unknown error.'}`,
-            { status: 400 }
+            { status: 500 }
           )
         }
       }
