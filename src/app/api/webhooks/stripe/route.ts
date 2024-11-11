@@ -10,8 +10,8 @@
 // }
 
 export async function POST (request: Request) {
-  console.log('Webhook start')
   const res = await request.json()
+  console.log(res)
   return Response.json({ res })
   // const body = await req.text()
   // const headersList = await headers()
