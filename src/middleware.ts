@@ -1,22 +1,22 @@
-// import { NextResponse, type NextRequest } from 'next/server'
-// import { redirects, roles } from '@/lib/constants'
-// import { updateSession } from '@/lib/actions/session'
+import { NextResponse, type NextRequest } from 'next/server'
+import { redirects, roles } from '@/lib/constants'
+import { updateSession } from '@/lib/actions/session'
 
-// export async function x (request: NextRequest) {
-//   if (request.nextUrl.pathname.startsWith('/api/webhooks')) {
-//     return NextResponse.next() // Bypass for webhooks
-//   }
+export async function middleware (request: NextRequest) {
+  if (request.nextUrl.pathname.startsWith('/api/webhooks')) {
+    return NextResponse.next() // Bypass for webhooks
+  }
 
-//   const role = roles.user
-//   const session = await updateSession(request, role)
+  const role = roles.user
+  const session = await updateSession(request, role)
 
-//   if (!session.data) {
-//     return NextResponse.redirect(new URL(redirects.toSignin, request.url))
-//   }
+  if (!session.data) {
+    return NextResponse.redirect(new URL(redirects.toSignin, request.url))
+  }
 
-//   return session.data
-// }
+  return session.data
+}
 
-// export const config = {
-//   matcher: ['/profile']
-// }
+export const config = {
+  matcher: ['/profile']
+}
