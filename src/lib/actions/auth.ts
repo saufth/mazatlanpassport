@@ -48,7 +48,7 @@ const sendVerifyEmailCode = async (email: string, code: number) => {
       port: 465,
       secure: true,
       auth: {
-        user: process.env.EMAIL_FROM as string,
+        user: process.env.EMAIL_FROM_ADDRESS as string,
         pass: process.env.EMAIL_FROM_PASSWORD as string
       }
     })
@@ -334,7 +334,7 @@ export async function verifyEmail (input: VerifyCodeInputs) {
       port: 465,
       secure: true,
       auth: {
-        user: process.env.EMAIL_FROM as string,
+        user: process.env.EMAIL_FROM_ADDRESS as string,
         pass: process.env.EMAIL_FROM_PASSWORD as string
       }
     })
@@ -442,7 +442,7 @@ export async function resetPasswordEmailCode (input: EmailInputs) {
       port: 465,
       secure: true,
       auth: {
-        user: process.env.EMAIL_FROM as string,
+        user: process.env.EMAIL_FROM_ADDRESS as string,
         pass: process.env.EMAIL_FROM_PASSWORD as string
       }
     })
@@ -565,7 +565,7 @@ export async function resetPassword (input: ResetPasswordInputs) {
       port: 465,
       secure: true,
       auth: {
-        user: process.env.EMAIL_FROM as string,
+        user: process.env.EMAIL_FROM_ADDRESS as string,
         pass: process.env.EMAIL_FROM_PASSWORD as string
       }
     })

@@ -261,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`subscriptions` (
   CONSTRAINT `chk_subscriptions-days`
     CHECK (`days` = 7 OR `days` = 30),
   CONSTRAINT `chk_subscriptions-amount`
-    CHECK (`amount` <= 899),
+    CHECK (`amount` <= 99999),
   CONSTRAINT `chk_subscriptions-currency`
     CHECK (LENGTH(`currency`) = 3),
   CONSTRAINT `chk_subscriptions-stripe_payment_id`
@@ -299,8 +299,8 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`products` (
     CHECK (LENGTH(`description`) >= 12),
   CONSTRAINT `chk_products-image`
     CHECK (LENGTH(`image`) >= 12),
-  CONSTRAINT `chk_subscriptions-amount`
-    CHECK (`amount` >= 9 AND `amount` <= 9999))
+  CONSTRAINT `chk_products-amount`
+    CHECK (`amount` <= 99999))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`product_categories` (
