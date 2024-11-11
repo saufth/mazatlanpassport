@@ -70,6 +70,7 @@ export interface Plan {
   id: 'week' | 'month'
   title: string
   description: string
+  days: number
   stripePriceId: string
 }
 

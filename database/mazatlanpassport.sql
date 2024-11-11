@@ -54,14 +54,14 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`stores` (
   `id` BINARY(16) NOT NULL,
   `name` VARCHAR(50) NOT NULL,
   `slogan` VARCHAR(50) NULL,
-  `description` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(250) NOT NULL,
   `email` VARCHAR(64) NOT NULL,
   `phone` BIGINT UNSIGNED NOT NULL,
   `website` VARCHAR(50) NULL,
-  `address` VARCHAR(255) NOT NULL,
+  `address` VARCHAR(250) NOT NULL,
   `maps_slug` VARCHAR(17) NOT NULL,
-  `profile_image` VARCHAR(255) NOT NULL,
-  `cover_image` VARCHAR(255) NOT NULL,
+  `profile_image` VARCHAR(250) NOT NULL,
+  `cover_image` VARCHAR(250) NOT NULL,
   `facebook_id` VARCHAR(50) NULL,
   `instagram_id` VARCHAR(30) NULL,
   `twitter_id` VARCHAR(15) NULL,
@@ -157,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`stores_branches` (
   `row_key` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(32) NOT NULL,
   `phone` BIGINT UNSIGNED NOT NULL,
-  `address` VARCHAR(255) NOT NULL,
+  `address` VARCHAR(250) NOT NULL,
   `maps_slug` VARCHAR(17) NOT NULL,
   `store_row_key` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`row_key`),
@@ -225,49 +225,20 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`users_stores_likes` (
     REFERENCES `mazatlanpassport`.`stores` (`row_key`))
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`plans` (
-  `row_key` SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `title` VARCHAR(50) NOT NULL,
-  `description` VARCHAR(255) NOT NULL,
-  `stripePriceId` VARCHAR(30) NOT NULL,
-  `days` SMALLINT UNSIGNED NOT NULL,
-  `concurrent` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  `cash` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  `expired` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  `expires_at` TIMESTAMP NULL,
-  `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
-  `updated_at` TIMESTAMP NULL,
-  `deleted_at` TIMESTAMP NULL,
-  `status` TINYINT UNSIGNED NOT NULL DEFAULT 1,
-  PRIMARY KEY (`row_key`),
-  UNIQUE INDEX `row_key_UNIQUE` (`row_key` ASC),
-  UNIQUE INDEX `title_UNIQUE` (`title` ASC),
-  CONSTRAINT `chk_plans-title`
-    CHECK (LENGTH(`title`) >= 3),
-  CONSTRAINT `chk_plans-description`
-    CHECK (LENGTH(`description`) >= 12),
-  CONSTRAINT `chk_plans-stripePriceId`
-    CHECK (LENGTH(`stripePriceId`) = 30),
-  CONSTRAINT `chk_plans-days`
-    CHECK (`days` >= 1 AND `days` <= 365))
-ENGINE = InnoDB;
-
-CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`suscriptions` (
+CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`subscriptions` (
   `row_key` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `id` BINARY(16) NOT NULL,
   `user_id` BINARY(16) NOT NULL,
   `first_name` VARCHAR(35) NOT NULL,
   `last_name` VARCHAR(35) NOT NULL,
   `email` VARCHAR(64) NOT NULL,
-  `genre_iso` TINYINT UNSIGNED NOT NULL,
   `title` VARCHAR(50) NOT NULL,
-  `description` VARCHAR(255) NOT NULL,
+  `description` VARCHAR(250) NOT NULL,
   `days` SMALLINT UNSIGNED NOT NULL,
-  `payment_cost` FLOAT NOT NULL,
+  `amount` MEDIUMINT UNSIGNED NOT NULL,
   `currency` VARCHAR(3) NOT NULL,
+  `stripe_payment_id` VARCHAR(66) NULL,
   `cash` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  `payment_url` VARCHAR(255) NULL,
-  `plan_row_key` SMALLINT UNSIGNED NOT NULL,
   `expired` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `expires_at` TIMESTAMP NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
@@ -277,39 +248,33 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`suscriptions` (
   PRIMARY KEY (`row_key`),
   UNIQUE INDEX `row_key_UNIQUE` (`row_key` ASC),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  INDEX `fk_suscriptions-plans_idx` (`plan_row_key` ASC),
-  CONSTRAINT `fk_suscriptions-plans`
-    FOREIGN KEY (`plan_row_key`)
-    REFERENCES `mazatlanpassport`.`plans` (`row_key`),
-  CONSTRAINT `chk_suscriptions-first_name`
+  CONSTRAINT `chk_subscriptions-first_name`
     CHECK (LENGTH(`first_name`) >= 3),
-  CONSTRAINT `chk_suscriptions-last_name`
+  CONSTRAINT `chk_subscriptions-last_name`
     CHECK (LENGTH(`last_name`) >= 3),
-  CONSTRAINT `chk_suscriptions-email`
+  CONSTRAINT `chk_subscriptions-email`
     CHECK (LENGTH(`email`) >= 6),
-  CONSTRAINT `chk_suscriptions-genre_iso`
-    CHECK (`genre_iso` = 0 OR `genre_iso` = 1 OR `genre_iso` = 2 OR `genre_iso` = 9),
-  CONSTRAINT `chk_suscriptions-title`
+  CONSTRAINT `chk_subscriptions-title`
     CHECK (LENGTH(`title`) >= 3),
-  CONSTRAINT `chk_suscriptions-description`
+  CONSTRAINT `chk_subscriptions-description`
     CHECK (LENGTH(`description`) >= 12),
-  CONSTRAINT `chk_suscriptions-days`
-    CHECK (`days` >= 1 AND `days` <= 365),
-  CONSTRAINT `chk_suscriptions-payment_cost`
-    CHECK (`payment_cost` >= 199 AND `payment_cost` < 1999),
-  CONSTRAINT `chk_suscriptions-currency`
+  CONSTRAINT `chk_subscriptions-days`
+    CHECK (`days` = 7 OR `days` = 30),
+  CONSTRAINT `chk_subscriptions-amount`
+    CHECK (`amount` <= 899),
+  CONSTRAINT `chk_subscriptions-currency`
     CHECK (LENGTH(`currency`) = 3),
-  CONSTRAINT `chk_suscriptions-payment_url`
-    CHECK (LENGTH(`payment_url`) >= 12 AND `cash` < 1))
+  CONSTRAINT `chk_subscriptions-stripe_payment_id`
+    CHECK (LENGTH(`stripe_payment_id`) = 66))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`products` (
   `row_key` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `id` BINARY(16) NOT NULL,
   `title` VARCHAR(50) NOT NULL,
-  `description` VARCHAR(255) NOT NULL,
-  `image` VARCHAR(255) NOT NULL,
-  `price` FLOAT NOT NULL,
+  `description` VARCHAR(250) NOT NULL,
+  `image` VARCHAR(250) NOT NULL,
+  `amount` MEDIUMINT UNSIGNED NOT NULL,
   `discount` TINYINT UNSIGNED NOT NULL,
   `store_row_key` INT UNSIGNED NOT NULL,
   `available` TINYINT UNSIGNED NOT NULL DEFAULT 1,
@@ -334,8 +299,8 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`products` (
     CHECK (LENGTH(`description`) >= 12),
   CONSTRAINT `chk_products-image`
     CHECK (LENGTH(`image`) >= 12),
-  CONSTRAINT `chk_suscriptions-price`
-    CHECK (`price` >= 9 AND `price` <= 9999))
+  CONSTRAINT `chk_subscriptions-amount`
+    CHECK (`amount` >= 9 AND `amount` <= 9999))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`product_categories` (
@@ -368,7 +333,7 @@ ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`orders` (
   `row_key` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `suscription_row_key` BIGINT UNSIGNED NOT NULL,
+  `subscription_row_key` BIGINT UNSIGNED NOT NULL,
   `store_row_key` INT UNSIGNED NOT NULL,
   `products` JSON NOT NULL,
   `rate` TINYINT UNSIGNED NULL,
@@ -379,11 +344,11 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`orders` (
   `status` TINYINT UNSIGNED NOT NULL DEFAULT 1,
   PRIMARY KEY (`row_key`),
   UNIQUE INDEX `row_key_UNIQUE` (`row_key` ASC),
-  INDEX `fk_orders-suscriptions_idx` (`suscription_row_key` ASC),
+  INDEX `fk_orders-subscriptions_idx` (`subscription_row_key` ASC),
   INDEX `fk_orders-stores_idx` (`store_row_key` ASC),
-  CONSTRAINT `fk_orders-suscriptions`
-    FOREIGN KEY (`suscription_row_key`)
-    REFERENCES `mazatlanpassport`.`suscriptions` (`row_key`),
+  CONSTRAINT `fk_orders-subscriptions`
+    FOREIGN KEY (`subscription_row_key`)
+    REFERENCES `mazatlanpassport`.`subscriptions` (`row_key`),
   CONSTRAINT `fk_orders-stores`
     FOREIGN KEY (`store_row_key`)
     REFERENCES `mazatlanpassport`.`stores` (`row_key`),

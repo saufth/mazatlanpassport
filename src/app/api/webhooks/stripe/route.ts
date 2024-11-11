@@ -1,13 +1,11 @@
-// import { revalidateTag } from 'next/cache'
 import { headers } from 'next/headers'
 import type Stripe from 'stripe'
-// import { z } from 'zod'
 import { stripe } from '@/lib/stripe'
-
-interface CheckoutItemSchema {
-  userId: string
-  priceId: string
-}
+import { pricingConfig } from '@/config/pricing'
+import type { Plan } from '@/types'
+import { getUserFullName } from '@/lib/actions/users'
+import { db } from '@/db'
+import { addDays } from 'date-fns'
 
 export async function POST (req: Request) {
   const body = await req.text()
@@ -15,8 +13,6 @@ export async function POST (req: Request) {
   const signature = headersList.get('Stripe-Signature') ?? ''
 
   let event: Stripe.Event
-
-  console.log('Webhook')
 
   try {
     event = stripe.webhooks.constructEvent(
@@ -31,25 +27,44 @@ export async function POST (req: Request) {
     )
   }
 
-  console.log(event.data.object)
-  console.log('\n\n\n')
-
   switch (event.type) {
     // Handling subscription events
     case 'checkout.session.completed':{
       const checkoutSessionCompleted = event.data.object
 
-      const paymentIntentId = checkoutSessionCompleted?.id
-      const orderAmount = checkoutSessionCompleted?.amount_total
-      const checkoutItems = checkoutSessionCompleted?.metadata as unknown as CheckoutItemSchema[]
+      if (
+        checkoutSessionCompleted?.metadata?.userId &&
+        checkoutSessionCompleted?.metadata?.priceId
+      ) {
+        const priceId = checkoutSessionCompleted?.metadata?.priceId as Plan['id']
+        const priceData = pricingConfig.plans[priceId]
 
-      console.log(checkoutSessionCompleted)
-      console.log('\n\n\n')
-      console.log(paymentIntentId)
-      console.log('\n\n\n')
-      console.log(orderAmount)
-      console.log('\n\n\n')
-      console.log(checkoutItems)
+        const userFullName = await getUserFullName({ id: checkoutSessionCompleted.metadata.userId })
+
+        try {
+          await db.query(
+            'INSERT INTO subscription (user_id, first_name, last_name, email, title, description, days, amount, currency, stripe_payment_id, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [
+              checkoutSessionCompleted.metadata.userId,
+              userFullName.data?.firstName ?? 'first-name-not-found',
+              userFullName.data?.firstName ?? 'last-name-not-found',
+              checkoutSessionCompleted.customer_email as string,
+              priceData.title,
+              priceData.description,
+              priceData.days,
+              checkoutSessionCompleted.amount_total as number,
+              checkoutSessionCompleted.currency as string,
+              priceData.stripePriceId,
+              addDays(new Date(), priceData.days)
+            ]
+          )
+        } catch (err) {
+          return new Response(
+            `Database Error: ${err instanceof Error ? err.message : 'Unknown error.'}`,
+            { status: 400 }
+          )
+        }
+      }
 
       break
     }
