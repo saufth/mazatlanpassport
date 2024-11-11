@@ -40,11 +40,11 @@ export async function POST (req: Request) {
             ? pricingConfig.plans.week
             : pricingConfig.plans.month
 
-        console.log('Inserting...')
         try {
           await db.query(
-            'INSERT INTO subscriptions (user_id, title, description, days, stripe_payment_id, expires_at) VALUES (?, ?, ?, ?, ?, ?)',
+            'INSERT INTO subscriptions (id, user_id, title, description, days, stripe_payment_id, expires_at) VALUES (UUID_TO_BIN(?, TRUE), ?, ?, ?, ?, ?, ?)',
             [
+              crypto.randomUUID(),
               checkoutSessionCompleted.metadata.userId,
               priceData.title,
               priceData.description,
