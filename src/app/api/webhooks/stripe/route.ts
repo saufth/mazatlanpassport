@@ -3,7 +3,6 @@ import type Stripe from 'stripe'
 import { stripe } from '@/lib/stripe'
 import { pricingConfig } from '@/config/pricing'
 import type { Plan } from '@/types'
-import { getUserFullName } from '@/lib/actions/users'
 import { db } from '@/db'
 import { addDays } from 'date-fns'
 
@@ -39,21 +38,14 @@ export async function POST (req: Request) {
         const priceId = checkoutSessionCompleted?.metadata?.priceId as Plan['id']
         const priceData = pricingConfig.plans[priceId]
 
-        const userFullName = await getUserFullName({ id: checkoutSessionCompleted.metadata.userId })
-
         try {
           await db.query(
-            'INSERT INTO subscription (user_id, first_name, last_name, email, title, description, days, amount, currency, stripe_payment_id, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO subscription (user_id, title, description, days, stripe_payment_id, expires_at) VALUES (?, ?, ?, ?, ?, ?)',
             [
               checkoutSessionCompleted.metadata.userId,
-              userFullName.data?.firstName ?? 'first-name-not-found',
-              userFullName.data?.firstName ?? 'last-name-not-found',
-              checkoutSessionCompleted.customer_email as string,
               priceData.title,
               priceData.description,
               priceData.days,
-              checkoutSessionCompleted.amount_total as number,
-              checkoutSessionCompleted.currency as string,
               priceData.stripePriceId,
               addDays(new Date(), priceData.days)
             ]
