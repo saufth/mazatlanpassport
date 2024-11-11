@@ -232,6 +232,7 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`subscriptions` (
   `title` VARCHAR(50) NOT NULL,
   `description` VARCHAR(250) NOT NULL,
   `days` SMALLINT UNSIGNED NOT NULL,
+  `stripe_price_id` VARCHAR(30) NULL,
   `stripe_payment_id` VARCHAR(66) NULL,
   `cash` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `expired` TINYINT UNSIGNED NOT NULL DEFAULT 0,
@@ -250,7 +251,9 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`subscriptions` (
   CONSTRAINT `chk_subscriptions-days`
     CHECK (`days` = 7 OR `days` = 30),
   CONSTRAINT `chk_subscriptions-stripe_payment_id`
-    CHECK (LENGTH(`stripe_payment_id`) = 66))
+    CHECK (LENGTH(`stripe_payment_id`) = 66),
+  CONSTRAINT `chk_subscriptions-stripe_price_id`
+    CHECK (LENGTH(`stripe_payment_id`) = 30))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`products` (
