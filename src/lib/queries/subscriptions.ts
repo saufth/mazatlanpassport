@@ -5,9 +5,7 @@ import { pricingConfig } from '@/config/pricing'
 import type { UUIDInputs } from '@/lib/validations/uuid'
 import type { UserPlan } from '@/types'
 
-interface Subscription
-  extends UUIDInputs,
-    Pick<UserPlan, 'paidInCash' | 'stripePriceId' | 'stripePaymentIntentId' | 'expiresAt' | 'isCanceled'> {}
+type Subscription = Pick<UserPlan, 'paidInCash' | 'stripePriceId' | 'stripePaymentIntentId' | 'expiresAt' | 'isCanceled'>
 
 export async function getSubscription (
   input: UUIDInputs
@@ -16,7 +14,7 @@ export async function getSubscription (
 
   try {
     const [subscription] = await db.query<Subscription[]>(
-      'SELECT id, paid_in_cash AS paidInCash, stripe_price_id AS stripePriceId, stripe_payment_id AS stripePaymentIntentId, expires_at AS expiresAt, NOT status AS isCanceled FROM subscriptions WHERE id = UUID_TO_BIN(?, TRUE);',
+      'SELECT paid_in_cash AS paidInCash, stripe_price_id AS stripePriceId, stripe_payment_id AS stripePaymentIntentId, expires_at AS expiresAt, NOT status AS isCanceled FROM subscriptions WHERE user_id = UUID_TO_BIN(?, TRUE);',
       [input.id]
     )
 
