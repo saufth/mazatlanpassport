@@ -1,19 +1,25 @@
 import {
   boolean as zodBoolean,
   object as zodObject,
+  string as zodString,
   ZodIssueCode,
   type infer as zodInfer
 } from 'zod'
+import { fullNameSchema } from '@/lib/validations/full-name'
+import { emailSchema } from '@/lib/validations/email'
+import { genreISOSchema } from '@/lib/validations/genre-iso'
 import { passwordWithConfirmSchema } from '@/lib/validations/password'
-import { profileSchema } from '@/lib/validations/profile'
 import { calculateYears } from '@/lib/utils'
 
 export const signupSchema = zodObject({
   terms: zodBoolean().refine((terms) => terms, {
     message: 'Acepta los términos de servicio y privacidad'
-  })
+  }),
+  birthdate: zodString({ required_error: 'Ingresa tu fecha de nacimiento' })
 })
-  .merge(profileSchema)
+  .merge(fullNameSchema)
+  .merge(emailSchema)
+  .merge(genreISOSchema)
   .merge(passwordWithConfirmSchema)
   .superRefine((val, ctx) => {
     if (val.confirmPassword !== val.password) {
