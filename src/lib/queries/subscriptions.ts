@@ -5,7 +5,7 @@ import { pricingConfig } from '@/config/pricing'
 import type { UUIDInputs } from '@/lib/validations/uuid'
 import type { UserPlan } from '@/types'
 
-type Subscription = Omit<UserPlan, 'isSubscribed'>
+type Subscription = Pick<UserPlan, 'paidInCash' | 'stripePriceId' | 'stripePaymentIntentId' | 'expiresAt' | 'isCanceled'>
 
 export async function getSubscription (
   input: UUIDInputs
