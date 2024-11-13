@@ -21,6 +21,8 @@ export default async function Profile ({
     plansPromise
   ])
 
+  console.log(plan)
+
   return (
     <div>
       <div className='container py-spacing-6 space-y-spacing-6'>
