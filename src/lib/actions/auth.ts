@@ -188,7 +188,7 @@ export async function signin (input: SigninInputs) {
 
     if (status.error === userStatus.unverified) {
       const [verifyCode] = await db.query<VerifyCode[]>(
-        'SELECT code, attempts, CONVERT_TZ(created_at AS createdAt, "UTC", "America/Mazatlan") FROM users_verify_codes WHERE user_row_key = ?',
+        'SELECT code, attempts, CONVERT_TZ(created_at, "UTC", "America/Mazatlan") AS createdAt FROM users_verify_codes WHERE user_row_key = ?',
         [userKeys.rowKey]
       )
 
@@ -275,7 +275,7 @@ export async function verifyEmail (input: VerifyCodeInputs) {
     }
 
     const [verifyCode] = await db.query<VerifyCode[]>(
-      'SELECT code, attempts, CONVERT_TZ(created_at AS createdAt, "UTC", "America/Mazatlan") FROM users_verify_codes WHERE user_row_key = ?',
+      'SELECT code, attempts, CONVERT_TZ(created_at, "UTC", "America/Mazatlan") AS createdAt FROM users_verify_codes WHERE user_row_key = ?',
       [userData.rowKey]
     )
 
@@ -411,7 +411,7 @@ export async function resetPasswordEmailCode (input: EmailInputs) {
     }
 
     const [verifyCode] = await db.query<VerifyCode[]>(
-      'SELECT code, attempts, CONVERT_TZ(created_at AS createdAt, "UTC", "America/Mazatlan") FROM users_recovery_codes WHERE user_row_key = ?',
+      'SELECT code, attempts, CONVERT_TZ(created_at, "UTC", "America/Mazatlan") AS createdAt FROM users_recovery_codes WHERE user_row_key = ?',
       [userKeys.rowKey]
     )
 
@@ -506,7 +506,7 @@ export async function resetPassword (input: ResetPasswordInputs) {
     }
 
     const [verifyCode] = await db.query<VerifyCode[]>(
-      'SELECT code, attempts, CONVERT_TZ(created_at AS createdAt, "UTC", "America/Mazatlan") FROM users_recovery_codes WHERE user_row_key = ?',
+      'SELECT code, attempts, CONVERT_TZ(created_at, "UTC", "America/Mazatlan") AS createdAt FROM users_recovery_codes WHERE user_row_key = ?',
       [userData.rowKey]
     )
 
