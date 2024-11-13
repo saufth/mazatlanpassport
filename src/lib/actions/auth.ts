@@ -188,12 +188,12 @@ export async function signin (input: SigninInputs) {
 
     if (status.error === userStatus.unverified) {
       const [verifyCode] = await db.query<VerifyCode[]>(
-        'SELECT code, attempts, CONVERT_TZ(created_at, "UTC", "America/Mazatlan") AS createdAt FROM users_verify_codes WHERE user_row_key = ?',
+        'SELECT code, attempts, created_at AS createdAt FROM users_verify_codes WHERE user_row_key = ?',
         [userKeys.rowKey]
       )
 
       if (verifyCode) {
-        if (calculateMinutes(new Date(verifyCode.createdAt)) < 5 && verifyCode.attempts < 2) {
+        if (calculateMinutes(new Date(new Date(verifyCode.createdAt).toLocaleString())) < 5 && verifyCode.attempts < 2) {
           await db.end()
           return {
             data: userId,
@@ -275,7 +275,7 @@ export async function verifyEmail (input: VerifyCodeInputs) {
     }
 
     const [verifyCode] = await db.query<VerifyCode[]>(
-      'SELECT code, attempts, CONVERT_TZ(created_at, "UTC", "America/Mazatlan") AS createdAt FROM users_verify_codes WHERE user_row_key = ?',
+      'SELECT code, attempts, created_at AS createdAt FROM users_verify_codes WHERE user_row_key = ?',
       [userData.rowKey]
     )
 
@@ -291,11 +291,13 @@ export async function verifyEmail (input: VerifyCodeInputs) {
       )
     }
 
-    console.log(verifyCode.createdAt)
-    console.log(new Date().toString())
-    console.log(calculateMinutes(new Date(verifyCode.createdAt)) >= 5)
+    const ta = new Date(verifyCode.createdAt).toLocaleString()
+    const tb = new Date().toLocaleString()
+    console.log(ta)
+    console.log(tb)
+    console.log(calculateMinutes(new Date(new Date(verifyCode.createdAt).toLocaleString())))
 
-    if (calculateMinutes(new Date(verifyCode.createdAt)) >= 5) {
+    if (calculateMinutes(new Date(new Date(verifyCode.createdAt).toLocaleString())) >= 5) {
       deleteCurrentVerifyEmailCode()
       await db.end()
       throw new Error('El código ha caducado, crea otro iniciando sesión')
@@ -411,12 +413,12 @@ export async function resetPasswordEmailCode (input: EmailInputs) {
     }
 
     const [verifyCode] = await db.query<VerifyCode[]>(
-      'SELECT code, attempts, CONVERT_TZ(created_at, "UTC", "America/Mazatlan") AS createdAt FROM users_recovery_codes WHERE user_row_key = ?',
+      'SELECT code, attempts, created_at AS createdAt FROM users_recovery_codes WHERE user_row_key = ?',
       [userKeys.rowKey]
     )
 
     if (verifyCode) {
-      if (calculateMinutes(new Date(verifyCode.createdAt)) < 5 && verifyCode.attempts < 2) {
+      if (calculateMinutes(new Date(new Date(verifyCode.createdAt).toLocaleString())) < 5 && verifyCode.attempts < 2) {
         await db.end()
         return {
           data: { id: userKeys.id },
@@ -506,7 +508,7 @@ export async function resetPassword (input: ResetPasswordInputs) {
     }
 
     const [verifyCode] = await db.query<VerifyCode[]>(
-      'SELECT code, attempts, CONVERT_TZ(created_at, "UTC", "America/Mazatlan") AS createdAt FROM users_recovery_codes WHERE user_row_key = ?',
+      'SELECT code, attempts, created_at AS createdAt FROM users_recovery_codes WHERE user_row_key = ?',
       [userData.rowKey]
     )
 
@@ -522,7 +524,7 @@ export async function resetPassword (input: ResetPasswordInputs) {
       )
     }
 
-    if (calculateMinutes(new Date(verifyCode.createdAt)) >= 5) {
+    if (calculateMinutes(new Date(new Date(verifyCode.createdAt).toLocaleString())) >= 5) {
       deleteCurrentRecoveryEmailCode()
       await db.end()
       throw new Error('El código ha caducado')
