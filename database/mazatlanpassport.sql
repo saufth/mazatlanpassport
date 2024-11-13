@@ -344,7 +344,7 @@ ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`roots_verify_codes` (
   `root_row_key` TINYINT UNSIGNED NOT NULL,
-  `code` MEDIUMINT UNSIGNED ZEROFILL NOT NULL,
+  `code` MEDIUMINT UNSIGNED NOT NULL,
   `attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `updated_at` TIMESTAMP NULL,
@@ -364,7 +364,7 @@ ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`roots_recovery_codes` (
   `root_row_key` TINYINT UNSIGNED NOT NULL,
-  `code` MEDIUMINT UNSIGNED ZEROFILL NOT NULL,
+  `code` MEDIUMINT UNSIGNED NOT NULL,
   `attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `updated_at` TIMESTAMP NULL,
@@ -384,7 +384,7 @@ ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`admins_verify_codes` (
   `admin_row_key` INT UNSIGNED NOT NULL,
-  `code` MEDIUMINT UNSIGNED ZEROFILL NOT NULL,
+  `code` MEDIUMINT UNSIGNED NOT NULL,
   `attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `updated_at` TIMESTAMP NULL,
@@ -404,7 +404,7 @@ ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`admins_recovery_codes` (
   `admin_row_key` INT UNSIGNED NOT NULL,
-  `code` MEDIUMINT UNSIGNED ZEROFILL NOT NULL,
+  `code` MEDIUMINT UNSIGNED NOT NULL,
   `attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `updated_at` TIMESTAMP NULL,
@@ -424,7 +424,7 @@ ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`users_verify_codes` (
   `user_row_key` INT UNSIGNED NOT NULL,
-  `code` MEDIUMINT UNSIGNED ZEROFILL NOT NULL,
+  `code` MEDIUMINT UNSIGNED NOT NULL,
   `attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `updated_at` TIMESTAMP NULL,
@@ -444,7 +444,7 @@ ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`users_recovery_codes` (
   `user_row_key` INT UNSIGNED NOT NULL,
-  `code` MEDIUMINT UNSIGNED ZEROFILL NOT NULL,
+  `code` MEDIUMINT UNSIGNED NOT NULL,
   `attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `updated_at` TIMESTAMP NULL,

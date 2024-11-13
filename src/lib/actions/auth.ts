@@ -291,6 +291,10 @@ export async function verifyEmail (input: VerifyCodeInputs) {
       )
     }
 
+    console.log(verifyCode.createdAt)
+    console.log(new Date().toString())
+    console.log(calculateMinutes(new Date(verifyCode.createdAt)) >= 5)
+
     if (calculateMinutes(new Date(verifyCode.createdAt)) >= 5) {
       deleteCurrentVerifyEmailCode()
       await db.end()
