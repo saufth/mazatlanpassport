@@ -120,9 +120,9 @@ export default function SigninForm () {
       </Form>
       <div className='flex justify-between mt-spacing-4'>
         <div className='f-body-2'>
-          ¿No tienes una cuenta? <Link href='/signup' className='text-ring font-semibold'>Registrate</Link>
+          ¿No tienes una cuenta? <Link href='/signup' className='text-ring font-medium'>Registrate</Link>
         </div>
-        <Link className='f-body-2 text-ring font-semibold' href='/signin/reset-password'>
+        <Link className='f-body-2 text-ring font-medium' href='/signin/reset-password'>
           Recuperar contraseña
         </Link>
       </div>

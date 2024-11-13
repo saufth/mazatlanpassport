@@ -402,7 +402,7 @@ export default function SignupForm () {
         </form>
       </Form>
       <div className='f-body-2 mt-spacing-4'>
-        ¿Ya tienes una cuenta? <Link href='/signin' className='text-ring font-semibold'>Inicia sesión</Link>
+        ¿Ya tienes una cuenta? <Link href='/signin' className='text-ring font-medium'>Inicia sesión</Link>
       </div>
     </div>
   )

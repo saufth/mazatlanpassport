@@ -168,7 +168,7 @@ export async function signin (input: SigninInputs) {
     }
 
     const [userKeys] = await db.query<UserKeys[]>(
-      'SELECT row_key, BIN_TO_UUID(id, TRUE) AS id, password FROM users WHERE email = ?',
+      'SELECT row_key AS rowKey, BIN_TO_UUID(id, TRUE) AS id, password FROM users WHERE email = ?',
       [input.email]
     )
 
