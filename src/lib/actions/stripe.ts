@@ -1,6 +1,9 @@
 'use server'
-import { unstable_cache as cache } from 'next/cache'
-import { currentUser, getUserEmail } from '@/lib/actions/users'
+import {
+  unstable_cache as cache,
+  unstable_noStore as noStore
+} from 'next/cache'
+import { currentUserId, getUserEmail } from '@/lib/queries/users'
 import { getErrorMessage } from '@/lib/handle-error'
 import { stripe } from '@/lib/stripe'
 import { absoluteUrl, formatPrice } from '@/lib/utils'
@@ -46,8 +49,10 @@ export async function getPlans (): Promise<PlanWithPrice[]> {
 
 // Managing subscription
 export async function managePlan (input: ManagePlanInputs) {
+  noStore()
+
   try {
-    const userId = await currentUser()
+    const userId = await currentUserId()
 
     if (!userId.data) {
       throw new Error(userId.error)
@@ -59,7 +64,7 @@ export async function managePlan (input: ManagePlanInputs) {
       throw new Error(email.error)
     }
 
-    const billingUrl = absoluteUrl('/')
+    const billingUrl = absoluteUrl('/profile')
 
     // If the user is already subscribed to a plan, we redirect them to profile page
     if (input.isSubscribed) {

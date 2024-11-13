@@ -1,38 +1,24 @@
 import { redirect } from 'next/navigation'
 import Profile from '@/app/(lobby)/_components/profile'
-import { redirects, roles, userStatus } from '@/lib/constants'
 import { getPlans } from '@/lib/actions/stripe'
-import { getSession } from '@/lib/actions/session'
-import { getUserFullName } from '@/lib/actions/users'
+import { getCachedUser } from '@/lib/queries/users'
+import { getSubscription } from '@/lib/queries/subscriptions'
 
 export default async function ProfilePage () {
-  const role = roles.user
-  const session = await getSession(role)
+  const user = await getCachedUser()
 
-  const userId = { id: session.data?.id as string }
-  const userProfile = await getUserFullName(userId)
-
-  if (!userProfile.data) {
-    if (userProfile.error) {
-      redirect(
-        userProfile.error !== userStatus.unverified
-          ? redirects.afterSignout
-          : redirects.toSignin
-      )
-    }
-    redirect(redirects.toSignin)
+  if (!user) {
+    redirect('/signin')
   }
 
-  const profile = userProfile.data
-  const plans = await getPlans()
+  const planPromise = getSubscription({ id: user.id })
+  const plansPromise = getPlans()
 
   return (
     <Profile
-      user={{
-        ...userId,
-        ...profile
-      }}
-      plans={plans}
+      user={user}
+      planPromise={planPromise}
+      plansPromise={plansPromise}
     />
   )
 }

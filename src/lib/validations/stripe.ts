@@ -7,7 +7,9 @@ import {
 
 export const managePlanSchema = zodObject({
   stripePriceId: zodString(),
-  isSubscribed: zodBoolean().optional()
+  stripePaymentIntentId: zodString().optional().nullable(),
+  isSubscribed: zodBoolean().optional(),
+  isCurrentPlan: zodBoolean().optional()
 })
 
 export type ManagePlanInputs = zodInfer<typeof managePlanSchema>

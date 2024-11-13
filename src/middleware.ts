@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { redirects, roles } from '@/lib/constants'
-import { updateSession } from '@/lib/actions/session'
+import { updateSession } from '@/lib/queries/sessions'
 
 export async function middleware (request: NextRequest) {
   // if (request.nextUrl.pathname.startsWith('/api/webhooks')) {

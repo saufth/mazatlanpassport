@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`stores` (
   CONSTRAINT `chk_stores-address`
     CHECK (LENGTH(`address`) >= 12),
   CONSTRAINT `chk_stores-phone`
-    CHECK (`phone` > 10000000000 AND `phone` <= 19999999999999),
+    CHECK (`phone` > 110000000009 AND `phone` <= 19999999999999),
   CONSTRAINT `chk_stores-website`
     CHECK (LENGTH(`website`) >= 5),
   CONSTRAINT `chk_stores-maps_slug`
@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`stores_branches` (
   CONSTRAINT `chk_stores_branches-address`
     CHECK (LENGTH(`address`) >= 12),
   CONSTRAINT `chk_stores_branches-phone`
-    CHECK (`phone` > 10000000000 AND `phone` <= 19999999999999))
+    CHECK (`phone` > 110000000009 AND `phone` <= 19999999999999))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`users` (
@@ -206,7 +206,7 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`users` (
   CONSTRAINT `chk_users-last_name`
     CHECK (LENGTH(`last_name`) >= 3),
   CONSTRAINT `chk_users-phone`
-    CHECK (`phone` > 10000000000 AND `phone` <= 19999999999999),
+    CHECK (`phone` > 110000000009 AND `phone` <= 19999999999999),
   CONSTRAINT `chk_users-genre_iso`
     CHECK (`genre_iso` = 0 OR `genre_iso` = 1 OR `genre_iso` = 2 OR `genre_iso` = 9))
 ENGINE = InnoDB;
@@ -229,14 +229,11 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`subscriptions` (
   `row_key` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `id` BINARY(16) NOT NULL,
   `user_id` BINARY(16) NOT NULL,
-  `title` VARCHAR(50) NOT NULL,
-  `description` VARCHAR(250) NOT NULL,
-  `days` SMALLINT UNSIGNED NOT NULL,
-  `stripe_price_id` VARCHAR(30) NULL,
+  `paid_in_cash` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  `stripe_price_id` VARCHAR(30) NOT NULL,
   `stripe_payment_id` VARCHAR(66) NULL,
-  `cash` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  `expired` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `expires_at` TIMESTAMP NOT NULL,
+  `canceled_at` TIMESTAMP NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `updated_at` TIMESTAMP NULL,
   `deleted_at` TIMESTAMP NULL,
@@ -244,12 +241,11 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`subscriptions` (
   PRIMARY KEY (`row_key`),
   UNIQUE INDEX `row_key_UNIQUE` (`row_key` ASC),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  CONSTRAINT `chk_subscriptions-title`
-    CHECK (LENGTH(`title`) >= 3),
-  CONSTRAINT `chk_subscriptions-description`
-    CHECK (LENGTH(`description`) >= 12),
-  CONSTRAINT `chk_subscriptions-days`
-    CHECK (`days` = 7 OR `days` = 30),
+  UNIQUE INDEX `stripe_price_id_UNIQUE` (`stripe_price_id` ASC),
+  INDEX `fk_subscriptions-users_idx` (`user_id` ASC),
+  CONSTRAINT `fk_subscriptions-users`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `mazatlanpassport`.`users` (`id`),
   CONSTRAINT `chk_subscriptions-stripe_price_id`
     CHECK (LENGTH(`stripe_price_id`) = 30),
   CONSTRAINT `chk_subscriptions-stripe_payment_id`
@@ -265,10 +261,11 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`products` (
   `amount` MEDIUMINT UNSIGNED NOT NULL,
   `discount` TINYINT UNSIGNED NOT NULL,
   `store_row_key` INT UNSIGNED NOT NULL,
+  `stock` SMALLINT UNSIGNED NULL,
   `available` TINYINT UNSIGNED NOT NULL DEFAULT 1,
-  `enable_at` TIMESTAMP NULL,
   `expired` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `expires_at` TIMESTAMP NULL,
+  `enable_at` TIMESTAMP NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `updated_at` TIMESTAMP NULL,
   `deleted_at` TIMESTAMP NULL,
@@ -288,7 +285,9 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`products` (
   CONSTRAINT `chk_products-image`
     CHECK (LENGTH(`image`) >= 12),
   CONSTRAINT `chk_products-amount`
-    CHECK (`amount` <= 99999))
+    CHECK (`amount` <= 999999),
+  CONSTRAINT `chk_products-discount`
+    CHECK (`discount` >= 20 AND `discount` <= 80))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`product_categories` (
@@ -325,7 +324,6 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`orders` (
   `store_row_key` INT UNSIGNED NOT NULL,
   `products` JSON NOT NULL,
   `rate` TINYINT UNSIGNED NULL,
-  `completed` TINYINT UNSIGNED NOT NULL DEFAULT 1,
   `completed_at` TIMESTAMP NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `deleted_at` TIMESTAMP NULL,
@@ -346,7 +344,7 @@ ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`roots_verify_codes` (
   `root_row_key` TINYINT UNSIGNED NOT NULL,
-  `code` MEDIUMINT UNSIGNED NOT NULL,
+  `code` MEDIUMINT UNSIGNED ZEROFILL NOT NULL,
   `attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `updated_at` TIMESTAMP NULL,
@@ -366,7 +364,7 @@ ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`roots_recovery_codes` (
   `root_row_key` TINYINT UNSIGNED NOT NULL,
-  `code` MEDIUMINT UNSIGNED NOT NULL,
+  `code` MEDIUMINT UNSIGNED ZEROFILL NOT NULL,
   `attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `updated_at` TIMESTAMP NULL,
@@ -386,7 +384,7 @@ ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`admins_verify_codes` (
   `admin_row_key` INT UNSIGNED NOT NULL,
-  `code` MEDIUMINT UNSIGNED NOT NULL,
+  `code` MEDIUMINT UNSIGNED ZEROFILL NOT NULL,
   `attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `updated_at` TIMESTAMP NULL,
@@ -406,7 +404,7 @@ ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`admins_recovery_codes` (
   `admin_row_key` INT UNSIGNED NOT NULL,
-  `code` MEDIUMINT UNSIGNED NOT NULL,
+  `code` MEDIUMINT UNSIGNED ZEROFILL NOT NULL,
   `attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `updated_at` TIMESTAMP NULL,
@@ -426,7 +424,7 @@ ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`users_verify_codes` (
   `user_row_key` INT UNSIGNED NOT NULL,
-  `code` MEDIUMINT UNSIGNED NOT NULL,
+  `code` MEDIUMINT UNSIGNED ZEROFILL NOT NULL,
   `attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `updated_at` TIMESTAMP NULL,
@@ -446,7 +444,7 @@ ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`users_recovery_codes` (
   `user_row_key` INT UNSIGNED NOT NULL,
-  `code` MEDIUMINT UNSIGNED NOT NULL,
+  `code` MEDIUMINT UNSIGNED ZEROFILL NOT NULL,
   `attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `updated_at` TIMESTAMP NULL,

@@ -3,8 +3,7 @@ import bcrypt from 'bcryptjs'
 import nodemailer from 'nodemailer'
 import { roles, userStatus } from '@/lib/constants'
 import { db } from '@/db'
-import { checkUserStatus, checkUserStatusByEmail } from '@/lib/actions/users'
-import { type RowDataPacket } from 'mysql2'
+import { checkUserStatus, checkUserStatusByEmail } from '@/lib/queries/users'
 import { type EmailInputs } from '@/lib/validations/email'
 import { type ResetPasswordInputs } from '@/lib/validations/auth/reset-password'
 import { type SigninInputs } from '@/lib/validations/auth/signin'
@@ -12,16 +11,16 @@ import { type SignupInputs } from '@/lib/validations/auth/signup'
 import { type UUIDInputs } from '@/lib/validations/uuid'
 import { type VerifyCodeInputs } from '@/lib/validations/verify-code'
 import { getErrorMessage } from '@/lib/handle-error'
-import { createSession, deleteSession, getSessionStatus } from '@/lib/actions/session'
+import { createSession, deleteSession, getSessionStatus } from '@/lib/queries/sessions'
 import { calculateMinutes, createVerifyCode } from '@/lib/utils'
 import { siteConfig } from '@/config/site'
 import type { Roles } from '@/types'
 
-interface RowKey extends RowDataPacket {
+interface RowKey {
   rowKey: number
 }
 
-interface RowID extends RowDataPacket, UUIDInputs {}
+type RowID = UUIDInputs
 
 interface RowKeyID extends RowKey, UUIDInputs {}
 
@@ -30,8 +29,7 @@ interface UserKeys extends RowKey, UUIDInputs {
 }
 
 interface VerifyCode
-  extends RowDataPacket,
-    Pick<VerifyCodeInputs, 'code'> {
+  extends Pick<VerifyCodeInputs, 'code'> {
     attempts: number
     createdAt: string
 }

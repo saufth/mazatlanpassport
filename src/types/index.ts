@@ -78,4 +78,13 @@ export interface PlanWithPrice extends Plan {
   price: string
 }
 
+export interface UserPlan extends Plan {
+  paidInCash: boolean
+  stripePaymentIntentId?: string | null
+  expiresAt: string
+  isSubscribed: boolean
+  isCanceled: boolean
+  isActive: boolean
+}
+
 export type Roles = keyof typeof roles

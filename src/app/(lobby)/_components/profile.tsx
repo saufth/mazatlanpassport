@@ -1,17 +1,26 @@
 import QRCodeImage from '@/components/qr-code'
-import ManagePlan from '@/components/manage-plan-form'
+import ManagePlanForm from '@/components/manage-plan-form'
 import { Icons } from '@/components/icons'
-import { type FullNameInputs } from '@/lib/validations/full-name'
-import { type UUIDInputs } from '@/lib/validations/uuid'
-import { absoluteUrl } from '@/lib/utils'
-import type { PlanWithPrice } from '@/types'
+import { absoluteUrl, cn } from '@/lib/utils'
+import { type ProfileInputs } from '@/lib/validations/profile'
+import type { PlanWithPrice, UserPlan } from '@/types'
 
 interface ProfileProps {
-  user: UUIDInputs & FullNameInputs
-  plans: PlanWithPrice[]
+  user: ProfileInputs | null
+  planPromise: Promise<UserPlan | null>
+  plansPromise: Promise<PlanWithPrice[]>
 }
 
-export default function Profile ({ user, plans }: ProfileProps) {
+export default async function Profile ({
+  user,
+  planPromise,
+  plansPromise
+}: ProfileProps) {
+  const [plan, plans] = await Promise.all([
+    planPromise,
+    plansPromise
+  ])
+
   return (
     <div>
       <div className='container py-spacing-6 space-y-spacing-6'>
@@ -27,14 +36,18 @@ export default function Profile ({ user, plans }: ProfileProps) {
                     <div className='f-subhead-1 font-bold text-white'>
                       {`${user?.firstName} ${user?.lastName}`}
                     </div>
-                    <div className='f-subhead-3 text-destructive font-medium'>
-                      Inactivo
+                    <div className={cn(
+                      'f-subhead-3 text-destructive font-medium',
+                      plan?.isSubscribed ? 'text-primary' : 'text-destructive'
+                    )}
+                    >
+                      {plan?.isSubscribed ? 'Activo' : 'Inactivo'}
                     </div>
                   </div>
                 </div>
                 <div className='max-w-40 h-auto aspect-square'>
                   <QRCodeImage
-                    data={absoluteUrl(`/profile/${user.id}`)}
+                    data={absoluteUrl(`/subscription/${plan?.id || ''}`)}
                     className='rounded-[28px]'
                   />
                 </div>
@@ -44,36 +57,42 @@ export default function Profile ({ user, plans }: ProfileProps) {
             </div>
           </div>
         </div>
-        <div>
-          <div className='f-heading-2 text-secondary font-bold text-balance text-center'>
-            Activa tu membresía y comienza a disfrutar de descuentos exclusivos
-          </div>
-          <div className='cols-container gap-y-gutter mt-spacing-5'>
-            {plans.map((planItem, key) => (
-              <div
-                className='w-6-cols md:w-4-cols lg:w-6-cols p-6 rounded-3xl bg-secondary-foreground'
-                key={`${planItem.title}-${key}`}
-              >
-                <div className='space-y-2'>
-                  <div className='flex justify-between'>
-                    <div className='f-subhead-3 text-secondary font-bold'>
-                      {planItem.title}
+        {!plan?.isSubscribed && (
+          <div>
+            <div className='f-heading-2 text-secondary font-bold text-balance text-center'>
+              Activa tu membresía y comienza a disfrutar de descuentos exclusivos
+            </div>
+            <div className='cols-container gap-y-gutter mt-spacing-5'>
+              {plans.map((planItem, key) => (
+                <div
+                  className='w-6-cols md:w-4-cols lg:w-6-cols p-6 rounded-3xl bg-secondary-foreground'
+                  key={`${planItem.title}-${key}`}
+                >
+                  <div className='space-y-2'>
+                    <div className='flex justify-between'>
+                      <div className='f-subhead-3 text-secondary font-bold'>
+                        {planItem.title}
+                      </div>
+                      <span className='f-body-1 font-extrabold text-green-700 pl-2'>
+                        {planItem.price}
+                      </span>
                     </div>
-                    <span className='f-body-1 font-extrabold text-green-700 pl-2'>
-                      {planItem.price}
-                    </span>
+                    <div className='max-w-sm f-body-1 text-secondary font-medium text-balance'>
+                      {planItem.description}
+                    </div>
                   </div>
-                  <div className='max-w-sm f-body-1 text-secondary font-medium text-balance'>
-                    {planItem.description}
+                  <div className='mt-12'>
+                    <ManagePlanForm
+                      stripePriceId={planItem.stripePriceId}
+                      stripePaymentIntentId={plan?.stripePaymentIntentId}
+                      isSubscribed={plan?.isSubscribed}
+                      isCurrentPlan={plan?.title === planItem.title}
+                    />
                   </div>
                 </div>
-                <div className='mt-12'>
-                  <ManagePlan stripePriceId={planItem.stripePriceId} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+              ))}
+            </div>
+          </div>)}
       </div>
     </div>
   )

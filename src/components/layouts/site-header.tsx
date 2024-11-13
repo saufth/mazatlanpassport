@@ -1,6 +1,6 @@
 import SiteHeaderContent from '@/components/layouts/site-header-content'
-import { getSession } from '@/lib/actions/session'
-import { getUserFullName } from '@/lib/actions/users'
+import { getSession } from '@/lib/queries/sessions'
+import { getUserFullName } from '@/lib/queries/users'
 import { roles } from '@/lib/constants'
 
 interface SiteHeaderProps {

@@ -35,21 +35,27 @@ export async function POST (req: Request) {
         checkoutSessionCompleted?.metadata?.userId &&
         checkoutSessionCompleted?.metadata?.priceId
       ) {
-        const priceData =
-          pricingConfig.plans.week.stripePriceId === checkoutSessionCompleted.metadata.priceId
-            ? pricingConfig.plans.week
-            : pricingConfig.plans.month
+        const stripeSessionCompletedMetadata = checkoutSessionCompleted.metadata
+
+        const plan = Object.values(pricingConfig.plans).find(
+          (plan) => plan.stripePriceId === stripeSessionCompletedMetadata.priceId
+        )
+
+        console.log(plan)
+
+        if (!plan) {
+          return new Response('Internal error.',
+            { status: 500 }
+          )
+        }
 
         try {
           await db.query(
-            'INSERT INTO subscriptions (id, user_id, title, description, days, stripe_price_id, stripe_payment_id, expires_at) VALUES (UUID_TO_BIN(?, TRUE), UUID_TO_BIN(?, TRUE), ?, ?, ?, ?, ?, ?)',
+            'INSERT INTO subscriptions (id, user_id, stripe_price_id, stripe_payment_id, expires_at) VALUES (UUID_TO_BIN(?, TRUE), UUID_TO_BIN(?, TRUE), ?, ?, ?, ?, ?, ?)',
             [
               crypto.randomUUID(),
-              checkoutSessionCompleted.metadata.userId,
-              priceData.title,
-              priceData.description,
-              priceData.days,
-              priceData.stripePriceId,
+              stripeSessionCompletedMetadata.userId,
+              stripeSessionCompletedMetadata.priceId,
               checkoutSessionCompleted.id,
               addMinutes(new Date(), 5)
             ]

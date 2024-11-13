@@ -1,33 +1,67 @@
-'use server'
-import { type RowDataPacket } from 'mysql2'
+import 'server-only'
+import { cache } from 'react'
 import { db } from '@/db'
-import { getSession } from '@/lib/actions/session'
+import { getSession } from '@/lib/queries/sessions'
 import { roles, userStatus } from '@/lib/constants'
 import { getErrorMessage } from '@/lib/handle-error'
 import { type EmailInputs } from '@/lib/validations/email'
 import { type FullNameInputs } from '@/lib/validations/full-name'
 import { type UUIDInputs } from '@/lib/validations/uuid'
-import { type SignupInputs } from '@/lib/validations/auth/signup'
+import { type ProfileInputs } from '@/lib/validations/profile'
 
-interface RowKey extends RowDataPacket {
+type User = Omit<ProfileInputs, 'id'>
+
+interface RowKey {
   rowKey: number
 }
 
-interface Email extends RowDataPacket, EmailInputs {}
+type Email = EmailInputs
 
-interface UserProfile
-  extends RowDataPacket,
-    Omit<SignupInputs, 'password' | 'confirmPassword' | 'terms'> {}
+type UserFullName = FullNameInputs
 
-interface UserFullName extends RowDataPacket, FullNameInputs {}
-
-interface UserStatus extends RowDataPacket {
+interface UserStatus {
   verifiedAt?: string
   blocked: boolean
   status: boolean
 }
 
-export async function currentUser () {
+export async function currentUser (): Promise<ProfileInputs | null> {
+  try {
+    const role = roles.user
+    const session = await getSession(role)
+
+    if (!session.data) {
+      throw new Error('Usuario no encontrado.')
+    }
+
+    const userId = session.data.id as string
+
+    const [user] = await db.query<User[]>(
+      'SELECT first_name AS firstName, last_name AS lastName, email, birthdate, genre_iso AS genreIso  FROM users WHERE id = UUID_TO_BIN(?, TRUE);',
+      [userId]
+    )
+
+    if (!user) {
+      throw new Error('Hubo un problema al buscar datos de usuario, intentalo de nuevo más tarde')
+    }
+
+    return {
+      id: userId,
+      ...user
+    }
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Cache is used with a data-fetching function like fetch to share a data snapshot between components.
+ * It ensures a single request is made for multiple identical data fetches, with the returned data cached and shared across components during the server render.
+ * @see https://react.dev/reference/react/cache#reference
+*/
+export const getCachedUser = cache(currentUser)
+
+export async function currentUserId () {
   try {
     const role = roles.user
     const session = await getSession(role)
@@ -127,7 +161,7 @@ export async function getUserProfile (input: UUIDInputs) {
       throw new Error(status.error)
     }
 
-    const [userProfile] = await db.query<UserProfile[]>(
+    const [userProfile] = await db.query<User[]>(
       'SELECT first_name AS firstName, last_name AS lastName, email, birthdate, genre_iso AS genreISO FROM users WHERE id = UUID_TO_BIN(?, TRUE);',
       [input.id]
     )

@@ -7,7 +7,7 @@ import { type ManagePlanInputs } from '@/lib/validations/stripe'
 
 type ManagePlanProps = ManagePlanInputs
 
-export default function ManagePlan (props: ManagePlanProps) {
+export default function ManagePlanForm (props: ManagePlanProps) {
   const [isTransition, startTransition] = useTransition()
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
