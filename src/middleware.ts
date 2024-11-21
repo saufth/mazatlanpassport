@@ -7,7 +7,11 @@ export async function middleware (request: NextRequest) {
     return NextResponse.next() // Bypass for webhooks
   }
 
-  if (request.nextUrl.pathname.includes('/signin')) {
+  if (
+    request.nextUrl.pathname.includes('/signin') ||
+    request.nextUrl.pathname.includes('/signup') ||
+    request.nextUrl.pathname.includes('/signout')
+  ) {
     return NextResponse.next()
   }
 
