@@ -30,7 +30,6 @@ interface DashboardAuthDropdownProps
 export default function DashboardAuthDropdown ({
   className,
   user,
-  role,
   ...props
 }: DashboardAuthDropdownProps) {
   if (!user) {
@@ -71,13 +70,13 @@ export default function DashboardAuthDropdown ({
         <DropdownMenuSeparator className='bg-secondary-foreground' />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild className='cursor-pointer'>
-            <Link href={`/${role}`}>
+            <Link href={`/${user.role}`}>
               <DashboardIcon className='mr-2 size-4' aria-hidden='true' />
               Dashboard
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild className='cursor-pointer'>
-            <Link href={`/${role}/settings`}>
+            <Link href={`/${user.role}/settings`}>
               <GearIcon className='mr-2 size-4' aria-hidden='true' />
               Configuración
             </Link>
@@ -85,7 +84,7 @@ export default function DashboardAuthDropdown ({
         </DropdownMenuGroup>
         <DropdownMenuSeparator className='bg-secondary-foreground' />
         <DropdownMenuItem asChild className='cursor-pointer'>
-          <Link href={`/${role}/signout`}>
+          <Link href={`/${user.role}/signout`}>
             <ExitIcon className='mr-2 size-4' aria-hidden='true' />
             Cerrar sesión
           </Link>

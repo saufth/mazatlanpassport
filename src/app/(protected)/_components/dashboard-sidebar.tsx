@@ -1,18 +1,21 @@
 'use client'
 import Link from 'next/link'
 import { useSelectedLayoutSegments } from 'next/navigation'
-import { type HTMLAttributes, type ReactNode } from 'react'
+import {
+  type HTMLAttributes,
+  type PropsWithChildren
+} from 'react'
 import { Icons } from '@/components/icons'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { SidebarNav } from '@/components/layouts/sidebar-nav'
 import { cn } from '@/lib/utils'
-import { roles, type Role } from '@/lib/constants'
+import { roles, type ProtectedRole } from '@/lib/constants'
 import { type SidebarNavItem } from '@/types'
 
 interface DashboardSidebarProps
-  extends HTMLAttributes<HTMLElement> {
-    children?: ReactNode
-    role: Role
+  extends PropsWithChildren,
+    HTMLAttributes<HTMLElement> {
+      role: ProtectedRole
 }
 
 export function DashboardSidebar ({
@@ -23,7 +26,7 @@ export function DashboardSidebar ({
 }: DashboardSidebarProps) {
   const segments = useSelectedLayoutSegments()
 
-  const sidebarNav: Record<Role, SidebarNavItem[]> = {
+  const sidebarNav: Record<ProtectedRole, SidebarNavItem[]> = {
     root: [
       {
         title: 'Dashboard',
@@ -78,20 +81,6 @@ export function DashboardSidebar ({
       {
         title: 'Settings',
         href: `/${roles.admin}/settings`,
-        icon: 'Settings',
-        active: segments.includes('settings')
-      }
-    ],
-    user: [
-      {
-        title: 'Dashboard',
-        href: `/${roles.user}`,
-        icon: 'Dashboard',
-        active: segments.length === 0
-      },
-      {
-        title: 'Settings',
-        href: `/${roles.user}/settings`,
         icon: 'Settings',
         active: segments.includes('settings')
       }

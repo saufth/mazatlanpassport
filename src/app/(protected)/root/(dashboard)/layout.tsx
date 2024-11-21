@@ -25,8 +25,10 @@ export default async function DashboardRootLayout ({
         />
         <div className='flex flex-col'>
           <DashboardHeader
-            user={{ name: root.username }}
-            role={rootRole}
+            user={{
+              name: root.username,
+              role: rootRole
+            }}
           />
           <div className='flex flex-col'>
             <main className='flex-1 overflow-hidden px-gutter'>
