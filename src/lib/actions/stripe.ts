@@ -1,15 +1,17 @@
 'use server'
-import {
-  unstable_cache as cache,
-  unstable_noStore as noStore
-} from 'next/cache'
-import { currentUserId, getUserEmail } from '@/lib/queries/users'
+import { unstable_noStore as noStore, unstable_cache as cache } from 'next/cache'
+import { getSession } from '@/lib/actions/auth'
+import { getUserEmail } from '@/lib/queries/user'
 import { getErrorMessage } from '@/lib/handle-error'
 import { stripe } from '@/lib/stripe'
-import { absoluteUrl, formatPrice } from '@/lib/utils'
-import { pricingConfig } from '@/config/pricing'
+import { formatPrice, absoluteUrl } from '@/lib/utils'
+import { uuidSchema } from '@/lib/validations/common/uuid'
 import { type ManagePlanInputs } from '@/lib/validations/stripe'
+import { pricingConfig } from '@/config/pricing'
+import { roles } from '@/lib/constants'
 import type { PlanWithPrice } from '@/types'
+
+const userRole = roles.user
 
 // Retrieve prices for all plans from Stripe
 export async function getPlans (): Promise<PlanWithPrice[]> {
@@ -52,13 +54,15 @@ export async function managePlan (input: ManagePlanInputs) {
   noStore()
 
   try {
-    const userId = await currentUserId()
+    const session = await getSession(userRole)
 
-    if (!userId.data) {
-      throw new Error(userId.error)
+    if (!session.data) {
+      throw new Error(session.error)
     }
 
-    const email = await getUserEmail(userId.data)
+    const userId = uuidSchema.parse(session.data)
+
+    const email = await getUserEmail(userId)
 
     if (!email.data) {
       throw new Error(email.error)
@@ -90,7 +94,7 @@ export async function managePlan (input: ManagePlanInputs) {
         }
       ],
       metadata: {
-        userId: userId.data.id,
+        userId: userId.id,
         priceId: input.stripePriceId
       }
     })

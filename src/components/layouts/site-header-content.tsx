@@ -10,15 +10,19 @@ import {
 } from 'framer-motion'
 import AuthDropdown from '@/components/layouts/auth-dropdown'
 import { Icons } from '@/components/icons'
+import { type EmailInputs } from '@/lib/validations/common/email'
+import { type FullNameInputs } from '@/lib/validations/common/name'
 import { siteConfig } from '@/config/site'
-import { type FullNameInputs } from '@/lib/validations/full-name'
 
 interface SiteHeaderContentProps {
   actions?: boolean
-  user?: FullNameInputs | null
+  user?: (FullNameInputs & EmailInputs) | null
 }
 
-export default function SiteHeaderContent ({ actions = true, user }: SiteHeaderContentProps) {
+export default function SiteHeaderContent ({
+  actions = true,
+  user
+}: SiteHeaderContentProps) {
   const { scrollYProgress } = useScroll()
   const [isOnTop, setIsOnTop] = useState(true)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -50,7 +54,15 @@ export default function SiteHeaderContent ({ actions = true, user }: SiteHeaderC
             </Link>
           </div>
           <div className='flex items-center gap-x-spacing-4'>
-            <AuthDropdown user={user} actions={actions} action={closeMenu} />
+            <AuthDropdown
+              user={user && {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email
+              }}
+              actions={actions}
+              action={closeMenu}
+            />
             <button className='w-11 h-4 relative scale-90 sm:scale-100' onClick={toggleMenu}>
               <motion.span
                 initial={{

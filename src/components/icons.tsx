@@ -1,8 +1,15 @@
-import { type ComponentProps } from 'react'
+import { type HTMLAttributes } from 'react'
 import { siteConfig } from '@/config/site'
-import { AlertTriangle } from 'lucide-react'
+import {
+  AvatarIcon,
+  ChevronLeftIcon,
+  ExclamationTriangleIcon,
+  GearIcon,
+  HomeIcon,
+  PersonIcon
+} from '@radix-ui/react-icons'
 
-type IconProps = ComponentProps<'svg'>
+export type IconProps = HTMLAttributes<SVGElement>
 
 export const Icons = {
   Logotype: (props: IconProps) => {
@@ -821,8 +828,6 @@ export const Icons = {
     return (
       <svg
         xmlns='http://www.w3.org/2000/svg'
-        width={16}
-        height={16}
         viewBox='0 0 16 16'
         {...props}
       >
@@ -833,5 +838,90 @@ export const Icons = {
       </svg>
     )
   },
-  Warning: AlertTriangle
+  Product: (props: IconProps) => (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      {...props}
+    >
+      <path d='M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z' />
+      <path d='m3.3 7 8.7 5 8.7-5' />
+      <path d='M12 22V12' />
+    </svg>
+  ),
+  Analytics: (props: IconProps) => (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      {...props}
+    >
+      <path d='M3 3v18h18' />
+      <path d='m19 9-5 5-4-4-3 3' />
+    </svg>
+  ),
+  Store: (props: IconProps) => (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      {...props}
+    >
+      <path d='m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7' />
+      <path d='M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8' />
+      <path d='M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4' />
+      <path d='M2 7h20' />
+      <path d='M22 7v3a2 2 0 0 1-2 2v0a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12v0a2 2 0 0 1-2-2V7' />
+    </svg>
+  ),
+  Menu: ({ ...props }: IconProps) => (
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      viewBox='0 0 24 24'
+      fill='none'
+      strokeWidth='1.5'
+      {...props}
+    >
+      <path
+        d='M3 5H11'
+        stroke='currentColor'
+        strokeWidth='1.5'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M3 12H16'
+        stroke='currentColor'
+        strokeWidth='1.5'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M3 19H21'
+        stroke='currentColor'
+        strokeWidth='1.5'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  ),
+  Avatar: AvatarIcon,
+  Dashboard: HomeIcon,
+  ChevronLeft: ChevronLeftIcon,
+  Person: PersonIcon,
+  Settings: GearIcon,
+  Warning: ExclamationTriangleIcon
 }

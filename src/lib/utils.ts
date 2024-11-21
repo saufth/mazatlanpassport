@@ -1,6 +1,6 @@
-import { siteConfig } from '@/config/site'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import { siteConfig } from '@/config/site'
 
 export function cn (...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -17,11 +17,16 @@ export function absoluteUrl (path: string = '/') {
 export function formatPhoneNumber (phoneNumber: string | number) {
   const cleanedNumber = String(phoneNumber).replace(/\D/g, '')
 
-  if (cleanedNumber.length < 10 || cleanedNumber.length > 14) {
+  if (
+    cleanedNumber.length < 10 ||
+    cleanedNumber.length > 14
+  ) {
     return cleanedNumber
   } else if (cleanedNumber.length === 10) {
     const numberSections = cleanedNumber.match(/^(\d{3})(\d{3})(\d{4})$/)
-    return numberSections ? `(${numberSections[1]}) ${numberSections[2]}-${numberSections[3]}` : cleanedNumber
+    return numberSections
+      ? `(${numberSections[1]}) ${numberSections[2]}-${numberSections[3]}`
+      : cleanedNumber
   }
 
   const dialCode = cleanedNumber.slice(0, cleanedNumber.length - 10)
@@ -35,8 +40,15 @@ export function createWhatsappUrl (phoneNumber: string, message?: string) {
   return `https://wa.me/${phoneNumber}${message ? `?text=${message.replaceAll(' ', '+')}` : ''}`
 }
 
-export function range (start: number, end: number, step: number = 1) {
-  return Array.from({ length: (end - start) / step + 1 }, (_, i) => start + (i * step))
+export function range (
+  start: number,
+  end: number,
+  step: number = 1
+) {
+  return Array.from(
+    { length: (end - start) / step + 1 },
+    (_, i) => start + (i * step)
+  )
 }
 
 export function formatPrice (
@@ -75,4 +87,11 @@ export function calculateYears (dateA: Date, dateB?: Date) {
 
 export function calculateMinutes (dateA: Date, dateB?: Date) {
   return ((dateB || new Date()).getTime() - dateA.getTime()) / 60000
+}
+
+export function toLocalDate (date: string | Date) {
+  const fixedDate = typeof date === 'string'
+    ? new Date(date)
+    : date
+  return new Date(fixedDate.toLocaleString())
 }

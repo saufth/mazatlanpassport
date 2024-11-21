@@ -1,8 +1,8 @@
-import React from 'react'
+import { type PropsWithChildren } from 'react'
 import SiteFooter from '@/components/layouts/site-footer'
 import SiteHeader from '@/components/layouts/site-header'
 
-export default async function LobbyLayout ({ children }: React.PropsWithChildren) {
+export default function LobbyLayout ({ children }: PropsWithChildren) {
   return (
     <div className='bg-primary text-primary-foreground relative z-10'>
       <SiteHeader />

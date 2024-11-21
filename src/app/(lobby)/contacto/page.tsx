@@ -1,7 +1,7 @@
 import { type Metadata } from 'next'
 import Image from 'next/image'
-import { SectionHeader } from '@/components/section-header'
 import ContactForm from '@/app/(lobby)/_components/contact-form'
+import { SectionHeader } from '@/components/section-header'
 import { siteConfig } from '@/config/site'
 
 export const metadata: Metadata = {

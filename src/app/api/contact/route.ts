@@ -2,28 +2,31 @@ import { NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
 import { ZodError } from 'zod'
 import { contactSchema } from '@/lib/validations/contact'
-import { siteConfig, contactConfig } from '@/config/site'
+import { siteName } from '@/config/site'
 
 export async function POST (req: Request) {
+  const emailFromAddress = process.env.EMAIL_FROM_ADDRESS as string
+  const emailFromPassword = process.env.EMAIL_FROM_PASSWORD as string
+  const appDomain = process.env.APP_DOMAIN as string
+
   try {
-    const domain = process.env.APP_DOMAIN as string
     const requestBody = await req.json()
     const validatedRequestBody = contactSchema.parse(requestBody)
 
     const transporter = nodemailer.createTransport({
-      name: `www.${domain}`,
-      host: `mail.${domain}`,
+      name: `www.${appDomain}`,
+      host: `mail.${appDomain}`,
       port: 465,
       secure: true,
       auth: {
-        user: process.env.EMAIL_FROM_ADDRESS as string,
-        pass: process.env.EMAIL_FROM_PASSWORD as string
+        user: emailFromAddress,
+        pass: emailFromPassword
       }
     })
 
     await transporter.sendMail({
-      from: `${siteConfig.name} ${contactConfig.email}`,
-      to: contactConfig.email,
+      from: `${siteName} ${emailFromAddress}`,
+      to: emailFromAddress,
       subject: 'Nuevo mensaje desde formulario web',
       html: `
         <p><b>Nombre(s):</b> ${validatedRequestBody.firstName}</p>
@@ -35,9 +38,9 @@ export async function POST (req: Request) {
     })
 
     await transporter.sendMail({
-      from: `${siteConfig.name} ${contactConfig.email}`,
+      from: `${siteName} ${emailFromAddress}`,
       to: validatedRequestBody.email,
-      subject: `${validatedRequestBody.firstName}, hemos recibido tu mensaje en ${siteConfig.name}`,
+      subject: `${validatedRequestBody.firstName}, hemos recibido tu mensaje en ${siteName}`,
       html: `
           <h1><b>¡Gracias por contactarnos!</b></h1>
           <p>Un miembro de nuestro equipo se comunicará contigo.</p>

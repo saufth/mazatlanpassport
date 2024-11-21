@@ -1,6 +1,10 @@
 import Link from 'next/link'
 import { type ComponentPropsWithRef } from 'react'
-import { DashboardIcon, ExitIcon, GearIcon } from '@radix-ui/react-icons'
+import {
+  DashboardIcon,
+  ExitIcon,
+  GearIcon
+} from '@radix-ui/react-icons'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button, type ButtonProps } from '@/components/ui/button'
 import { CallToAction } from '@/components/call-to-action'
@@ -14,12 +18,13 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
-import { type FullNameInputs } from '@/lib/validations/full-name'
+import { type EmailInputs } from '@/lib/validations/common/email'
+import { type FullNameInputs } from '@/lib/validations/common/name'
 
-interface ProfileButtonProps
+interface AuthDropdownProps
   extends ComponentPropsWithRef<typeof DropdownMenuTrigger>,
     ButtonProps {
-      user?: FullNameInputs | null
+      user?: (FullNameInputs & EmailInputs) | null
       actions?: boolean
       action?: () => void
 }
@@ -30,7 +35,7 @@ export default function AuthDropdown ({
   action,
   className,
   ...props
-}: ProfileButtonProps) {
+}: AuthDropdownProps) {
   if (!user) {
     if (actions) {
       return (
@@ -65,7 +70,7 @@ export default function AuthDropdown ({
         >
           <Avatar className='bg-white size-9'>
             <AvatarFallback className='bg-gradient-to-tr from-accent via-accent/70 to-accent/50'>
-              <span className='pr-px text-white -tracking-[0.1em] leading-none'>
+              <span className='pr-px text-white -tracking-[0.1em] leading-none uppercase'>
                 {initials}
               </span>
             </AvatarFallback>
@@ -74,9 +79,14 @@ export default function AuthDropdown ({
       </DropdownMenuTrigger>
       <DropdownMenuContent className='w-56' align='end' forceMount>
         <DropdownMenuLabel className='font-normal'>
-          <p className='text-sm font-medium leading-none'>
-            {user.firstName} {user.lastName}
-          </p>
+          <div className='flex flex-col space-y-1'>
+            <p className='text-sm font-medium leading-none'>
+              {user.firstName} {user.lastName}
+            </p>
+            <p className='text-xs leading-none text-muted-foreground'>
+              {user.email}
+            </p>
+          </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator className='bg-secondary-foreground' />
         <DropdownMenuGroup>

@@ -8,18 +8,19 @@ USE `mazatlanpassport`;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`roots` (
   `row_key` TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(32) NOT NULL,
+  `id` BINARY(16) NOT NULL,
+  `username` VARCHAR(16) NOT NULL,
   `password` VARCHAR(60) NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `updated_at` TIMESTAMP NULL,
   `deleted_at` TIMESTAMP NULL,
-  `verified_at` TIMESTAMP NULL,
   `status` TINYINT UNSIGNED NOT NULL DEFAULT 1,
   PRIMARY KEY (`row_key`),
   UNIQUE INDEX `row_key_UNIQUE` (`row_key` ASC),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   UNIQUE INDEX `username_UNIQUE` (`username` ASC),
   CONSTRAINT `chk_roots-username`
-    CHECK (LENGTH(`username`) >= 6),
+    CHECK (LENGTH(`username`) >= 4),
   CONSTRAINT `chk_roots-password`
     CHECK (LENGTH(`password`) = 60))
 ENGINE = InnoDB;
@@ -29,6 +30,7 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`admins` (
   `id` BINARY(16) NOT NULL,
   `email` VARCHAR(64) NOT NULL,
   `password` VARCHAR(60) NOT NULL,
+  `name` VARCHAR(50) NOT NULL,
   `root_row_key` TINYINT UNSIGNED NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
   `updated_at` TIMESTAMP NULL,
@@ -41,19 +43,22 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`admins` (
   UNIQUE INDEX `row_key_UNIQUE` (`row_key` ASC),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC),
   CONSTRAINT `fk_admins-roots`
     FOREIGN KEY (`root_row_key`)
     REFERENCES `mazatlanpassport`.`roots` (`row_key`),
   CONSTRAINT `chk_admins-email`
     CHECK (LENGTH(`email`) >= 6),
   CONSTRAINT `chk_admins-password`
-    CHECK (LENGTH(`password`) = 60))
+    CHECK (LENGTH(`password`) = 60),
+  CONSTRAINT `chk_admins-name`
+    CHECK (LENGTH(`name`) >= 3))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`stores` (
   `row_key` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `id` BINARY(16) NOT NULL,
-  `name` VARCHAR(50) NOT NULL,
+  `name` VARCHAR(32) NOT NULL,
   `slogan` VARCHAR(50) NULL,
   `description` VARCHAR(250) NOT NULL,
   `email` VARCHAR(64) NOT NULL,
@@ -109,7 +114,7 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`stores` (
   CONSTRAINT `chk_stores-address`
     CHECK (LENGTH(`address`) >= 12),
   CONSTRAINT `chk_stores-phone`
-    CHECK (`phone` > 110000000009 AND `phone` <= 19999999999999),
+    CHECK (`phone` > 11000000009 AND `phone` <= 19399999999900),
   CONSTRAINT `chk_stores-website`
     CHECK (LENGTH(`website`) >= 5),
   CONSTRAINT `chk_stores-maps_slug`
@@ -172,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`stores_branches` (
   CONSTRAINT `chk_stores_branches-address`
     CHECK (LENGTH(`address`) >= 12),
   CONSTRAINT `chk_stores_branches-phone`
-    CHECK (`phone` > 110000000009 AND `phone` <= 19999999999999))
+    CHECK (`phone` > 11000000009 AND `phone` <= 19399999999900))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`users` (
@@ -180,8 +185,8 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`users` (
   `id` BINARY(16) NOT NULL,
   `email` VARCHAR(64) NOT NULL,
   `password` VARCHAR(60) NOT NULL,
-  `first_name` VARCHAR(50) NOT NULL,
-  `last_name` VARCHAR(50) NOT NULL,
+  `first_name` VARCHAR(32) NOT NULL,
+  `last_name` VARCHAR(32) NOT NULL,
   `phone` BIGINT UNSIGNED NULL,
   `genre_iso` TINYINT UNSIGNED NOT NULL,
   `birthdate` DATE NOT NULL,
@@ -207,7 +212,7 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`users` (
   CONSTRAINT `chk_users-last_name`
     CHECK (LENGTH(`last_name`) >= 3),
   CONSTRAINT `chk_users-phone`
-    CHECK (`phone` > 110000000009 AND `phone` <= 19999999999999),
+    CHECK (`phone` > 11000000009 AND `phone` <= 19399999999900),
   CONSTRAINT `chk_users-genre_iso`
     CHECK (`genre_iso` = 0 OR `genre_iso` = 1 OR `genre_iso` = 2 OR `genre_iso` = 9))
 ENGINE = InnoDB;

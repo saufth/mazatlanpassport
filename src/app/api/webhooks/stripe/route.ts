@@ -30,7 +30,6 @@ export async function POST (req: Request) {
     case 'checkout.session.completed': {
       const checkoutSessionCompleted = event.data.object
 
-      console.log(checkoutSessionCompleted)
       if (
         checkoutSessionCompleted?.metadata?.userId &&
         checkoutSessionCompleted?.metadata?.priceId
@@ -40,8 +39,6 @@ export async function POST (req: Request) {
         const plan = Object.values(pricingConfig.plans).find(
           (plan) => plan.stripePriceId === stripeSessionCompletedMetadata.priceId
         )
-
-        console.log(plan)
 
         if (!plan) {
           return new Response('Internal error.',

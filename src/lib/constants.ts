@@ -1,19 +1,41 @@
 export const unknownError = 'Se ha producido un error desconocido. Por favor, inténtelo de nuevo más tarde.'
 
 export const redirects = {
-  toSignin: '/signin',
-  toSignup: '/signup',
-  afterSignin: '/',
-  afterSignout: '/',
-  toVerify: '/verify-email',
-  afterVerify: '/'
+  user: {
+    toSignin: '/signin',
+    toSignup: '/signup',
+    afterSignin: '/profile',
+    afterSignout: '/',
+    toVerify: '/verify-email',
+    afterVerify: '/profile'
+  },
+  admin: {
+    toSignin: '/admin/signin',
+    afterSignin: '/admin',
+    afterSignout: '/admin/signin',
+    toVerify: '/admin/verify-email',
+    afterVerify: '/admin'
+  },
+  root: {
+    toSignin: '/root/signin',
+    afterSignin: '/root',
+    afterSignout: '/root/signin'
+  }
 } as const
 
-export const roles = {
-  user: 'user',
+export const protectedRoles = {
   admin: 'admin',
   root: 'root'
 } as const
+
+export type ProtectedRole = keyof typeof protectedRoles
+
+export const roles = {
+  user: 'user',
+  ...protectedRoles
+} as const
+
+export type Role = keyof typeof roles
 
 export const userStatus = {
   notFound: 'La cuenta no existe',

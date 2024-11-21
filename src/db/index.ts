@@ -1,3 +1,4 @@
+import 'server-only'
 import mysql from 'serverless-mysql'
 import * as mysql2 from 'mysql2'
 

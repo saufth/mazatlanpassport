@@ -1,8 +1,10 @@
+import type { Author } from 'next/dist/lib/metadata/types/metadata-types'
 import { createWhatsappUrl, formatPhoneNumber } from '@/lib/utils'
 import { blog } from '@/config/blog'
 import { countries } from '@/lib/constants'
-import type { Author } from 'next/dist/lib/metadata/types/metadata-types'
 import type { MainNavItem, NavItem } from '@/types'
+
+export const siteName = 'Mazatlán Passport'
 
 export const blogNav: MainNavItem[] = [
   ...blog.map((blogItem) => ({ title: blogItem.title, href: blogItem.slug }))
@@ -31,11 +33,15 @@ export const siteNav: MainNavItem[] = [
   }
 ]
 
-const country = countries.find((countryItem) => countryItem.alpha2 === 'MX')!
-const address = 'Mazatlán, Sinaloa.'
-const phone = '526692393939'
+const country = countries.find(
+  (countryItem) => (
+    countryItem.alpha2 === process.env.NEXT_PUBLIC_COUNTRY_ALPHA2 as string
+  )
+)!
+const address = process.env.NEXT_PUBLIC_ADDRESS as string
+const phone = process.env.NEXT_PUBLIC_PHONE_NUMBER as string
 export const contactConfig = {
-  email: 'mazatlanpassport@gmail.com',
+  email: process.env.NEXT_PUBLIC_EMAIL_ADDRESS as string,
   phone: {
     number: phone,
     displayNumber: formatPhoneNumber(phone),
@@ -45,7 +51,7 @@ export const contactConfig = {
     country: country.name.es,
     title: address,
     fullTitle: `${address} ${country.name.es}.`,
-    url: 'https://maps.app.goo.gl/CBoETvyJYMmrmifX9'
+    url: `https://maps.app.goo.gl/${process.env.NEXT_PUBLIC_GOOGLE_MAPS_ID as string}`
   }
 }
 
@@ -73,10 +79,10 @@ export const socialNav: NavItem[] = [
 ]
 
 export const siteConfig = {
-  name: 'Mazatlán Passport',
+  name: siteName,
   slogan: '¡Descuentos exclusivos en Mazatlán!',
   description: 'Promociones exclusivas para viajeros inteligentes.',
-  url: 'https://mazatlanpassport.mx',
+  url: process.env.NEXT_PUBLIC_APP_URL as string,
   mainNav: [
     {
       title: 'Inicio',

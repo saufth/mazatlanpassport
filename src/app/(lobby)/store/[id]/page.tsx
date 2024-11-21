@@ -3,10 +3,10 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { PromoCard } from '@/components/promo-card'
-import type { UUIDInputs } from '@/lib/validations/uuid'
-import { siteConfig } from '@/config/site'
+import type { UUIDInputs } from '@/lib/validations/common/uuid'
 import { stores } from '@/config/stores'
 import { promos } from '@/config/promos'
+import { siteConfig } from '@/config/site'
 
 interface StorePageProps {
   params: Promise<UUIDInputs>

@@ -1,7 +1,7 @@
 import { type Metadata } from 'next'
 import Image from 'next/image'
-import { siteConfig } from '@/config/site'
 import { blog } from '@/config/blog'
+import { siteConfig } from '@/config/site'
 
 const article = blog.find((articleItem) => articleItem.title === 'Las 10 mejores cosas que hacer en Mazatlán')!
 

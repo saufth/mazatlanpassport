@@ -1,5 +1,10 @@
 import { type ReactNode } from 'react'
-import { roles } from '@/lib/constants'
+import { type EmailInputs } from '@/lib/validations/common/email'
+import { type NameInputs } from '@/lib/validations/common/name'
+import { type PasswordInputs } from '@/lib/validations/common/password'
+import { type UUIDInputs } from '@/lib/validations/common/uuid'
+import { type VerifyCodeInputs } from '@/lib/validations/auth'
+import { Icons } from '@/components/icons'
 
 export interface Title {
   title: string
@@ -9,7 +14,9 @@ export interface Description {
   description: string
 }
 
-export type Header = Title & Description
+export interface Header
+  extends Title,
+    Description {}
 
 export interface ImageProps {
   src: string
@@ -22,8 +29,15 @@ export interface ImageData {
   image: ImageProps
 }
 
-export interface NavItem extends Title {
+export interface NavItem {
+  title: string
   href: string
+  active?: boolean
+  disabled?: boolean
+  external?: boolean
+  icon?: keyof typeof Icons
+  label?: string
+  description?: string
 }
 
 export interface Nav {
@@ -36,7 +50,11 @@ export interface NavItemWithChildren extends NavItem {
 
 export type MainNavItem = NavItemWithChildren
 
-export interface Item extends Header, Partial<ImageData> {
+export type SidebarNavItem = NavItemWithChildren
+
+export interface Item
+  extends Header,
+    Partial<ImageData> {
   slug?: string
 }
 
@@ -44,11 +62,17 @@ export interface Article extends Item {
   items: string[]
 }
 
-export interface Section extends Item {
+export interface ItemList {
   items: Item[]
 }
 
-export type Subcategory = Item & Partial<Pick<Section, 'items'>>
+export interface Section
+  extends Item,
+  ItemList {}
+
+export interface Subcategory
+  extends Item,
+    Partial<ItemList> {}
 
 export interface Category extends Item {
   items: Subcategory[]
@@ -87,4 +111,32 @@ export interface UserPlan extends Plan {
   isActive: boolean
 }
 
-export type Roles = keyof typeof roles
+export interface Status {
+  status: boolean
+}
+
+export interface RowKey {
+  rowKey: number
+}
+
+export interface UserStatus extends Status {
+  verifiedAt?: string
+  blocked: boolean
+}
+export interface UserKeys
+  extends RowKey,
+    UUIDInputs,
+    PasswordInputs {}
+
+export type VerifyCode = Pick<VerifyCodeInputs, 'code'>
+
+export interface VerifyEmailCode
+  extends VerifyCode {
+    attempts: number
+    createdAt: string
+}
+
+export interface VerifyEmailConfirm
+  extends RowKey,
+    EmailInputs,
+    NameInputs {}
