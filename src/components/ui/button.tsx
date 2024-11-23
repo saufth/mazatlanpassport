@@ -14,13 +14,13 @@ const buttonVariants = cva(
       variant: {
         default: 'bg-accent text-accent-foreground',
         destructive: 'bg-destructive/95 text-destructive-foreground',
-        outline: 'border border-primary text-primary text-primary',
+        outline: 'border border-secondary/60 text-secondary text-secondary',
         secondary: 'bg-secondary text-white',
         ghost: 'text-secondary bg-white',
         link: 'hover:underline hover:scale-100'
       },
       size: {
-        default: 'py-spacing-2 px-spacing-4 f-body-2 leading-none font-bold',
+        default: 'py-spacing-2 px-spacing-4 f-body-2 leading-none font-bsemibold',
         xs: 'text-xs lg:text-sm',
         sm: 'px-2 py-0.5 text-sm lg:text-base',
         lg: 'w-fit px-spacing-5 py-spacing-3 f-subhead-3 font-bold',

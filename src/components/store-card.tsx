@@ -31,7 +31,7 @@ export function StoreCard ({
     <Card
       as='article'
       className={cn(
-        'group border-0 shadow-none bg-transparent rounded-2xl overflow-hidden',
+        'group border-0 shadow-none bg-transparent overflow-hidden',
         className
       )}
     >
@@ -54,7 +54,7 @@ export function StoreCard ({
         </CardContent>
         <CardHeader className='p-4 -mt-px relative z-10 overflow-hidden bg-gradient-to-t from-secondary via-secondary/95 to-secondary/80 backdrop-filter backdrop-blur-lg backdrop-saturate-200'>
           <CardTitle
-            className='f-subhead-3 leading-none text-white font-bold'
+            className='f-subhead-3 leading-none text-white font-bold line-clamp-1'
             title={name}
           >
             {name}

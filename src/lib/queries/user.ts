@@ -15,7 +15,7 @@ type UserProfile = Omit<UserInputs, 'id'>
 
 const userRole = roles.user
 
-export async function getCurrentUser (): Promise<UserInputs | null> {
+export async function getCurrentUser () {
   noStore()
 
   try {

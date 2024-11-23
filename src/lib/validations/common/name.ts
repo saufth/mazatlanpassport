@@ -6,8 +6,8 @@ import {
 
 export const nameSchema = zodObject({
   name: zodString({ required_error: 'El Nombre es requqrido' })
-    .min(3, { message: 'El Nombre debe tener de 3 a 32 caracteres' })
-    .max(32, { message: 'El Nombre debe tener de 3 a 32 caracteres' })
+    .min(3, { message: 'El Nombre debe tener de 3 a 50 caracteres' })
+    .max(50, { message: 'El Nombre debe tener de 3 a 50 caracteres' })
 })
 
 export type NameInputs = zodInfer<typeof nameSchema>

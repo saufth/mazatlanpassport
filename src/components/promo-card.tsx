@@ -37,9 +37,9 @@ export function PromoCard ({
       )}
     >
       <CardHeader className='p-0 relative overflow-hidden'>
-        <div className='p-4 w-full h-full relative z-10 bg-gradient-to-r from-secondary via-secondary to-secondary/80 backdrop-filter backdrop-blur-lg backdrop-saturate-200'>
+        <CardHeader className='p-4 w-full h-full relative z-10 bg-gradient-to-r from-secondary via-secondary to-secondary/80 backdrop-filter backdrop-blur-lg backdrop-saturate-200'>
           <CardTitle
-            className='f-body-1 leading-none text-white font-extrabold'
+            className='f-body-1 leading-none text-white font-extrabold line-clamp-1'
             title={name}
           >
             {name}
@@ -56,12 +56,12 @@ export function PromoCard ({
             </div>
           </div>
           <CardDescription
-            className='f-body-2 leading-none text-white'
+            className='f-body-2 leading-none text-white line-clamp-2'
             title={description}
           >
             {description}
           </CardDescription>
-        </div>
+        </CardHeader>
         <div className='absolute inset-0 overflow-hidden'>
           <Image
             src={image}

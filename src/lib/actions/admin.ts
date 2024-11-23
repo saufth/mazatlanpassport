@@ -7,6 +7,7 @@ import bcrypt from 'bcryptjs'
 import { db } from '@/db'
 import {
   createSession,
+  deleteSession,
   getSession,
   getSessionStatus
 } from '@/lib/actions/auth'
@@ -40,16 +41,12 @@ import type {
 
 const adminRole = roles.admin
 
-export async function createAdmin (input: CreateAdminInputs) {
+export async function createAdmin (
+  input: CreateAdminInputs & { rootId: string }
+) {
   noStore()
 
   try {
-    const session = await getSession(roles.root)
-
-    if (!session.data) {
-      throw new Error('Datos de sesión no encontrados')
-    }
-
     const [adminWithSameEmail] = await db.query<Status[]>(
       'SELECT status FROM admins WHERE email = ?',
       [input.email]
@@ -61,7 +58,7 @@ export async function createAdmin (input: CreateAdminInputs) {
 
     const [rootRowKey] = await db.query<RowKey[]>(
       'SELECT row_key AS rowKey FROM roots WHERE id = UUID_TO_BIN(?, TRUE)',
-      [session.data.id]
+      [input.rootId]
     )
 
     if (!rootRowKey) {
@@ -80,13 +77,13 @@ export async function createAdmin (input: CreateAdminInputs) {
       [
         adminId.id,
         input.email,
-        encryptedPassword,
         input.name,
+        encryptedPassword,
         rootRowKey.rowKey
       ]
     )
 
-    revalidatePath('/root/admins')
+    revalidatePath('/root/admins/dashboard')
 
     return {
       data: adminId,
@@ -198,6 +195,22 @@ export async function signinAdmin (input: SigninInputs) {
 
     return {
       data: adminId,
+      error: null
+    }
+  } catch (err) {
+    return {
+      data: null,
+      error: getErrorMessage(err)
+    }
+  }
+}
+
+export async function signoutAdmin () {
+  try {
+    await deleteSession(adminRole)
+
+    return {
+      data: null,
       error: null
     }
   } catch (err) {
@@ -376,7 +389,7 @@ export async function resetAdminPasswordEmailCode (input: EmailInputs) {
   }
 }
 
-export async function resetAdmintPassword (input: ResetPasswordInputs) {
+export async function resetAdminPassword (input: ResetPasswordInputs) {
   noStore()
 
   try {

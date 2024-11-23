@@ -1,17 +1,16 @@
-import React from 'react'
+import { forwardRef, type HTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
-import { Item } from '@/types'
 
-const Card = React.forwardRef<
+const Card = forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
+  HTMLAttributes<HTMLDivElement> & {
     as?: 'div' | 'section' | 'article'
   }
 >(({ className, as: Comp = 'div', ...props }, ref) => (
   <Comp
     ref={ref}
     className={cn(
-      'bg-card border text-card-foreground shadow-sm',
+      'bg-card border rounded-2xl text-card-foreground shadow-sm',
       className
     )}
     {...props}
@@ -19,65 +18,56 @@ const Card = React.forwardRef<
 ))
 Card.displayName = 'Card'
 
-const CardHeader = React.forwardRef<
+const CardHeader = forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
+  HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('w-full p-2 flex flex-col space-y-spacing-1', className)}
+    className={cn('flex flex-col space-y-spacing-1 p-gutter', className)}
     {...props}
   />
 ))
 CardHeader.displayName = 'CardHeader'
 
-type CardProps = React.ComponentProps<typeof Card>
-
-interface CardDataProps extends CardProps {
-  item: Item
-}
-
-const CardTitle = React.forwardRef<
+const CardTitle = forwardRef<
   HTMLParagraphElement,
-  React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <h3
+  HTMLAttributes<HTMLHeadingElement> & { as?: 'h1' | 'h2' | 'h3' | 'h4' }
+>(({ className, as: Comp = 'h3', ...props }, ref) => (
+  <Comp
     ref={ref}
-    className={cn('text-lg line-clamp-1', className)}
+    className={cn(
+      'font-semibold',
+      className
+    )}
     {...props}
   />
 ))
 CardTitle.displayName = 'CardTitle'
 
-type CardTitleProps = React.ComponentProps<typeof CardTitle>
-
-const CardDescription = React.forwardRef<
+const CardDescription = forwardRef<
   HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
+  HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn('text-muted-foreground line-clamp-2', className)}
+    className={cn('text-muted-foreground', className)}
     {...props}
   />
 ))
 CardDescription.displayName = 'CardDescription'
 
-type CardDescriptionProps = React.ComponentProps<typeof CardDescription>
-
-const CardContent = React.forwardRef<
+const CardContent = forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
+  HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div ref={ref} className={cn('w-full', className)} {...props} />
 ))
 CardContent.displayName = 'CardContent'
 
-type CardContentProps = React.ComponentProps<typeof CardContent>
-
-const CardFooter = React.forwardRef<
+const CardFooter = forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
+  HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
@@ -87,19 +77,11 @@ const CardFooter = React.forwardRef<
 ))
 CardFooter.displayName = 'CardFooter'
 
-type CardFooterProps = React.ComponentProps<typeof CardFooter>
-
 export {
   Card,
   CardHeader,
   CardFooter,
   CardTitle,
   CardDescription,
-  CardContent,
-  type CardProps,
-  type CardDataProps,
-  type CardTitleProps,
-  type CardDescriptionProps,
-  type CardContentProps,
-  type CardFooterProps
+  CardContent
 }

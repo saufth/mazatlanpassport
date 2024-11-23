@@ -11,14 +11,14 @@ export const redirects = {
   },
   admin: {
     toSignin: '/admin/signin',
-    afterSignin: '/admin',
+    afterSignin: '/admin/dashboard',
     afterSignout: '/admin/signin',
     toVerify: '/admin/verify-email',
-    afterVerify: '/admin'
+    afterVerify: '/admin/dashboard'
   },
   root: {
     toSignin: '/root/signin',
-    afterSignin: '/root',
+    afterSignin: '/root/dashboard',
     afterSignout: '/root/signin'
   }
 } as const
@@ -42,6 +42,37 @@ export const userStatus = {
   inactive: 'Cuenta inactiva',
   blocked: 'Cuanta bloqeada',
   unverified: 'Cuenta no verificada'
+} as const
+
+export const months = {
+  en: [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ],
+  es: [
+    'Enero',
+    'Febrero',
+    'Marzo',
+    'Abril',
+    'Mayo',
+    'Junio',
+    'Julio',
+    'Agosto',
+    'Septiembre',
+    'Octubre',
+    'Noviembre',
+    'Diciembre'
+  ]
 } as const
 
 /**
@@ -2022,34 +2053,3 @@ export const countries = [
     alpha2: 'ZW'
   }
 ] as const
-
-export const months = {
-  en: [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ],
-  es: [
-    'Enero',
-    'Febrero',
-    'Marzo',
-    'Abril',
-    'Mayo',
-    'Junio',
-    'Julio',
-    'Agosto',
-    'Septiembre',
-    'Octubre',
-    'Noviembre',
-    'Diciembre'
-  ]
-} as const

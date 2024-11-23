@@ -41,7 +41,9 @@ export function ErrorCard ({
         <Icon className='size-10 text-muted-foreground/75' aria-hidden='true' />
       </div>
       <div className='flex flex-col items-center justify-center space-y-1.5 py-14 text-center'>
-        <CardTitle className='text-2xl'>{title}</CardTitle>
+        <CardTitle className='text-2xl font-normal line-clamp-1'>
+          {title}
+        </CardTitle>
         <CardDescription className='line-clamp-4'>
           {description}
         </CardDescription>

@@ -1,6 +1,8 @@
 import 'server-only'
-import { unstable_noStore as noStore } from 'next/cache'
-import { cache } from 'react'
+import {
+  unstable_cache as cache,
+  unstable_noStore as noStore
+} from 'next/cache'
 import { db } from '@/db'
 import { getSession } from '@/lib/actions/auth'
 import { getErrorMessage } from '@/lib/handle-error'
@@ -56,6 +58,60 @@ export async function getCurrentAdmin (): Promise<AdminProfileInputs | null> {
  * @see https://react.dev/reference/react/cache#reference
 */
 export const getCachedAdmin = cache(getCurrentAdmin)
+
+export async function getAdminById (input: UUIDInputs) {
+  noStore()
+
+  try {
+    const [admin] = await db.query<AdminProfile[]>(
+      'SELECT email, name FROM admins WHERE id = BIN_TO_UUID(?, TRUE);',
+      [input.id]
+    )
+
+    if (!admin) {
+      throw new Error('Hubo un problema al buscar datos del administradoe, intentalo de nuevo más tarde')
+    }
+
+    return admin
+  } catch {
+    return null
+  }
+}
+
+export async function getAdminsByRootId (input: { rootId: string }) {
+  return await cache(
+    async () => {
+      try {
+        const [rootKey] = await db.query<RowKey[]>(
+          'SELECT BIN_TO_UUID(id, TRUE) AS id, email, name FROM admins WHERE id = UUID_TO_BIN(?, TRUE);',
+          [input.rootId]
+        )
+
+        if (!rootKey) {
+          throw new Error('Hubo un problema al buscar datos del administradoe, intentalo de nuevo más tarde')
+        }
+
+        const admins = await db.query<AdminProfileInputs[]>(
+          'SELECT BIN_TO_UUID(id, TRUE) AS id, email, name FROM admins WHERE root_row_key = ?;',
+          [rootKey.rowKey]
+        )
+
+        if (!admins) {
+          throw new Error('Hubo un problema al buscar datos del administradoe, intentalo de nuevo más tarde')
+        }
+
+        return admins
+      } catch {
+        return null
+      }
+    },
+    [`admins-${input.rootId}`],
+    {
+      revalidate: 900,
+      tags: [`admins-${input.rootId}`]
+    }
+  )()
+}
 
 export async function getAdminEmail (input: UUIDInputs) {
   noStore()
