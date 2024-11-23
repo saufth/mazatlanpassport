@@ -82,18 +82,18 @@ export async function getAdminsByRootId (input: { rootId: string }) {
   return await cache(
     async () => {
       try {
-        const [rootKey] = await db.query<RowKey[]>(
-          'SELECT BIN_TO_UUID(id, TRUE) AS id, email, name FROM admins WHERE id = UUID_TO_BIN(?, TRUE);',
+        const [rootRowKey] = await db.query<RowKey[]>(
+          'SELECT row_key AS rowKey FROM roots WHERE id = UUID_TO_BIN(?, TRUE);',
           [input.rootId]
         )
 
-        if (!rootKey) {
+        if (!rootRowKey) {
           throw new Error('Hubo un problema al buscar datos del administradoe, intentalo de nuevo más tarde')
         }
 
         const admins = await db.query<AdminProfileInputs[]>(
           'SELECT BIN_TO_UUID(id, TRUE) AS id, email, name FROM admins WHERE root_row_key = ?;',
-          [rootKey.rowKey]
+          [rootRowKey.rowKey]
         )
 
         if (!admins) {

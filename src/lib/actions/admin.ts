@@ -8,7 +8,6 @@ import { db } from '@/db'
 import {
   createSession,
   deleteSession,
-  getSession,
   getSessionStatus
 } from '@/lib/actions/auth'
 import {
@@ -83,7 +82,7 @@ export async function createAdmin (
       ]
     )
 
-    revalidatePath('/root/admins/dashboard')
+    revalidatePath('/root/dashboard')
 
     return {
       data: adminId,

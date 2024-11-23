@@ -68,7 +68,7 @@ export function CreateAdminDialog ({
       }
 
       if (data) {
-        router.push(`/root/dashboard/admins/${data.id}`)
+        router.push('/root/dashboard')
         toast.success('Administrador creado')
       }
 
