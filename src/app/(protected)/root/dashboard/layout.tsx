@@ -20,8 +20,6 @@ export default async function DashboardRootLayout ({
 
   const adminsPromise = getAdminsByRootId({ rootId: root.id })
 
-  console.log(await adminsPromise)
-
   return (
     <SidebarProvider>
       <div className='grid min-h-screen w-full lg:grid-cols-[17.5rem_1fr]'>
