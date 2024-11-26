@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
-import { UpdateAdminForm } from '@/app/(protected)/_components/update-admin-form'
+import { UpdateAdminNameForm } from '@/app/(protected)/_components/update-admin-name-form'
+import { UpdateAdminEmailForm } from '@/app/(protected)/_components/update-admin-email-form'
 import {
   Card,
   CardContent,
@@ -27,16 +28,31 @@ export default async function DashboardAdminPage ({
 
   return (
     <div>
-      <div className='py-gutter'>
+      <div className='py-gutter space-y-gutter'>
         <Card as='section' className='p-gutter space-y-4 bg-popover'>
           <CardHeader className='space-y-1 px-0 py-0'>
-            <CardTitle className='text-2xl'>Actualizar administrador</CardTitle>
+            <CardTitle className='text-2xl'>
+              Nombre
+            </CardTitle>
             <CardDescription>
-              Actualiza el nombre y correo electrónico del administrador.
+              Actualiza el nombre del administrador.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <UpdateAdminForm admin={admin} />
+            <UpdateAdminNameForm name={admin.name} />
+          </CardContent>
+        </Card>
+        <Card as='section' className='p-gutter space-y-4 bg-popover'>
+          <CardHeader className='space-y-1 px-0 py-0'>
+            <CardTitle className='text-2xl'>
+              Correo electrónico
+            </CardTitle>
+            <CardDescription>
+              Actualiza el correo electrónico del administrador.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <UpdateAdminEmailForm email={admin.email} />
           </CardContent>
         </Card>
       </div>

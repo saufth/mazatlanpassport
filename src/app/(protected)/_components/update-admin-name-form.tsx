@@ -13,40 +13,32 @@ import {
 import { Input } from '@/components/ui/input'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  updateAdminSchema,
-  type UpdateAdminInputs
-} from '@/lib/validations/admin'
-import { updateAdmin } from '@/lib/actions/admin'
 import { Button } from '@/components/ui/button'
+import { updateAdminName } from '@/lib/actions/admin'
+import { nameSchema, type NameInputs } from '@/lib/validations/common/name'
 
-interface UpdateAdminFormProps {
-  admin: UpdateAdminInputs
-}
-
-export function UpdateAdminForm ({ admin }: UpdateAdminFormProps) {
+export function UpdateAdminNameForm ({ name }: NameInputs) {
   const { adminId } = useParams<{ adminId: string }>()
   const [isTransition, startTransition] = useTransition()
 
-  const form = useForm<UpdateAdminInputs>({
-    resolver: zodResolver(updateAdminSchema),
+  const form = useForm<NameInputs>({
+    resolver: zodResolver(nameSchema),
     defaultValues: {
-      name: admin.name,
-      email: admin.email
+      name
     }
   })
 
-  const onSubmit = async (input: UpdateAdminInputs) => {
+  const onSubmit = async (input: NameInputs) => {
     startTransition(async () => {
       toast.message('Actualizando..')
-      const response = await updateAdmin(adminId, input)
+      const response = await updateAdminName(adminId, input)
 
       if (response.error) {
         toast.error(response.error)
         return
       }
 
-      toast.success('Administrador actualizado con exito')
+      toast.success('Nombre actualizado con exito')
     })
   }
 
@@ -73,23 +65,6 @@ export function UpdateAdminForm ({ admin }: UpdateAdminFormProps) {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name='email'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Correo electrónico</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder='Correo electrónico del grupo o empresa.'
-                  autoFocus
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <div className='mt-spacing-3'>
           <Button
             className='flex items-center gap-x-spacing-2'
@@ -97,7 +72,7 @@ export function UpdateAdminForm ({ admin }: UpdateAdminFormProps) {
             disabled={isTransition}
             type='submit'
           >
-            Actualizar administrador
+            Actualizar nombre
           </Button>
         </div>
       </form>

@@ -22,10 +22,8 @@ import {
   type SigninInputs,
   type VerifyCodeInputs
 } from '@/lib/validations/auth'
-import {
-  type CreateAdminInputs,
-  type UpdateAdminInputs
-} from '@/lib/validations/admin'
+import { type CreateAdminInputs } from '@/lib/validations/admin'
+import { type NameInputs } from '@/lib/validations/common/name'
 import { sendVerifyEmailCode } from '@/lib/verify-email'
 import {
   calculateMinutes,
@@ -108,7 +106,7 @@ export async function createAdmin (
   }
 }
 
-export async function updateAdmin (adminId: string, input: UpdateAdminInputs) {
+export async function updateAdminName (adminId: string, input: NameInputs) {
   noStore()
 
   try {
@@ -121,8 +119,34 @@ export async function updateAdmin (adminId: string, input: UpdateAdminInputs) {
       throw new Error('El nombre ya esta siendo usado.')
     }
 
+    await db.query(
+      'UPDATE admins SET name = ? WHERE id = UUID_TO_BIN(?, TRUE);',
+      [
+        input.name,
+        adminId
+      ]
+    )
+
+    revalidatePath(`/root/admin/${adminId}`)
+
+    return {
+      data: null,
+      error: null
+    }
+  } catch (err) {
+    return {
+      data: null,
+      error: getErrorMessage(err)
+    }
+  }
+}
+
+export async function updateAdminEmail (adminId: string, input: EmailInputs) {
+  noStore()
+
+  try {
     const [adminWithSameEmail] = await db.query<Status[]>(
-      'SELECT status FROM admins WHERE email = ?;',
+      'SELECT status FROM admins WHERE email = ?',
       [input.email]
     )
 
@@ -131,9 +155,8 @@ export async function updateAdmin (adminId: string, input: UpdateAdminInputs) {
     }
 
     await db.query(
-      'UPDATE admins SET name = ?, email = ? WHERE id = UUID_TO_BIN(?, TRUE);',
+      'UPDATE admins SET email = ?, verified_at = NULL WHERE id = UUID_TO_BIN(?, TRUE);',
       [
-        input.name,
         input.email,
         adminId
       ]
