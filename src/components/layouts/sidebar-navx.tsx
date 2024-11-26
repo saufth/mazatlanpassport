@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { type HTMLAttributes } from 'react'
 import { Icons } from '@/components/icons'
-import { useSidebar } from '@/components/layouts/sidebar-provider'
+import { useSidebar } from '@/components/layouts/sidebar-providerx'
 import { cn } from '@/lib/utils'
 import type { SidebarNavItem } from '@/types'
 

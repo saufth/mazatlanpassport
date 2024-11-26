@@ -40,14 +40,20 @@ export default function SigninForm () {
       toast.message('Iniciando sesión..')
       const response = await signinRoot(input)
 
-      if (!response.data) {
+      if (response.error) {
         toast.error(response.error)
         return
       }
 
       toast.success('Iniciaste sesión')
       form.reset()
-      router.push(redirects.root.afterSignin)
+
+      if (!response.data) {
+        router.push(`${redirects.root.afterSignin}/onboarding`)
+        return
+      }
+
+      router.push(`${redirects.root.afterSignin}/admin/${response.data.adminId}`)
     })
   }
 

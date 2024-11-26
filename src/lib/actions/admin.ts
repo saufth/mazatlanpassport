@@ -22,7 +22,10 @@ import {
   type SigninInputs,
   type VerifyCodeInputs
 } from '@/lib/validations/auth'
-import { type CreateAdminInputs } from '@/lib/validations/admin'
+import {
+  type CreateAdminInputs,
+  type UpdateAdminInputs
+} from '@/lib/validations/admin'
 import { sendVerifyEmailCode } from '@/lib/verify-email'
 import {
   calculateMinutes,
@@ -46,8 +49,17 @@ export async function createAdmin (
   noStore()
 
   try {
+    const [adminWithSameName] = await db.query<Status[]>(
+      'SELECT status FROM admins WHERE name = ?;',
+      [input.name]
+    )
+
+    if (adminWithSameName) {
+      throw new Error('El correo electrónico ya esta siendo usado')
+    }
+
     const [adminWithSameEmail] = await db.query<Status[]>(
-      'SELECT status FROM admins WHERE email = ?',
+      'SELECT status FROM admins WHERE email = ?;',
       [input.email]
     )
 
@@ -56,7 +68,7 @@ export async function createAdmin (
     }
 
     const [rootRowKey] = await db.query<RowKey[]>(
-      'SELECT row_key AS rowKey FROM roots WHERE id = UUID_TO_BIN(?, TRUE)',
+      'SELECT row_key AS rowKey FROM roots WHERE id = UUID_TO_BIN(?, TRUE);',
       [input.rootId]
     )
 
@@ -72,7 +84,7 @@ export async function createAdmin (
     }
 
     await db.query(
-      'INSERT INTO admins (id, email, name, password, root_row_key) VALUES (UUID_TO_BIN(?, TRUE), ?, ?, ?, ?)',
+      'INSERT INTO admins (id, email, name, password, root_row_key) VALUES (UUID_TO_BIN(?, TRUE), ?, ?, ?, ?);',
       [
         adminId.id,
         input.email,
@@ -82,10 +94,55 @@ export async function createAdmin (
       ]
     )
 
-    revalidatePath('/root/dashboard')
+    revalidatePath(`/root/admin/${adminId.id}`)
 
     return {
       data: adminId,
+      error: null
+    }
+  } catch (err) {
+    return {
+      data: null,
+      error: getErrorMessage(err)
+    }
+  }
+}
+
+export async function updateAdmin (adminId: string, input: UpdateAdminInputs) {
+  noStore()
+
+  try {
+    const [adminWithSameName] = await db.query<Status[]>(
+      'SELECT status FROM admins WHERE name = ?;',
+      [input.name]
+    )
+
+    if (adminWithSameName) {
+      throw new Error('El nombre ya esta siendo usado.')
+    }
+
+    const [adminWithSameEmail] = await db.query<Status[]>(
+      'SELECT status FROM admins WHERE email = ?;',
+      [input.email]
+    )
+
+    if (adminWithSameEmail) {
+      throw new Error('El correo electrónico ya esta siendo usado.')
+    }
+
+    await db.query(
+      'UPDATE admins SET name = ?, email = ? WHERE id = UUID_TO_BIN(?, TRUE);',
+      [
+        input.name,
+        input.email,
+        adminId
+      ]
+    )
+
+    revalidatePath(`/root/admin/${adminId}`)
+
+    return {
+      data: null,
       error: null
     }
   } catch (err) {
@@ -120,7 +177,7 @@ export async function signinAdmin (input: SigninInputs) {
     }
 
     const [adminKeys] = await db.query<Array<UserKeys & PasswordInputs>>(
-      'SELECT row_key AS rowKey, BIN_TO_UUID(id, TRUE) AS id, password FROM admins WHERE email = ?',
+      'SELECT row_key AS rowKey, BIN_TO_UUID(id, TRUE) AS id, password FROM admins WHERE email = ?;',
       [input.email]
     )
 
@@ -141,7 +198,7 @@ export async function signinAdmin (input: SigninInputs) {
 
     if (status.error === userStatus.unverified) {
       const [verifyCode] = await db.query<VerifyEmailCode[]>(
-        'SELECT code, attempts, created_at AS createdAt FROM admins_verify_codes WHERE admin_row_key = ?',
+        'SELECT code, attempts, created_at AS createdAt FROM admins_verify_codes WHERE admin_row_key = ?;',
         [adminKeys.rowKey]
       )
 
@@ -157,7 +214,7 @@ export async function signinAdmin (input: SigninInputs) {
         }
 
         await db.query(
-          'DELETE FROM admins_verify_codes WHERE admin_row_key = ?',
+          'DELETE FROM admins_verify_codes WHERE admin_row_key = ?;',
           [adminKeys.rowKey]
         )
       }
@@ -165,7 +222,7 @@ export async function signinAdmin (input: SigninInputs) {
       const code = createVerifyCode()
 
       await db.query(
-        'INSERT INTO admins_verify_codes (admin_row_key, code) VALUES (?, ?)',
+        'INSERT INTO admins_verify_codes (admin_row_key, code) VALUES (?, ?);',
         [
           adminKeys.rowKey,
           code
@@ -246,7 +303,7 @@ export async function verifyAdminEmail (input: VerifyCodeInputs) {
     }
 
     const [adminVerifyData] = await db.query<VerifyEmailConfirm[]>(
-      'SELECT row_key AS rowKey, name, email FROM admins WHERE id = UUID_TO_BIN(?, TRUE)',
+      'SELECT row_key AS rowKey, name, email FROM admins WHERE id = UUID_TO_BIN(?, TRUE);',
       [input.id]
     )
 
@@ -255,7 +312,7 @@ export async function verifyAdminEmail (input: VerifyCodeInputs) {
     }
 
     const [verifyCode] = await db.query<VerifyEmailCode[]>(
-      'SELECT code, attempts, created_at AS createdAt FROM admins_verify_codes WHERE admin_row_key = ?',
+      'SELECT code, attempts, created_at AS createdAt FROM admins_verify_codes WHERE admin_row_key = ?;',
       [adminVerifyData.rowKey]
     )
 
@@ -265,7 +322,7 @@ export async function verifyAdminEmail (input: VerifyCodeInputs) {
 
     const deleteCurrentVerifyEmailCode = () => {
       db.query(
-        'DELETE FROM admins_verify_codes WHERE admin_row_key = ?',
+        'DELETE FROM admins_verify_codes WHERE admin_row_key = ?;',
         [adminVerifyData.rowKey]
       )
     }
@@ -282,14 +339,17 @@ export async function verifyAdminEmail (input: VerifyCodeInputs) {
 
     if (verifyCode.code !== input.code) {
       await db.query(
-        'UPDATE admins_verify_codes SET attempts = ?, updated_at = (NOW())',
-        [verifyCode.attempts + 1]
+        'UPDATE admins_verify_codes SET attempts = ?, updated_at = (NOW()) WHERE admin_row_key = ?;',
+        [
+          verifyCode.attempts + 1,
+          adminVerifyData.rowKey
+        ]
       )
       throw new Error('Código incorrecto')
     }
 
     await db.query(
-      'UPDATE admins SET verified_at = (NOW()) WHERE row_key = ?',
+      'UPDATE admins SET verified_at = (NOW()) WHERE row_key = ?;',
       [adminVerifyData.rowKey]
     )
 
@@ -334,7 +394,7 @@ export async function resetAdminPasswordEmailCode (input: EmailInputs) {
     }
 
     const [adminKeys] = await db.query<UserKeys[]>(
-      'SELECT row_key AS rowKey, BIN_TO_UUID(id, TRUE) AS id FROM admins WHERE email = ?',
+      'SELECT row_key AS rowKey, BIN_TO_UUID(id, TRUE) AS id FROM admins WHERE email = ?;',
       [input.email]
     )
 
@@ -343,7 +403,7 @@ export async function resetAdminPasswordEmailCode (input: EmailInputs) {
     }
 
     const [verifyCode] = await db.query<VerifyEmailCode[]>(
-      'SELECT code, attempts, created_at AS createdAt FROM admins_recovery_codes WHERE admin_row_key = ?',
+      'SELECT code, attempts, created_at AS createdAt FROM admins_recovery_codes WHERE admin_row_key = ?;',
       [adminKeys.rowKey]
     )
 
@@ -359,7 +419,7 @@ export async function resetAdminPasswordEmailCode (input: EmailInputs) {
       }
 
       await db.query(
-        'DELETE FROM admins_recovery_codes WHERE admin_row_key = ?',
+        'DELETE FROM admins_recovery_codes WHERE admin_row_key = ?;',
         [adminKeys.rowKey]
       )
     }
@@ -367,7 +427,7 @@ export async function resetAdminPasswordEmailCode (input: EmailInputs) {
     const code = createVerifyCode()
 
     await db.query(
-      'INSERT INTO admins_recovery_codes (admin_row_key, code) VALUES (?, ?)',
+      'INSERT INTO admins_recovery_codes (admin_row_key, code) VALUES (?, ?);',
       [adminKeys.rowKey, code]
     )
 
@@ -414,7 +474,7 @@ export async function resetAdminPassword (input: ResetPasswordInputs) {
     }
 
     const [adminVerifyData] = await db.query<VerifyEmailConfirm[]>(
-      'SELECT row_key AS rowKey, name, email FROM admins WHERE id = UUID_TO_BIN(?, TRUE)',
+      'SELECT row_key AS rowKey, name, email FROM admins WHERE id = UUID_TO_BIN(?, TRUE);',
       [input.id]
     )
 
@@ -423,7 +483,7 @@ export async function resetAdminPassword (input: ResetPasswordInputs) {
     }
 
     const [verifyCode] = await db.query<VerifyEmailCode[]>(
-      'SELECT code, attempts, created_at AS createdAt FROM admins_recovery_codes WHERE admin_row_key = ?',
+      'SELECT code, attempts, created_at AS createdAt FROM admins_recovery_codes WHERE admin_row_key = ?;',
       [adminVerifyData.rowKey]
     )
 
@@ -433,7 +493,7 @@ export async function resetAdminPassword (input: ResetPasswordInputs) {
 
     const deleteCurrentRecoveryEmailCode = () => {
       db.query(
-        'DELETE FROM admins_recovery_codes WHERE admin_row_key = ?',
+        'DELETE FROM admins_recovery_codes WHERE admin_row_key = ?;',
         [adminVerifyData.rowKey]
       )
     }
@@ -450,8 +510,11 @@ export async function resetAdminPassword (input: ResetPasswordInputs) {
 
     if (verifyCode.code !== input.code) {
       await db.query(
-        'UPDATE admins_recovery_codes SET attempts = ?, updated_at = (NOW())',
-        [verifyCode.attempts + 1]
+        'UPDATE admins_recovery_codes SET attempts = ?, updated_at = (NOW()) WHERE admin_row_key = ?;',
+        [
+          verifyCode.attempts + 1,
+          adminVerifyData.rowKey
+        ]
       )
       throw new Error('Código incorrecto')
     }

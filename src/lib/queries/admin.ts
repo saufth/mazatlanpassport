@@ -59,13 +59,13 @@ export async function getCurrentAdmin (): Promise<AdminProfileInputs | null> {
 */
 export const getCachedAdmin = cache(getCurrentAdmin)
 
-export async function getAdminById (input: UUIDInputs) {
+export async function getAdminById (input: { adminId: string }) {
   noStore()
 
   try {
     const [admin] = await db.query<AdminProfile[]>(
-      'SELECT email, name FROM admins WHERE id = BIN_TO_UUID(?, TRUE);',
-      [input.id]
+      'SELECT email, name FROM admins WHERE id = UUID_TO_BIN(?, TRUE) AND status = 1 AND blocked = 0 ORDER BY created_at DESC;',
+      [input.adminId]
     )
 
     if (!admin) {
@@ -92,7 +92,7 @@ export async function getAdminsByRootId (input: { rootId: string }) {
         }
 
         const admins = await db.query<AdminProfileInputs[]>(
-          'SELECT BIN_TO_UUID(id, TRUE) AS id, email, name FROM admins WHERE root_row_key = ?;',
+          'SELECT BIN_TO_UUID(id, TRUE) AS id, email, name FROM admins WHERE root_row_key = ? AND status = 1 AND blocked = 0 ORDER BY created_at DESC;',
           [rootRowKey.rowKey]
         )
 

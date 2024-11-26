@@ -4,7 +4,7 @@ export default function SigninRootPage () {
   return (
     <section>
       <div className='container screen-container flex items-center justify-center'>
-        <div className='w-full max-w-md relative'>
+        <div className='w-full max-w-md'>
           <div className='space-y-spacing-2'>
             <div className='f-heading-2 font-extrabold text-secondary'>
               Inica sesión

@@ -1,11 +1,12 @@
 import { type PropsWithChildren } from 'react'
+import { SidebarProvider } from '@/components/ui/sidebar'
 
 export default function ProtectedLayout ({ children }: PropsWithChildren) {
   return (
-    <div className='bg-primary text-primary-foreground relative z-10'>
-      <main className='relative z-10'>
+    <SidebarProvider>
+      <main className='w-full'>
         {children}
       </main>
-    </div>
+    </SidebarProvider>
   )
 }

@@ -20,7 +20,7 @@ import {
   roles,
   userStatus
 } from '@/lib/constants'
-import type { Status } from '@/types'
+import type { RowKey, Status } from '@/types'
 
 const rootRole = roles.root
 
@@ -101,8 +101,8 @@ export async function signinRoot (input: SigninRootInputs) {
       return status
     }
 
-    const [rootKeys] = await db.query<Array<UUIDInputs & PasswordInputs>>(
-      'SELECT BIN_TO_UUID(id, TRUE) AS id, password FROM roots WHERE username = ?',
+    const [rootKeys] = await db.query<Array<RowKey & UUIDInputs & PasswordInputs>>(
+      'SELECT row_key AS rowKey, BIN_TO_UUID(id, TRUE) AS id, password FROM roots WHERE username = ?',
       [input.username]
     )
 
@@ -127,8 +127,13 @@ export async function signinRoot (input: SigninRootInputs) {
       throw new Error(newSession.error)
     }
 
+    const [adminId] = await db.query<Array<{ adminId: string }>>(
+      'SELECT BIN_TO_UUID(id, TRUE) AS adminId FROM admins WHERE root_row_key = ? AND status = 1 AND blocked = 0 ORDER BY created_at DESC;',
+      [rootKeys.rowKey]
+    )
+
     return {
-      data: rootId,
+      data: adminId || null,
       error: null
     }
   } catch (err) {

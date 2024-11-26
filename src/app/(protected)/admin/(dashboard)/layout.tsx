@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import { type PropsWithChildren } from 'react'
 import { DashboardHeader } from '@/app/(protected)/_components/dashboard-header'
 import { DashboardSidebar } from '@/app/(protected)/_components/dashboard-sidebar'
-import { SidebarProvider } from '@/components/layouts/sidebar-provider'
+import { SidebarProvider } from '@/components/layouts/sidebar-providerx'
 import { getCachedAdmin } from '@/lib/queries/admin'
 import { protectedRoles, redirects } from '@/lib/constants'
 

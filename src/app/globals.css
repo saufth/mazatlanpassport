@@ -24,6 +24,14 @@
     --border: 91.97% 0.004 286.32; /* #E4E4E7 */
     --input: 100% 0 0; /* #FFFFFF */
     --ring: 56.55% 0.188 255.61; /* #0573E1 */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 224.3 76.3% 48%; /*240 5.9% 10%; */
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
     /* Radius */
     --radius: 0.5rem; /* 8px */
     /* Shell */
@@ -65,6 +73,18 @@
     --border: 91.97% 0.004 286.32; /* #E4E4E7 */
     --input: 100% 0 0; /* #FFFFFF */
     --ring: 56.55% 0.188 255.61; /* #0573E1 */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 224.3 76.3% 48%; /*240 5.9% 10%; */
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  * {
+    @apply border-border;
   }
 
   @media (min-width: 768px) {

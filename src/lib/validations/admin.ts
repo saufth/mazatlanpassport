@@ -20,3 +20,8 @@ export const createAdminSchema = nameSchema
   })
 
 export type CreateAdminInputs = zodInfer<typeof createAdminSchema>
+
+export const updateAdminSchema = nameSchema
+  .merge(emailSchema)
+
+export type UpdateAdminInputs = zodInfer<typeof updateAdminSchema>

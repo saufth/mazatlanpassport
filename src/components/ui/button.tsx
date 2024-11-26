@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
   cn(
-    'inline-flex rounded-2xl items-center justify-center items-center ring-0 ring-transparent',
+    'inline-flex rounded-xl items-center justify-center items-center ring-0 ring-transparent',
     'disabled:pointer-events-none disabled:opacity-50',
     'focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent'
   ),
@@ -20,10 +20,11 @@ const buttonVariants = cva(
         link: 'hover:underline hover:scale-100'
       },
       size: {
-        default: 'py-spacing-2 px-spacing-4 f-body-2 leading-none font-bsemibold',
+        default: 'py-spacing-2 px-spacing-4 f-body-2 leading-none font-semibold',
+        x: '',
         xs: 'text-xs lg:text-sm',
         sm: 'px-2 py-0.5 text-sm lg:text-base',
-        lg: 'w-fit px-spacing-5 py-spacing-3 f-subhead-3 font-bold',
+        lg: 'w-fit px-4 py-2.5 text-base font-semibold',
         full: 'w-full sm:w-fit px-spacing-5 py-spacing-3 f-subhead-3 font-bold',
         icon: 'h-7 lg:h-[33px] w-7 lg:w-[33px]'
       }

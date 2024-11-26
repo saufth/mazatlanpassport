@@ -1,29 +1,32 @@
 'use client'
 import Link from 'next/link'
 import { useSelectedLayoutSegments } from 'next/navigation'
-import {
-  type HTMLAttributes,
-  type PropsWithChildren
-} from 'react'
+import { type ComponentProps } from 'react'
 import { Icons } from '@/components/icons'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { SidebarNav } from '@/components/layouts/sidebar-nav'
-import { cn } from '@/lib/utils'
+import DashboardAuthDropdown from '@/app/(protected)/_components/dashboard-auth-dropdown'
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail
+} from '@/components/ui/sidebar'
+import { type NameInputs } from '@/lib/validations/common/name'
+import { type EmailInputs } from '@/lib/validations/common/email'
 import { roles, type ProtectedRole } from '@/lib/constants'
 import { type SidebarNavItem } from '@/types'
 
 interface DashboardSidebarProps
-  extends PropsWithChildren,
-    HTMLAttributes<HTMLElement> {
-      role: ProtectedRole
+  extends ComponentProps<typeof Sidebar> {
+      user: NameInputs & Partial<EmailInputs> & { role: ProtectedRole }
 }
 
-export function DashboardSidebar ({
-  children,
-  className,
-  role,
-  ...props
-}: DashboardSidebarProps) {
+export function DashboardSidebar ({ children, user }: DashboardSidebarProps) {
   const segments = useSelectedLayoutSegments()
 
   const sidebarNav: Record<ProtectedRole, SidebarNavItem[]> = {
@@ -88,21 +91,39 @@ export function DashboardSidebar ({
   }
 
   return (
-    <aside className={cn('h-screen w-full', className)} {...props}>
-      <div className='hidden h-[3.55rem] items-center border-b border-secondary-foreground/60 px-4 lg:flex lg:px-6'>
-        <Link
-          href='/'
-          className='flex w-fit items-center font-heading tracking-wider text-foreground/90 transition-colors hover:text-foreground'
-        >
-          <Icons.LogotypeAlt className='size-28' aria-hidden='true' />
-        </Link>
-      </div>
-      <div className='flex flex-col gap-2.5 px-4 pt-2 lg:px-6 lg:pt-4'>
+    <Sidebar collapsible='icon'>
+      <SidebarHeader>
         {children}
-      </div>
-      <ScrollArea className='h-[calc(100vh-8rem)] px-3 py-2.5 lg:px-5'>
-        <SidebarNav items={sidebarNav[role]} className='p-1 pt-4' />
-      </ScrollArea>
-    </aside>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>
+            Administradores
+          </SidebarGroupLabel>
+          <SidebarMenu>
+            {sidebarNav[user.role].map((item) => {
+              const Icon = Icons[item.icon ?? 'ChevronsUpDown']
+
+              return (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <Link href={item.href}>
+                      <Icon />
+                      <span>
+                        {item.title}
+                      </span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )
+            })}
+          </SidebarMenu>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarFooter>
+        <DashboardAuthDropdown user={user} />
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
   )
 }

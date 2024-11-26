@@ -11,14 +11,14 @@ export const redirects = {
   },
   admin: {
     toSignin: '/admin/signin',
-    afterSignin: '/admin/dashboard',
+    afterSignin: '/admin',
     afterSignout: '/admin/signin',
     toVerify: '/admin/verify-email',
-    afterVerify: '/admin/dashboard'
+    afterVerify: '/admin'
   },
   root: {
     toSignin: '/root/signin',
-    afterSignin: '/root/dashboard',
+    afterSignin: '/root',
     afterSignout: '/root/signin'
   }
 } as const

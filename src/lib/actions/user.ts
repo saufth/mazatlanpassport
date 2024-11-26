@@ -55,7 +55,7 @@ export async function signup (input: SignupUserInputs) {
     }
 
     const [userWithSameEmail] = await db.query<{ status: boolean }[]>(
-      'SELECT status FROM users WHERE email = ?',
+      'SELECT status FROM users WHERE email = ?;',
       [input.email]
     )
 
@@ -71,7 +71,7 @@ export async function signup (input: SignupUserInputs) {
     }
 
     await db.query(
-      'INSERT INTO users (id, email, password, first_name, last_name, genre_iso, birthdate) VALUES (UUID_TO_BIN(?, TRUE), ?, ?, ?, ?, ?, STR_TO_DATE(?, "%d/%m/%Y"))',
+      'INSERT INTO users (id, email, password, first_name, last_name, genre_iso, birthdate) VALUES (UUID_TO_BIN(?, TRUE), ?, ?, ?, ?, ?, STR_TO_DATE(?, "%d/%m/%Y"));',
       [
         userId.id,
         input.email,
@@ -84,7 +84,7 @@ export async function signup (input: SignupUserInputs) {
     )
 
     const [userKey] = await db.query<RowKey[]>(
-      'SELECT row_key AS rowKey FROM users WHERE id = UUID_TO_BIN(?, TRUE)',
+      'SELECT row_key AS rowKey FROM users WHERE id = UUID_TO_BIN(?, TRUE);',
       [userId.id]
     )
 
@@ -95,7 +95,7 @@ export async function signup (input: SignupUserInputs) {
     const code = createVerifyCode()
 
     await db.query(
-      'INSERT INTO users_verify_codes (user_row_key, code) VALUES (?, ?)',
+      'INSERT INTO users_verify_codes (user_row_key, code) VALUES (?, ?);',
       [userKey.rowKey, code]
     )
 
@@ -138,7 +138,7 @@ export async function signin (input: SigninInputs) {
     }
 
     const [userKeys] = await db.query<UserKeys[]>(
-      'SELECT row_key AS rowKey, BIN_TO_UUID(id, TRUE) AS id, password FROM users WHERE email = ?',
+      'SELECT row_key AS rowKey, BIN_TO_UUID(id, TRUE) AS id, password FROM users WHERE email = ?;',
       [input.email]
     )
 
@@ -156,7 +156,7 @@ export async function signin (input: SigninInputs) {
 
     if (status.error === userStatus.unverified) {
       const [verifyCode] = await db.query<VerifyEmailCode[]>(
-        'SELECT code, attempts, created_at AS createdAt FROM users_verify_codes WHERE user_row_key = ?',
+        'SELECT code, attempts, created_at AS createdAt FROM users_verify_codes WHERE user_row_key = ?;',
         [userKeys.rowKey]
       )
 
@@ -172,7 +172,7 @@ export async function signin (input: SigninInputs) {
         }
 
         await db.query(
-          'DELETE FROM users_verify_codes WHERE user_row_key = ?',
+          'DELETE FROM users_verify_codes WHERE user_row_key = ?;',
           [userKeys.rowKey]
         )
       }
@@ -180,7 +180,7 @@ export async function signin (input: SigninInputs) {
       const code = createVerifyCode()
 
       await db.query(
-        'INSERT INTO users_verify_codes (user_row_key, code) VALUES (?, ?)',
+        'INSERT INTO users_verify_codes (user_row_key, code) VALUES (?, ?);',
         [userKeys.rowKey, code]
       )
 
@@ -255,7 +255,7 @@ export async function verifyEmail (input: VerifyCodeInputs) {
     }
 
     const [userVerifyData] = await db.query<VerifyEmailConfirm[]>(
-      'SELECT row_key AS rowKey, first_name AS name, email FROM users WHERE id = UUID_TO_BIN(?, TRUE)',
+      'SELECT row_key AS rowKey, first_name AS name, email FROM users WHERE id = UUID_TO_BIN(?, TRUE);',
       [input.id]
     )
 
@@ -264,7 +264,7 @@ export async function verifyEmail (input: VerifyCodeInputs) {
     }
 
     const [verifyCode] = await db.query<VerifyEmailCode[]>(
-      'SELECT code, attempts, created_at AS createdAt FROM users_verify_codes WHERE user_row_key = ?',
+      'SELECT code, attempts, created_at AS createdAt FROM users_verify_codes WHERE user_row_key = ?;',
       [userVerifyData.rowKey]
     )
 
@@ -274,7 +274,7 @@ export async function verifyEmail (input: VerifyCodeInputs) {
 
     const deleteCurrentVerifyEmailCode = () => {
       db.query(
-        'DELETE FROM users_verify_codes WHERE user_row_key = ?',
+        'DELETE FROM users_verify_codes WHERE user_row_key = ?;',
         [userVerifyData.rowKey]
       )
     }
@@ -291,14 +291,17 @@ export async function verifyEmail (input: VerifyCodeInputs) {
 
     if (verifyCode.code !== input.code) {
       await db.query(
-        'UPDATE users_verify_codes SET attempts = ?, updated_at = (NOW())',
-        [verifyCode.attempts + 1]
+        'UPDATE users_verify_codes SET attempts = ?, updated_at = (NOW()) WHERE user_row_key = ?;',
+        [
+          verifyCode.attempts + 1,
+          userVerifyData.rowKey
+        ]
       )
       throw new Error('Código incorrecto')
     }
 
     await db.query(
-      'UPDATE users SET verified_at = (NOW()) WHERE row_key = ?',
+      'UPDATE users SET verified_at = (NOW()) WHERE row_key = ?;',
       [userVerifyData.rowKey]
     )
 
@@ -343,7 +346,7 @@ export async function resetPasswordEmailCode (input: EmailInputs) {
     }
 
     const [userKeyID] = await db.query<Array<RowKey & UUIDInputs>>(
-      'SELECT row_key AS rowKey, BIN_TO_UUID(id, TRUE) AS id FROM users WHERE email = ?',
+      'SELECT row_key AS rowKey, BIN_TO_UUID(id, TRUE) AS id FROM users WHERE email = ?;',
       [input.email]
     )
 
@@ -352,7 +355,7 @@ export async function resetPasswordEmailCode (input: EmailInputs) {
     }
 
     const [verifyCode] = await db.query<VerifyEmailCode[]>(
-      'SELECT code, attempts, created_at AS createdAt FROM users_recovery_codes WHERE user_row_key = ?',
+      'SELECT code, attempts, created_at AS createdAt FROM users_recovery_codes WHERE user_row_key = ?;',
       [userKeyID.rowKey]
     )
 
@@ -368,7 +371,7 @@ export async function resetPasswordEmailCode (input: EmailInputs) {
       }
 
       await db.query(
-        'DELETE FROM users_recovery_codes WHERE user_row_key = ?',
+        'DELETE FROM users_recovery_codes WHERE user_row_key = ?;',
         [userKeyID.rowKey]
       )
     }
@@ -376,7 +379,7 @@ export async function resetPasswordEmailCode (input: EmailInputs) {
     const code = createVerifyCode()
 
     await db.query(
-      'INSERT INTO users_recovery_codes (user_row_key, code) VALUES (?, ?)',
+      'INSERT INTO users_recovery_codes (user_row_key, code) VALUES (?, ?);',
       [userKeyID.rowKey, code]
     )
 
@@ -423,7 +426,7 @@ export async function resetPassword (input: ResetPasswordInputs) {
     }
 
     const [userVerifyData] = await db.query<VerifyEmailConfirm[]>(
-      'SELECT row_key AS rowKey, first_name AS name, email FROM users WHERE id = UUID_TO_BIN(?, TRUE)',
+      'SELECT row_key AS rowKey, first_name AS name, email FROM users WHERE id = UUID_TO_BIN(?, TRUE);',
       [input.id]
     )
 
@@ -432,7 +435,7 @@ export async function resetPassword (input: ResetPasswordInputs) {
     }
 
     const [verifyCode] = await db.query<VerifyEmailCode[]>(
-      'SELECT code, attempts, created_at AS createdAt FROM users_recovery_codes WHERE user_row_key = ?',
+      'SELECT code, attempts, created_at AS createdAt FROM users_recovery_codes WHERE user_row_key = ?;',
       [userVerifyData.rowKey]
     )
 
@@ -442,7 +445,7 @@ export async function resetPassword (input: ResetPasswordInputs) {
 
     const deleteCurrentRecoveryEmailCode = () => {
       db.query(
-        'DELETE FROM users_recovery_codes WHERE user_row_key = ?',
+        'DELETE FROM users_recovery_codes WHERE user_row_key = ?;',
         [userVerifyData.rowKey]
       )
     }
@@ -459,8 +462,11 @@ export async function resetPassword (input: ResetPasswordInputs) {
 
     if (verifyCode.code !== input.code) {
       await db.query(
-        'UPDATE users_recovery_codes SET attempts = ?, updated_at = (NOW())',
-        [verifyCode.attempts + 1]
+        'UPDATE users_recovery_codes SET attempts = ?, updated_at = (NOW()) WHERE user_row_key = ?;',
+        [
+          verifyCode.attempts + 1,
+          userVerifyData.rowKey
+        ]
       )
       throw new Error('Código incorrecto')
     }

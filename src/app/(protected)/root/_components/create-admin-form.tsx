@@ -16,8 +16,8 @@ import { cn } from '@/lib/utils'
 
 interface CreateAdminFormProps
   extends Omit<ComponentPropsWithRef<'form'>, 'onSubmit'> {
-  form: UseFormReturn<CreateAdminInputs>
-  onSubmit: (data: CreateAdminInputs) => void
+    form: UseFormReturn<CreateAdminInputs>
+    onSubmit: (data: CreateAdminInputs) => void
 }
 
 export function CreateAdminForm ({
@@ -40,13 +40,13 @@ export function CreateAdminForm ({
       >
         <FormField
           control={form.control}
-          name='email'
+          name='name'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Correo electrónico</FormLabel>
+              <FormLabel>Nombre</FormLabel>
               <FormControl>
                 <Input
-                  placeholder='Correo electrónico del grupo o empresa.'
+                  placeholder='Nombre del grupo o empresa.'
                   autoFocus
                   {...field}
                 />
@@ -57,13 +57,13 @@ export function CreateAdminForm ({
         />
         <FormField
           control={form.control}
-          name='name'
+          name='email'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nombre</FormLabel>
+              <FormLabel>Correo electrónico</FormLabel>
               <FormControl>
                 <Input
-                  placeholder='Nombre del grupo o empresa.'
+                  placeholder='Correo electrónico del grupo o empresa.'
                   {...field}
                 />
               </FormControl>

@@ -1,7 +1,7 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import { useTransition, type ComponentPropsWithoutRef } from 'react'
-import { CreateAdminForm } from '@/app/(protected)/root/dashboard/_components/create-admin-form'
+import { CreateAdminForm } from '@/app/(protected)/root/_components/create-admin-form'
 import { Icons } from '@/components/icons'
 import { Button } from '@/components/ui/button'
 import {
@@ -68,8 +68,8 @@ export function CreateAdminDialog ({
       }
 
       if (data) {
-        router.push('/root/dashboard')
-        toast.success('Administrador creado')
+        router.push(`/root/admin/${data.id}`)
+        toast.success('Administrador creado con exito')
       }
 
       onOpenChange?.(false)

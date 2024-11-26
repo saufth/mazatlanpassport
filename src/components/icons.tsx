@@ -2,12 +2,17 @@ import { type HTMLAttributes } from 'react'
 import { siteConfig } from '@/config/site'
 import {
   AvatarIcon,
+  CheckIcon,
+  ChevronDownIcon,
   ChevronLeftIcon,
   ExclamationTriangleIcon,
   GearIcon,
   HomeIcon,
-  PersonIcon
+  PersonIcon,
+  PlusCircledIcon,
+  PlusIcon
 } from '@radix-ui/react-icons'
+import { ChevronsUpDownIcon } from 'lucide-react'
 
 export type IconProps = HTMLAttributes<SVGElement>
 
@@ -919,9 +924,14 @@ export const Icons = {
     </svg>
   ),
   Avatar: AvatarIcon,
+  Check: CheckIcon,
+  ChevronDown: ChevronDownIcon,
+  ChevronsUpDown: ChevronsUpDownIcon,
   Dashboard: HomeIcon,
   ChevronLeft: ChevronLeftIcon,
   Person: PersonIcon,
+  Plus: PlusIcon,
+  PlusCircled: PlusCircledIcon,
   Settings: GearIcon,
   Warning: ExclamationTriangleIcon
 }
