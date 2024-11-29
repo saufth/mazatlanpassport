@@ -52,8 +52,7 @@ export function Intro () {
               }
             }}
           >
-            Comienza creando un nuevo administrador para poder
-            agregar tus primeras tiendas.
+            Comienza creando un nuevo administrador para agregar las primeras tiendas.
           </motion.p>
           <motion.div
             className='pt-4'
@@ -66,7 +65,7 @@ export function Intro () {
               }
             }}
           >
-            <Button onClick={() => router.push('/admin/onboarding?step=create')}>
+            <Button onClick={() => router.push('/root/onboarding?step=create')}>
               Comenzar
             </Button>
           </motion.div>
