@@ -5,7 +5,7 @@ import {
   type infer as zodInfer
 } from 'zod'
 
-export const PhoneSchema = zodObject({
+export const phoneSchema = zodObject({
   phone: coerce.number({
     required_error: 'El número de teléfono es requerido',
     invalid_type_error: 'El número de teléfono no es valido'
@@ -24,7 +24,7 @@ export const PhoneSchema = zodObject({
     })
 })
 
-export type PhoneInputs = zodInfer<typeof PhoneSchema>
+export type PhoneInputs = zodInfer<typeof phoneSchema>
 
 export const phoneCodeSchema = zodObject({
   countryCode: coerce.number({
@@ -44,7 +44,7 @@ export const phoneCodeSchema = zodObject({
       message: 'El código de país no es valido'
     })
 })
-  .merge(PhoneSchema)
+  .merge(phoneSchema)
 
 export type PhoneCodeInputs = zodInfer<typeof phoneCodeSchema>
 

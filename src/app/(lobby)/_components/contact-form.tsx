@@ -27,7 +27,7 @@ export default function ContactForm () {
       firstName: '',
       lastName: '',
       email: '',
-      phone: '',
+      phone: undefined,
       subject: ''
     }
   })
@@ -129,8 +129,12 @@ export default function ContactForm () {
               <FormLabel>Número de teléfono</FormLabel>
               <FormControl>
                 <Input
+                  inputMode='numeric'
                   placeholder='Ingresa un número de teléfono'
                   {...field}
+                  value={field.value ?? ''}
+                  pattern='[0-9]*'
+                  onChange={(e) => e.target.validity.valid && field.onChange(e.target.value)}
                 />
               </FormControl>
               <FormMessage />

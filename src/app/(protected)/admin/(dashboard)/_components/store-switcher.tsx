@@ -66,9 +66,11 @@ export function StoreSwitcher ({ adminId, storesPromise }: StoreSwitcherProps) {
                   <span className='truncate font-semibold'>
                     {activeStore?.name}
                   </span>
-                  <span className='truncate text-xs'>
-                    {activeStore?.slogan}
-                  </span>
+                  {activeStore?.slogan && (
+                    <span className='truncate text-xs'>
+                      {activeStore.slogan}
+                    </span>
+                  )}
                 </div>
                 <Icons.ChevronsUpDown className='ml-auto' />
               </SidebarMenuButton>
