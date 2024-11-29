@@ -2,7 +2,7 @@
 import { useSearchParams } from 'next/navigation'
 import { AnimatePresence } from 'framer-motion'
 import { CreateStore } from '@/app/(protected)/admin/onboarding/_components/create-store'
-import { Intro } from '@/app/(protected)/root/onboarding/_components/intro'
+import { Intro } from '@/app/(protected)/admin/onboarding/_components/intro'
 
 interface OnboardingAdminProps {
   adminId: string
