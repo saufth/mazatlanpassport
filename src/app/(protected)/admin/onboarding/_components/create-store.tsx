@@ -26,7 +26,6 @@ export function CreateStore ({ adminId }: CreateStoreProps) {
       name: '',
       slogan: '',
       description: '',
-      email: '',
       countryCode: 52,
       phone: undefined,
       website: '',
