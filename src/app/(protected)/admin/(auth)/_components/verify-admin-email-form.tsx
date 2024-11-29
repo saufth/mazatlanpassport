@@ -38,16 +38,22 @@ export default function VerifyAdminEmailForm () {
   const onSubmit = (inputs: VerifyCodeInputs) => {
     startTransition(async () => {
       toast.message('Verificando..')
-      const response = await verifyAdminEmail(inputs)
+      const { data, error } = await verifyAdminEmail(inputs)
 
-      if (response.error) {
-        toast.error(response.error)
+      if (error) {
+        toast.error(error)
         return
       }
 
       toast.success('Verificación exitoso!')
+
+      if (!data) {
+        router.push(`${redirects.admin.afterVerify}/onboarding`)
+        return
+      }
+
       form.reset()
-      router.push(redirects.admin.afterVerify)
+      router.push(`${redirects.admin.afterVerify}/store/${data?.storeId}`)
     })
   }
 

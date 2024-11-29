@@ -391,8 +391,10 @@ export async function verifyAdminEmail (input: VerifyCodeInputs) {
       throw new Error(newSession.error)
     }
 
+    const storeId = await getLastStoreIdByAdminId({ adminId: adminId.id })
+
     return {
-      data: null,
+      data: storeId.data,
       error: null
     }
   } catch (err) {
