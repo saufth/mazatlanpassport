@@ -12,13 +12,13 @@ export default async function DashboardRootLayout ({
   children
 }: PropsWithChildren) {
   const root = await getCachedRoot()
-  const rootRole = protectedRoles.root
 
   if (!root) {
     redirect(redirects.root.afterSignin)
   }
 
   const adminsPromise = getAdminsByRootId({ rootId: root.id })
+  const rootRole = protectedRoles.root
 
   return (
     <div className='flex min-h-screen'>

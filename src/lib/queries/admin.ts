@@ -1,8 +1,9 @@
 import 'server-only'
 import {
-  unstable_cache as cache,
-  unstable_noStore as noStore
+  unstable_noStore as noStore,
+  unstable_cache as nextCache
 } from 'next/cache'
+import { cache } from 'react'
 import { db } from '@/db'
 import { getSession } from '@/lib/actions/auth'
 import { getErrorMessage } from '@/lib/handle-error'
@@ -69,7 +70,7 @@ export async function getAdminById (input: { adminId: string }) {
     )
 
     if (!admin) {
-      throw new Error('Hubo un problema al buscar datos del administradoe, intentalo de nuevo más tarde')
+      throw new Error('Hubo un problema al buscar datos del administrador, intentalo de nuevo más tarde')
     }
 
     return admin
@@ -79,7 +80,7 @@ export async function getAdminById (input: { adminId: string }) {
 }
 
 export async function getAdminsByRootId (input: { rootId: string }) {
-  return await cache(
+  return await nextCache(
     async () => {
       try {
         const [rootRowKey] = await db.query<RowKey[]>(
@@ -88,7 +89,7 @@ export async function getAdminsByRootId (input: { rootId: string }) {
         )
 
         if (!rootRowKey) {
-          throw new Error('Hubo un problema al buscar datos del administradoe, intentalo de nuevo más tarde')
+          throw new Error('Hubo un problema al buscar datos de usuario root, intentalo de nuevo más tarde')
         }
 
         const admins = await db.query<AdminProfileInputs[]>(
@@ -97,7 +98,7 @@ export async function getAdminsByRootId (input: { rootId: string }) {
         )
 
         if (!admins) {
-          throw new Error('Hubo un problema al buscar datos del administradoe, intentalo de nuevo más tarde')
+          throw new Error('Hubo un problema al buscar datos del administrador, intentalo de nuevo más tarde')
         }
 
         return admins

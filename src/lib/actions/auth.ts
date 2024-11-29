@@ -131,10 +131,10 @@ export async function getSession (role: Role) {
       throw new Error('Hubo un problema al intentar obtener datos de sesión.')
     }
 
-    const decryptedSession = await decryptSession(sessionToken, role)
+    const session = await decryptSession(sessionToken, role)
 
     return {
-      data: decryptedSession,
+      data: session,
       error: null
     }
   } catch (err) {

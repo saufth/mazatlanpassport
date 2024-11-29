@@ -9,7 +9,7 @@ import { roles, type Role } from '@/lib/constants'
 
 const jwtSecretKeys: Record<Role, Uint8Array> = {
   user: new TextEncoder().encode(process.env.JWT_USER_SECRET_KEY as string),
-  admin: new TextEncoder().encode(process.env.JWT_ADMINS_SECRET_KEY as string),
+  admin: new TextEncoder().encode(process.env.JWT_ADMIN_SECRET_KEY as string),
   root: new TextEncoder().encode(process.env.JWT_ROOT_SECRET_KEY as string)
 }
 

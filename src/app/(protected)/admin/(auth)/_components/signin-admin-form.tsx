@@ -17,10 +17,7 @@ import {
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signinAdmin } from '@/lib/actions/admin'
-import {
-  signinSchema,
-  type SigninInputs
-} from '@/lib/validations/auth'
+import { signinSchema, type SigninInputs } from '@/lib/validations/auth'
 import { redirects, userStatus } from '@/lib/constants'
 
 export default function SigninAdminForm () {
@@ -48,13 +45,19 @@ export default function SigninAdminForm () {
 
       if (response.error === userStatus.unverified) {
         toast.error('Ingresa el código enviado a tu correo electrónico')
-        router.push(`${redirects.admin.toVerify}/${response.data.id}`)
+        router.push(`${redirects.admin.toVerify}/${response.data.adminId}`)
         return
       }
 
       toast.success('Iniciaste sesión')
       form.reset()
-      router.push(redirects.admin.afterSignin)
+
+      if (!response.data.storeId) {
+        router.push(`${redirects.admin.afterSignin}/onboarding`)
+        return
+      }
+
+      router.push(`${redirects.admin.afterSignin}/store/${response.data.storeId}`)
     })
   }
 

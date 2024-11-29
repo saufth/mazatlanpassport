@@ -7,40 +7,46 @@ import { motion } from 'framer-motion'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Icons } from '@/components/icons'
-import { CreateAdminForm } from '@/app/(protected)/root/_components/create-admin-form'
+import { CreateStoreForm } from '@/app/(protected)/admin/_components/create-store-form'
 import { StepHeader } from '@/app/(protected)/root/onboarding/_components/step-header'
-import { createAdmin } from '@/lib/actions/admin'
-import { createAdminSchema, type CreateAdminInputs } from '@/lib/validations/admin'
+import { createStore } from '@/lib/actions/store'
+import { createStoreSchema, type CreateStoreInputs } from '@/lib/validations/store'
 
-interface CreateAdminProps {
-  rootId: string
+interface CreateStoreProps {
+  adminId: string
 }
 
-export function CreateAdmin ({ rootId }: CreateAdminProps) {
+export function CreateStore ({ adminId }: CreateStoreProps) {
   const router = useRouter()
   const [isCreatePending, startCreateTransaction] = useTransition()
 
-  const form = useForm<CreateAdminInputs>({
-    resolver: zodResolver(createAdminSchema),
+  const form = useForm<CreateStoreInputs>({
+    resolver: zodResolver(createStoreSchema),
     defaultValues: {
       name: '',
+      slogan: '',
+      description: '',
       email: '',
-      password: '',
-      confirmPassword: ''
+      countryCode: 52,
+      phone: undefined,
+      website: '',
+      address: '',
+      googleMapsId: '',
+      reservation: false
     }
   })
 
-  function onSubmit (input: CreateAdminInputs) {
+  function onSubmit (input: CreateStoreInputs) {
     startCreateTransaction(async () => {
-      const { data, error } = await createAdmin({ ...input, rootId })
+      const response = await createStore({ ...input, adminId })
 
-      if (error) {
-        toast.error(error)
+      if (response.error) {
+        toast.error(response.error)
         return
       }
 
-      if (data) {
-        router.push(`/root/admin/${data.id}`)
+      if (response.data) {
+        router.push(`/admin/store/${response.data.id}`)
       }
 
       form.reset()
@@ -65,8 +71,8 @@ export function CreateAdmin ({ rootId }: CreateAdminProps) {
         className='flex flex-col space-y-4 rounded-xl bg-background/60 p-8'
       >
         <StepHeader
-          title='Comencemos creando un administrador'
-          description='Puedes actualizar los datos del administrador en otro momento'
+          title='Comencemos creando un nuevo establecimiento'
+          description='Puedes actualizar los datos del establecimiento en otro momento'
         />
         <motion.div
           variants={{
@@ -78,14 +84,14 @@ export function CreateAdmin ({ rootId }: CreateAdminProps) {
             }
           }}
         >
-          <CreateAdminForm form={form} onSubmit={onSubmit}>
+          <CreateStoreForm form={form} onSubmit={onSubmit}>
             <Button type='submit' disabled={isCreatePending}>
               {isCreatePending && (
                 <Icons.Spinner className='mr-2 size-4 animate-spin' />
               )}
-              Crear administrador
+              Crear establecimiento
             </Button>
-          </CreateAdminForm>
+          </CreateStoreForm>
         </motion.div>
       </motion.div>
     </motion.div>

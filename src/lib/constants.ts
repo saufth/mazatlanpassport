@@ -13,7 +13,7 @@ export const redirects = {
     toSignin: '/admin/signin',
     afterSignin: '/admin',
     afterSignout: '/admin/signin',
-    toVerify: '/admin/verify-email',
+    toVerify: '/admin/signin/verify-email',
     afterVerify: '/admin'
   },
   root: {

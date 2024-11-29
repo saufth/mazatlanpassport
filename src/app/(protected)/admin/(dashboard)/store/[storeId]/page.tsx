@@ -1,4 +1,4 @@
-export default function DashboardRootPage () {
+export default function DashboardAdminPage () {
   return (
     <div>
       <div className='pt-gutter'>

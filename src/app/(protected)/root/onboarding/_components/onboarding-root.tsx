@@ -4,11 +4,11 @@ import { AnimatePresence } from 'framer-motion'
 import { CreateAdmin } from '@/app/(protected)/root/onboarding/_components/create-admin'
 import { Intro } from '@/app/(protected)/root/onboarding/_components/intro'
 
-interface OnboardingProps {
+interface OnboardingRootProps {
   rootId: string
 }
 
-export function Onboarding ({ rootId }: OnboardingProps) {
+export function OnboardingRoot ({ rootId }: OnboardingRootProps) {
   const search = useSearchParams()
   const step = search.get('step')
 

@@ -10,10 +10,7 @@ import {
   deleteSession,
   getSessionStatus
 } from '@/lib/actions/auth'
-import {
-  getAdminStatus,
-  getAdminStatusByEmail
-} from '@/lib/queries/admin'
+import { getAdminStatus, getAdminStatusByEmail } from '@/lib/queries/admin'
 import { getErrorMessage } from '@/lib/handle-error'
 import { type EmailInputs } from '@/lib/validations/common/email'
 import { type PasswordInputs } from '@/lib/validations/common/password'
@@ -38,6 +35,7 @@ import type {
   VerifyEmailConfirm,
   VerifyEmailCode
 } from '@/types'
+import { getLastStoreIdByAdminId } from '../queries/store'
 
 const adminRole = roles.admin
 
@@ -231,7 +229,10 @@ export async function signinAdmin (input: SigninInputs) {
           verifyCode.attempts < 2
         ) {
           return {
-            data: adminId,
+            data: {
+              adminId: adminId.id,
+              storeId: null
+            },
             error: userStatus.unverified
           }
         }
@@ -252,28 +253,34 @@ export async function signinAdmin (input: SigninInputs) {
         ]
       )
 
-      await sendVerifyEmailCode(
-        input.email,
-        code
-      )
+      await sendVerifyEmailCode(input.email, code)
 
       return {
-        data: adminId,
+        data: {
+          adminId: adminId.id,
+          storeId: null
+        },
         error: userStatus.unverified
       }
     }
 
-    const newSession = await createSession(
-      adminId,
-      adminRole
-    )
+    const newSession = await createSession(adminId, adminRole)
 
     if (newSession.error) {
       throw new Error(newSession.error)
     }
 
+    const lastStoreId = await getLastStoreIdByAdminId({ adminId: adminId.id })
+
+    if (lastStoreId.error) {
+      throw new Error('Hubo un problema al intentar conseguir datos del administrador, porfavor intentalo de nuevo más tarde')
+    }
+
     return {
-      data: adminId,
+      data: {
+        adminId: adminId.id,
+        storeId: lastStoreId.data?.storeId
+      },
       error: null
     }
   } catch (err) {

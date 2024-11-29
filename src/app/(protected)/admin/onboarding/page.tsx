@@ -4,20 +4,20 @@ import { Suspense } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { GridPattern } from '@/components/grid-pattern'
 import { Shell } from '@/components/shell'
-import { OnboardingRoot } from '@/app/(protected)/root/onboarding/_components/onboarding-root'
-import { getCachedRoot } from '@/lib/queries/root'
+import { OnboardingAdmin } from '@/app/(protected)/admin/onboarding/_components/onboarding-admin'
+import { getCachedAdmin } from '@/lib/queries/admin'
 import { redirects } from '@/lib/constants'
 
 export const metadata: Metadata = {
   title: 'Onboarding',
-  description: 'Comienza creando un administrador'
+  description: 'Comienza creando un establecimiento'
 }
 
-export default async function OnboardingRootPage () {
-  const root = await getCachedRoot()
+export default async function OnboardingAdminPage () {
+  const admin = await getCachedAdmin()
 
-  if (!root) {
-    redirect(redirects.root.toSignin)
+  if (!admin) {
+    redirect(redirects.admin.toSignin)
   }
 
   return (
@@ -31,7 +31,7 @@ export default async function OnboardingRootPage () {
         className='[mask-image:radial-gradient(300px_circle_at_left_top,white,transparent)]'
       />
       <Suspense fallback={<Skeleton className='size-full' />}>
-        <OnboardingRoot rootId={root.id} />
+        <OnboardingAdmin adminId={admin.id} />
       </Suspense>
     </Shell>
   )

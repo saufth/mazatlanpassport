@@ -61,13 +61,12 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`stores` (
   `name` VARCHAR(32) NOT NULL,
   `slogan` VARCHAR(50) NULL,
   `description` VARCHAR(250) NOT NULL,
-  `email` VARCHAR(64) NOT NULL,
   `phone` BIGINT UNSIGNED NOT NULL,
-  `website` VARCHAR(50) NULL,
   `address` VARCHAR(250) NOT NULL,
-  `maps_slug` VARCHAR(17) NOT NULL,
-  `profile_image` VARCHAR(250) NOT NULL,
-  `cover_image` VARCHAR(250) NOT NULL,
+  `google_maps_id` VARCHAR(17) NULL,
+  `website` VARCHAR(50) NULL,
+  `image_profile` VARCHAR(250) NULL,
+  `image_cover` VARCHAR(250) NULL,
   `facebook_id` VARCHAR(50) NULL,
   `instagram_id` VARCHAR(30) NULL,
   `twitter_id` VARCHAR(15) NULL,
@@ -98,7 +97,6 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`stores` (
   UNIQUE INDEX `row_key_UNIQUE` (`row_key` ASC),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC),
-  UNIQUE INDEX `email_UNIQUE` (`email` ASC),
   INDEX `fk_stores-admins_idx` (`admin_row_key` ASC),
   CONSTRAINT `fk_stores-admins`
     FOREIGN KEY (`admin_row_key`)
@@ -109,20 +107,18 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`stores` (
     CHECK (LENGTH(`slogan`) >= 6),
   CONSTRAINT `chk_stores-description`
     CHECK (LENGTH(`description`) >= 12),
-  CONSTRAINT `chk_stores-email`
-    CHECK (LENGTH(`email`) >= 6),
-  CONSTRAINT `chk_stores-address`
-    CHECK (LENGTH(`address`) >= 12),
   CONSTRAINT `chk_stores-phone`
     CHECK (`phone` > 11000000009 AND `phone` <= 19399999999900),
+  CONSTRAINT `chk_stores-address`
+    CHECK (LENGTH(`address`) >= 12),
+  CONSTRAINT `chk_stores-google_maps_id`
+    CHECK (LENGTH(`google_maps_id`) = 17),
   CONSTRAINT `chk_stores-website`
     CHECK (LENGTH(`website`) >= 5),
-  CONSTRAINT `chk_stores-maps_slug`
-    CHECK (LENGTH(`maps_slug`) = 17),
-  CONSTRAINT `chk_stores-profile_image`
-    CHECK (LENGTH(`profile_image`) >= 12),
-  CONSTRAINT `chk_stores-cover_image`
-    CHECK (LENGTH(`cover_image`) >= 12),
+  CONSTRAINT `chk_stores-image_profile`
+    CHECK (LENGTH(`image_profile`) >= 12),
+  CONSTRAINT `chk_stores-image_cover`
+    CHECK (LENGTH(`image_cover`) >= 12),
   CONSTRAINT `chk_stores-facebook_id`
     CHECK (LENGTH(`facebook_id`) >= 5),
   CONSTRAINT `chk_stores-rate`
@@ -164,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`stores_branches` (
   `name` VARCHAR(32) NOT NULL,
   `phone` BIGINT UNSIGNED NOT NULL,
   `address` VARCHAR(250) NOT NULL,
-  `maps_slug` VARCHAR(17) NOT NULL,
+  `maps_id` VARCHAR(17) NOT NULL,
   `store_row_key` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`row_key`),
   UNIQUE INDEX `row_key_UNIQUE` (`row_key` ASC),
@@ -348,26 +344,6 @@ CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`orders` (
     REFERENCES `mazatlanpassport`.`stores` (`row_key`),
   CONSTRAINT `chk_orders-rate`
     CHECK (`rate` >= 0 AND `rate` <= 5))
-ENGINE = InnoDB;
-
-CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`roots_verify_codes` (
-  `root_row_key` TINYINT UNSIGNED NOT NULL,
-  `code` MEDIUMINT UNSIGNED NOT NULL,
-  `attempts` TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  `created_at` TIMESTAMP NOT NULL DEFAULT (NOW()),
-  `updated_at` TIMESTAMP NULL,
-  `deleted_at` TIMESTAMP NULL,
-  `status` TINYINT UNSIGNED NOT NULL DEFAULT 1,
-  PRIMARY KEY (`root_row_key`),
-  UNIQUE INDEX `root_row_key_UNIQUE` (`root_row_key` ASC),
-  INDEX `fk_roots_verify_codes-roots_idx` (`root_row_key` ASC),
-  CONSTRAINT `fk_roots_verify_codes-roots`
-    FOREIGN KEY (`root_row_key`)
-    REFERENCES `mazatlanpassport`.`roots` (`row_key`),
-  CONSTRAINT `chk_roots_verify_codes-code`
-    CHECK (`code` >= 100000 AND `code` <= 999999),
-  CONSTRAINT `chk_roots_verify_codes-attempts`
-    CHECK (`attempts` <= 3))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `mazatlanpassport`.`roots_recovery_codes` (

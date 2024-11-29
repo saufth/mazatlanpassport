@@ -16,7 +16,7 @@ interface DashboardAdminPageProps {
   }>
 }
 
-export default async function DashboardAdminPage ({
+export default async function DashboardRootPage ({
   params
 }: DashboardAdminPageProps) {
   const { adminId } = await params

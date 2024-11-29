@@ -42,6 +42,7 @@ export function AdminSwitcher ({ rootId, adminsPromise }: StoreSwitcherProps) {
   const { adminId } = useParams<{ adminId: string }>()
 
   const admins = use(adminsPromise)
+
   const [activeAdmin, setActiveAdmin] = useState(admins?.find((adminItem) => adminItem.id === adminId))
   const [showNewAdminDialog, setShowNewAdminDialog] = useState(false)
   const [isOpen, setOpen] = useState(false)
